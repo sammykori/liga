@@ -38,8 +38,8 @@ function Stats() {
             >
                 <Carousel>
                     <CarouselContent>
-                        {stats.map((ma) => (
-                            <CarouselItem>
+                        {stats.map((ma, index) => (
+                            <CarouselItem key={index}>
                                 <motion.div
                                     whileHover={{ scale: 1.02 }}
                                     transition={{ duration: 0.3 }}

@@ -4,12 +4,16 @@ import ProfileImage from "@/components/sections/profile/ProfileImage";
 import MainInfo from "@/components/sections/profile/MainInfo";
 import MoreInfo from "@/components/sections/profile/MoreInfo";
 import { createClient } from "@/utils/supabase/client";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
+import { User } from "@supabase/supabase-js";
+import { Database } from "@/types/database";
+
+type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
 export default function Profile() {
     const supabase = createClient();
-    const [user, setUser] = useState<any>(null);
-    const [profileStats, setProfileStats] = useState<any>(null);
+    const [user, setUser] = useState<User>();
+    const [profileStats, setProfileStats] = useState<Profile>();
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -40,7 +44,7 @@ export default function Profile() {
             };
             fetchProfile();
         }
-    }, [user]);
+    }, [user, supabase]);
 
     return (
         <div className="container mx-auto px-4 py-8">

@@ -6,7 +6,6 @@ import {
 import { Icon } from "@iconify/react";
 import { Database } from "@/types/database";
 import dayjs from "dayjs";
-import { stat } from "fs";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 

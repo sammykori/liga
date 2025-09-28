@@ -8,9 +8,9 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { PlayerRating } from "@/types/mock";
 
-function LeaderTable({ data: mockLeaderboard }: { data: any[] }) {
+function LeaderTable({ data: mockLeaderboard }: { data: PlayerRating[] }) {
     return (
         <Card className="py-0 rounded-r-none">
             <Table>

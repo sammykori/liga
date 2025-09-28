@@ -15,7 +15,7 @@ interface MatchCardProps {
         time: string;
         venue: string;
         isLive?: boolean;
-        status: "upcoming" | "live" | "finished";
+        status: string;
     };
     variant?: "compact" | "hero";
     onClick?: () => void;

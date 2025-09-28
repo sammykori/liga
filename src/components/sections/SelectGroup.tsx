@@ -1,13 +1,9 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
-import { useState } from "react";
 import { GroupsFilter } from "../GroupsFilter";
 
 function SelectGroup({ groups }: { groups: string[] }) {
-    const [selectedPosition, setSelectedPosition] = useState<string | null>(
-        null
-    );
     return (
         <motion.section
             initial={{ opacity: 0, y: 20 }}

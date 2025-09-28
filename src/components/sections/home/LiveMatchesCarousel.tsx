@@ -9,7 +9,40 @@ import {
     CarouselContent,
     CarouselItem,
 } from "@/components/ui/carousel";
-function LiveMatchesCarousel({ matches }: { matches: any[] }) {
+
+const matches = [
+    {
+        id: "1",
+        teamA: "Team A",
+        teamB: "Team B",
+        scoreA: 4,
+        scoreB: 2,
+        date: "Sunday, 31 Jun",
+        time: "15:30",
+        venue: "Strouden Park",
+        isLive: true,
+        status: "live",
+    },
+    {
+        id: "2",
+        teamA: "Team C",
+        teamB: "Team D",
+        date: "Today",
+        time: "08:00 PM",
+        venue: "Central Stadium",
+        status: "upcoming",
+    },
+    {
+        id: "3",
+        teamA: "Team E",
+        teamB: "Team F",
+        date: "Tomorrow",
+        time: "08:00 PM",
+        venue: "North Arena",
+        status: "upcoming",
+    },
+];
+function LiveMatchesCarousel() {
     const router = useRouter();
     const handleMatchClick = (matchId: string) => {
         router.push(`/match/${matchId}`);
@@ -41,8 +74,8 @@ function LiveMatchesCarousel({ matches }: { matches: any[] }) {
                 }}
             >
                 <CarouselContent>
-                    {matches.map((ma) => (
-                        <CarouselItem>
+                    {matches.map((ma, index) => (
+                        <CarouselItem key={index}>
                             <MatchCard
                                 match={ma}
                                 variant="hero"

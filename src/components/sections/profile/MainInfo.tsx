@@ -73,7 +73,7 @@ function MainInfo({ stats }: { stats?: Profile }) {
                                 {stats?.matches_played}
                             </p>
                             <p className="text-xs text-purple-100">
-                                "Matches played"
+                                Matches played
                             </p>
                         </div>
                     </motion.div>
@@ -91,7 +91,7 @@ function MainInfo({ stats }: { stats?: Profile }) {
                                 {stats?.matches_won}
                             </p>
                             <p className="text-xs text-purple-100">
-                                "Matches won"
+                                Matches won
                             </p>
                         </div>
                     </motion.div>
@@ -107,7 +107,7 @@ function MainInfo({ stats }: { stats?: Profile }) {
                         <div className="w-full aspect-square rounded-lg p-4 flex flex-col justify-start items-center text-center bg-gradient-to-br from-purple-500 to-purple-100 text-white">
                             <p className="text-2xl font-bold">{stats?.goals}</p>
                             <p className="text-xs text-purple-100">
-                                "Goals scored"
+                                Goals scored
                             </p>
                         </div>
                     </motion.div>

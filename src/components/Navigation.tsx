@@ -5,10 +5,11 @@ import { Icon } from "@iconify/react";
 import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import MenuOverlay from "./MenuOverlay";
+import { User } from "@supabase/supabase-js";
 
 export function Navigation() {
     const supabase = createClient();
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<User>();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {

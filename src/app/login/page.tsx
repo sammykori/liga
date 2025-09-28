@@ -1,11 +1,11 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
+import { toast } from "sonner";
 import {
     Card,
     CardContent,
@@ -16,6 +16,7 @@ import {
 import { Icon } from "@iconify/react";
 import { z } from "zod";
 import { useState, useEffect } from "react";
+import { PostgrestError } from "@supabase/supabase-js";
 
 const authSchema = z.object({
     email: z
@@ -41,7 +42,6 @@ export default function Auth() {
     const supabase = createClient();
     const navigate = useRouter();
     const searchParams = useSearchParams();
-    const { toast } = useToast();
     const [mode, setMode] = useState<AuthMode>("login");
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -82,7 +82,7 @@ export default function Auth() {
         });
 
         return () => subscription.unsubscribe();
-    }, [navigate]);
+    }, [navigate, supabase]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -95,10 +95,8 @@ export default function Auth() {
                     .email()
                     .safeParse(formData.email);
                 if (!emailValidation.success) {
-                    toast({
-                        title: "Invalid email",
+                    toast.error("Invalid email", {
                         description: emailValidation.error.message,
-                        variant: "destructive",
                     });
                     return;
                 }
@@ -112,8 +110,7 @@ export default function Auth() {
 
                 if (error) throw error;
 
-                toast({
-                    title: "Password reset email sent",
+                toast("Password reset email sent", {
                     description:
                         "Check your email for the password reset link.",
                 });
@@ -125,10 +122,8 @@ export default function Auth() {
                 });
 
                 if (!validation.success) {
-                    toast({
-                        title: "Validation error",
+                    toast.error("Validation error", {
                         description: validation.error.message,
-                        variant: "destructive",
                     });
                     return;
                 }
@@ -147,8 +142,7 @@ export default function Auth() {
 
                     if (error) throw error;
 
-                    toast({
-                        title: "Account created successfully",
+                    toast.success("Account created successfully", {
                         description:
                             "Please check your email to verify your account.",
                     });
@@ -164,12 +158,13 @@ export default function Auth() {
                     // Navigation is handled by auth state change
                 }
             }
-        } catch (error: any) {
-            toast({
-                title: "Authentication error",
-                description: error.message || "An unexpected error occurred.",
-                variant: "destructive",
-            });
+        } catch (error) {
+            if (error instanceof PostgrestError) {
+                toast.error("Authentication error", {
+                    description:
+                        error.message || "An unexpected error occurred.",
+                });
+            }
         } finally {
             setIsLoading(false);
         }
@@ -345,7 +340,7 @@ export default function Auth() {
                                         Forgot your password?
                                     </button>
                                     <div className="text-sm text-muted-foreground">
-                                        Don't have an account?{" "}
+                                        Don&apos;t have an account?{" "}
                                         <button
                                             type="button"
                                             onClick={() => setMode("signup")}

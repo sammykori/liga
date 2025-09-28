@@ -2,7 +2,6 @@
 import { motion } from "framer-motion";
 
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Icon } from "@iconify/react";
 import SelectGroup from "@/components/sections/SelectGroup";

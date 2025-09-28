@@ -1,19 +1,5 @@
 "use client";
 import { motion } from "framer-motion";
-import { Navigation } from "@/components/Navigation";
-import { BottomNavigation } from "@/components/BottomNavigation";
-import { Card } from "@/components/ui/card";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Icon } from "@iconify/react";
 import SelectGroup from "@/components/sections/SelectGroup";
 import Stats from "@/components/sections/leaderboard/Stats";
 import LeaderTable from "@/components/sections/leaderboard/LeaderTable";

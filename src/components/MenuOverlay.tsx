@@ -6,11 +6,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import { User } from "@supabase/supabase-js";
+import { AuthError } from "@supabase/supabase-js";
 
 interface MenuOverlayProps {
     isOpen: boolean;
     onClose: () => void;
-    user?: any;
+    user?: User;
 }
 
 interface MenuItem {
@@ -39,10 +41,13 @@ export default function MenuOverlay({
             if (error) throw error;
             onClose();
             router.push("/login");
-        } catch (error: any) {
-            toast("Signed out successfully", {
-                description: "You have been logged out.",
-            });
+        } catch (error) {
+            if (error instanceof AuthError) {
+                toast("Error signing out", {
+                    description:
+                        error.message || "An unexpected error occurred.",
+                });
+            }
         }
     };
 

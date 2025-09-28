@@ -4,7 +4,40 @@ import { Icon } from "@iconify/react";
 import { MatchCard } from "../../MatchCard";
 import { useRouter } from "next/navigation";
 
-function UpcomingMatches({ matches }: { matches: any[] }) {
+const matches = [
+    {
+        id: "1",
+        teamA: "Team A",
+        teamB: "Team B",
+        scoreA: 4,
+        scoreB: 2,
+        date: "Sunday, 31 Jun",
+        time: "15:30",
+        venue: "Strouden Park",
+        isLive: true,
+        status: "live",
+    },
+    {
+        id: "2",
+        teamA: "Team C",
+        teamB: "Team D",
+        date: "Today",
+        time: "08:00 PM",
+        venue: "Central Stadium",
+        status: "upcoming",
+    },
+    {
+        id: "3",
+        teamA: "Team E",
+        teamB: "Team F",
+        date: "Tomorrow",
+        time: "08:00 PM",
+        venue: "North Arena",
+        status: "upcoming",
+    },
+];
+
+function UpcomingMatches() {
     const router = useRouter();
 
     const handleMatchClick = (matchId: string) => {
