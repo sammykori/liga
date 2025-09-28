@@ -53,15 +53,21 @@ export default function Profile() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                {/* Profile Header */}
-                <ProfileImage />
+                <div className="w-full flex flex-col md:flex-row">
+                    {/* Profile Header */}
+                    <div className="w-full md:w-2/5 xl:w-1/5 md:pl-6">
+                        <ProfileImage />
+                    </div>
 
-                {/* Main Info */}
-                {/* Match Stats */}
-                <MainInfo stats={profileStats} />
+                    {/* Main Info */}
+                    {/* Match Stats */}
+                    <div className="w-full md:w-3/5 xl:w-4/5 md:pl-6">
+                        <MainInfo stats={profileStats} />
 
-                {/* More Info */}
-                <MoreInfo stats={profileStats} />
+                        {/* More Info */}
+                        <MoreInfo stats={profileStats} />
+                    </div>
+                </div>
             </motion.section>
         </div>
     );
