@@ -1,0 +1,42 @@
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Icon } from "@iconify/react";
+import { PlayerCard } from "../../PlayerCard";
+
+function TopPlayers({ players }: { players: any[] }) {
+    return (
+        <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+        >
+            <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-foreground">
+                    Top Players
+                </h3>
+                <Button variant="link" size="sm" className="text-primary">
+                    View all{" "}
+                    <Icon icon="mdi:arrow-right" className="w-4 h-4 ml-1" />
+                </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {players.slice(0, 6).map((player, index) => (
+                    <motion.div
+                        key={player.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                            duration: 0.3,
+                            delay: index * 0.1,
+                        }}
+                    >
+                        <PlayerCard player={player} variant="compact" />
+                    </motion.div>
+                ))}
+            </div>
+        </motion.section>
+    );
+}
+
+export default TopPlayers;
