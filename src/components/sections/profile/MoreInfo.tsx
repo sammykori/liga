@@ -82,7 +82,7 @@ function MoreInfo({ stats }: { stats?: Profile }) {
                                         ? "M"
                                         : stats?.sex === "female"
                                         ? "F"
-                                        : -""}
+                                        : "-"}
                                 </span>
                                 <span className="text-gray-400 text-xs font-medium"></span>
                             </p>

@@ -47,7 +47,9 @@ export default function Auth() {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
-        name: "",
+        givenName: "",
+        lastName: "",
+        dob: "",
     });
 
     useEffect(() => {
@@ -118,7 +120,10 @@ export default function Auth() {
             } else {
                 const validation = authSchema.safeParse({
                     ...formData,
-                    name: mode === "signup" ? formData.name : undefined,
+                    givenName:
+                        mode === "signup" ? formData.givenName : undefined,
+                    lastName: mode === "signup" ? formData.lastName : undefined,
+                    dob: mode === "signup" ? formData.dob : undefined,
                 });
 
                 if (!validation.success) {
@@ -135,7 +140,9 @@ export default function Auth() {
                         options: {
                             emailRedirectTo: `${window.location.origin}/`,
                             data: {
-                                name: formData.name,
+                                givenName: formData.givenName,
+                                lastName: formData.lastName,
+                                dob: formData.dob,
                             },
                         },
                     });
@@ -234,27 +241,74 @@ export default function Auth() {
                                         animate={{ opacity: 1, height: "auto" }}
                                         exit={{ opacity: 0, height: 0 }}
                                         transition={{ duration: 0.3 }}
+                                        className="space-y-4"
                                     >
-                                        <Label
-                                            htmlFor="name"
-                                            className="text-card-foreground"
-                                        >
-                                            Name
-                                        </Label>
-                                        <Input
-                                            id="name"
-                                            type="text"
-                                            placeholder="Enter your name"
-                                            value={formData.name}
-                                            onChange={(e) =>
-                                                handleInputChange(
-                                                    "name",
-                                                    e.target.value
-                                                )
-                                            }
-                                            required={mode === "signup"}
-                                            className="mt-1"
-                                        />
+                                        <div>
+                                            <Label
+                                                htmlFor="name"
+                                                className="text-card-foreground"
+                                            >
+                                                Given Name
+                                            </Label>
+                                            <Input
+                                                id="name"
+                                                type="text"
+                                                placeholder="Enter your given name"
+                                                value={formData.givenName}
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        "givenName",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                required={mode === "signup"}
+                                                className="mt-1"
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label
+                                                htmlFor="name"
+                                                className="text-card-foreground"
+                                            >
+                                                Last Name
+                                            </Label>
+                                            <Input
+                                                id="name"
+                                                type="text"
+                                                placeholder="Enter your name"
+                                                value={formData.lastName}
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        "lastName",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                required={mode === "signup"}
+                                                className="mt-1"
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label
+                                                htmlFor="name"
+                                                className="text-card-foreground"
+                                            >
+                                                Date of Birth
+                                            </Label>
+                                            <Input
+                                                id="name"
+                                                type="date"
+                                                placeholder="Enter your name"
+                                                value={formData.dob}
+                                                onChange={(e) =>
+                                                    handleInputChange(
+                                                        "dob",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                required={mode === "signup"}
+                                                className="mt-1"
+                                            />
+                                        </div>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
@@ -309,7 +363,7 @@ export default function Auth() {
 
                             <Button
                                 type="submit"
-                                className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
+                                className="w-full hover:opacity-90 transition-opacity"
                                 disabled={isLoading}
                             >
                                 {isLoading ? (
