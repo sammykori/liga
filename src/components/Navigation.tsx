@@ -6,24 +6,12 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import MenuOverlay from "./MenuOverlay";
 import { User } from "@supabase/supabase-js";
+import { useAuthUser } from "@/hooks/useAuthUser";
 
 export function Navigation() {
     const supabase = createClient();
-    const [user, setUser] = useState<User>();
+    const { data: user, isLoading } = useAuthUser();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            const { data, error } = await supabase.auth.getUser();
-            if (error) {
-                console.error("Error fetching user:", error);
-            } else {
-                setUser(data.user);
-            }
-        };
-
-        fetchUser();
-    }, [supabase]);
 
     console.log("Current user:", user);
 
