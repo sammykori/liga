@@ -166,7 +166,7 @@ function ProfileImage({ profileImage }: { profileImage: ProfileImageProp }) {
                 />
                 <div className="absolute  w-[90%] flex justify-center items-center bg-white border border-gray-500/50 rounded-full p-1 bottom-4 left-0 right-0 mx-auto  backdrop-blur">
                     <Dialog>
-                        <DialogTrigger className="w-full flex justify-center items-center px-4 py-2">
+                        <DialogTrigger className="w-full flex justify-center items-center px-4">
                             <Icon
                                 icon="solar:camera-outline"
                                 className="size-4"

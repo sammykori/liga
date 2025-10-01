@@ -2,11 +2,20 @@
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import { Database } from "@/types/database";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import MainInfoForm from "./MainInfoForm";
+import { useState } from "react";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
-function MainInfo({ stats }: { stats?: Profile }) {
-    console.log(stats);
+function MainInfo({ stats }: { stats: Profile }) {
+    const [open, setOpen] = useState(false);
     return (
         <div className="w-full bg-muted/30 rounded-2xl p-6 mb-6 text-center">
             <div className="flex flex-col xl:flex-row justify-around">
@@ -126,8 +135,19 @@ function MainInfo({ stats }: { stats?: Profile }) {
                 </div>
             </div>
             <div className="w-full flex justify-center items-center bg-white border border-gray-500/50 rounded-full p-1 backdrop-blur">
-                <Icon icon="mynaui:edit" className="size-4" />
-                <span className="text-sm font-medium ml-2">Edit</span>
+                <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger className="w-full flex justify-center items-center px-4 ">
+                        <Icon icon="mynaui:edit" className="size-4" />
+                        <span className="text-sm font-medium ml-2">Edit</span>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Edit Player Info</DialogTitle>
+
+                            <MainInfoForm stats={stats} closeModal={setOpen} />
+                        </DialogHeader>
+                    </DialogContent>
+                </Dialog>
             </div>
         </div>
     );

@@ -6,10 +6,21 @@ import {
 import { Icon } from "@iconify/react";
 import { Database } from "@/types/database";
 import dayjs from "dayjs";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { useState } from "react";
+import MoreInfoForm from "./MoreInfoForm";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
-function MoreInfo({ stats }: { stats?: Profile }) {
+function MoreInfo({ stats }: { stats: Profile }) {
+    const [open, setOpen] = useState(false);
+
     return (
         <div className="bg-muted/30 rounded-2xl p-4 mb-6">
             <Collapsible>
@@ -89,8 +100,24 @@ function MoreInfo({ stats }: { stats?: Profile }) {
                         </div>
                     </div>
                     <div className="w-full flex justify-center items-center bg-white border border-gray-500/50 rounded-full p-1 backdrop-blur">
-                        <Icon icon="mynaui:edit" className="size-4" />
-                        <span className="text-sm font-medium ml-2">Edit</span>
+                        <Dialog open={open} onOpenChange={setOpen}>
+                            <DialogTrigger className="w-full flex justify-center items-center px-4 ">
+                                <Icon icon="mynaui:edit" className="size-4" />
+                                <span className="text-sm font-medium ml-2">
+                                    Edit
+                                </span>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Edit Player Info</DialogTitle>
+
+                                    <MoreInfoForm
+                                        stats={stats}
+                                        closeModal={setOpen}
+                                    />
+                                </DialogHeader>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </CollapsibleContent>
             </Collapsible>
