@@ -5,19 +5,18 @@ async function fetchProfile(userId?: string) {
     const supabase = createClient();
     if (!userId) throw new Error("No userId provided");
 
-    const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
+    const { data, error } = await supabase.from("groups").select("*");
 
-    if (error) throw error;
+    if (error) {
+        console.log(error);
+        throw error;
+    }
     return data;
 }
 
-export function useProfile(userId?: string) {
+export function useGroup(userId?: string) {
     return useQuery({
-        queryKey: ["profile", userId],
+        queryKey: ["groups", userId],
         queryFn: () => fetchProfile(userId),
         enabled: !!userId, // only run if we have a user
     });

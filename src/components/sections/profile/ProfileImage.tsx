@@ -71,20 +71,20 @@ function ProfileImage({ profileImage }: { profileImage: ProfileImageProp }) {
         return publicUrl.publicUrl;
     }
 
-    async function updateProfilePic(userId: string, url: string | null) {
-        const { data, error } = await supabase
-            .from("profiles")
-            .update({ profile_url: url })
-            .eq("id", userId);
+    // async function updateProfilePic(userId: string, url: string | null) {
+    //     const { data, error } = await supabase
+    //         .from("profiles")
+    //         .update({ profile_url: url })
+    //         .eq("id", userId);
 
-        if (error) {
-            console.error("Error updating profile:", error);
-            toast("Error updating profile", {
-                description: "Error:" + error,
-            });
-        }
-        return data;
-    }
+    //     if (error) {
+    //         console.error("Error updating profile:", error);
+    //         toast("Error updating profile", {
+    //             description: "Error:" + error,
+    //         });
+    //     }
+    //     return data;
+    // }
 
     function handleChangeImage(file: File | null) {
         console.log(file);

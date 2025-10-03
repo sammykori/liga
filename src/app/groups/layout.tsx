@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
+import { BottomNavigation } from "@/components/BottomNavigation";
 
 export const metadata: Metadata = {
     title: "Liga",
@@ -11,5 +11,11 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode;
 }) {
-    return <Suspense>{children}</Suspense>;
+    return (
+        <div className="min-h-screen bg-background pb-20 relative">
+            {children}
+
+            <BottomNavigation />
+        </div>
+    );
 }

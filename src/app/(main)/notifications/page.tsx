@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Icon } from "@iconify/react";
-import SelectGroup from "@/components/sections/SelectGroup";
 
 // Mock notifications data
 const mockNotifications = [
@@ -58,8 +57,6 @@ export default function Notifications() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                <SelectGroup groups={["BG", "AS"]} />
-
                 <div className="mb-6">
                     <h2 className="text-sm font-medium text-muted-foreground mb-4">
                         Latest

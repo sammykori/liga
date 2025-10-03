@@ -1,9 +1,7 @@
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -131,7 +129,10 @@ function MainInfoForm({ stats, closeModal }: MainInfoFormProps) {
                                     </FormControl>
                                     <SelectContent>
                                         {positions.map((position, index) => (
-                                            <SelectItem value={position}>
+                                            <SelectItem
+                                                value={position}
+                                                key={index}
+                                            >
                                                 {position}
                                             </SelectItem>
                                         ))}

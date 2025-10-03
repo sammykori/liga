@@ -8,7 +8,8 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { AuthError } from "@supabase/supabase-js";
-
+import { useGroup } from "@/hooks/useGroups";
+import { getInitials } from "@/lib/helpers";
 interface MenuOverlayProps {
     isOpen: boolean;
     onClose: () => void;
@@ -35,6 +36,13 @@ export default function MenuOverlay({
     const router = useRouter();
     const supabase = createClient();
 
+    const { data: groups } = useGroup(user?.id);
+
+    const handleNavigation = (page: string) => {
+        onClose();
+        router.push(page);
+    };
+
     const handleLogout = async () => {
         try {
             const { error } = await supabase.auth.signOut();
@@ -53,34 +61,13 @@ export default function MenuOverlay({
 
     const menuSections: MenuSection[] = [
         {
-            title: "Groups",
-            items: [
-                {
-                    icon: "mdi:account-group",
-                    label: "Baller FC",
-                    action: () => {
-                        onClose();
-                        // Navigate to group details
-                    },
-                },
-                {
-                    icon: "mdi:account-group",
-                    label: "Baller FC",
-                    action: () => {
-                        onClose();
-                        // Navigate to group details
-                    },
-                },
-            ],
-        },
-        {
             title: "Quick actions",
             items: [
                 {
                     icon: "mdi:plus-circle",
                     label: "Create a new group",
                     action: () => {
-                        onClose();
+                        handleNavigation("create-new-group");
                         // Navigate to create group
                     },
                 },
@@ -88,7 +75,7 @@ export default function MenuOverlay({
                     icon: "mdi:soccer",
                     label: "Create a new match",
                     action: () => {
-                        onClose();
+                        handleNavigation("create-new-match");
                         // Navigate to create match
                     },
                 },
@@ -101,24 +88,21 @@ export default function MenuOverlay({
                     icon: "mdi:information",
                     label: "About",
                     action: () => {
-                        onClose();
-                        router.push("/about");
+                        handleNavigation("about");
                     },
                 },
                 {
                     icon: "mdi:shield-account",
                     label: "Privacy Policy",
                     action: () => {
-                        onClose();
-                        router.push("/privacy");
+                        handleNavigation("privacy");
                     },
                 },
                 {
                     icon: "mdi:help-circle",
                     label: "FAQ",
                     action: () => {
-                        onClose();
-                        router.push("/faq");
+                        handleNavigation("faq");
                     },
                 },
             ],
@@ -156,9 +140,9 @@ export default function MenuOverlay({
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* Header */}
-                    <div className="flex items-center justify-between p-6 border-b border-border">
+                    <div className="flex items-center justify-between p-4 border-b border-border">
                         <div className="flex items-center gap-3">
-                            <Avatar className="w-12 h-12">
+                            <Avatar className="w-8 h-8">
                                 <AvatarImage
                                     src={user?.user_metadata?.avatar_url}
                                 />
@@ -169,7 +153,7 @@ export default function MenuOverlay({
                                 </AvatarFallback>
                             </Avatar>
                             <div>
-                                <p className="text-sm text-muted-foreground">
+                                <p className="text-xs text-muted-foreground">
                                     Welcome Back,
                                 </p>
                                 <h2 className="text-lg font-semibold text-foreground">
@@ -192,67 +176,139 @@ export default function MenuOverlay({
 
                     {/* Menu Sections */}
                     <div className="p-6 space-y-8">
-                        {menuSections.map((section) => (
-                            <motion.div
-                                key={section.title}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.3, delay: 0.1 }}
-                            >
-                                <h3 className="text-lg font-semibold text-foreground mb-4">
-                                    {section.title}
-                                </h3>
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                duration: 0.3,
+                                delay: 0.1,
+                            }}
+                        >
+                            <h3 className="text-sm font-semibold text-foreground">
+                                Groups
+                            </h3>
 
-                                <div className="space-y-2">
-                                    {section.items.map((item, index) => (
+                            <div className="space-y-4 p-3">
+                                {groups &&
+                                    groups.map((item, index) => (
                                         <motion.button
-                                            key={`${item.label}-${index}`}
-                                            whileHover={{ scale: 1.02 }}
-                                            whileTap={{ scale: 0.98 }}
-                                            onClick={item.action}
-                                            className={`w-full flex items-center gap-4 p-4 rounded-lg transition-colors ${
-                                                item.variant === "destructive"
-                                                    ? "hover:bg-destructive/10 text-destructive"
-                                                    : "hover:bg-accent text-foreground"
-                                            }`}
+                                            key={`${item.name}-${index}`}
+                                            whileHover={{
+                                                scale: 1.02,
+                                            }}
+                                            whileTap={{
+                                                scale: 0.98,
+                                            }}
+                                            onClick={() =>
+                                                router.push(`groups/${item.id}`)
+                                            }
+                                            className={`w-full flex items-center gap-4 rounded-lg transition-colors ${"hover:bg-accent text-foreground"}`}
                                         >
-                                            <div
-                                                className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                                            <div className="w-8 aspect-square border p-1  rounded-full flex justify-center items-center relative">
+                                                {item.badge && (
+                                                    <Icon
+                                                        icon={item.badge}
+                                                        className="h-full w-full"
+                                                        style={{
+                                                            color: `${item.background_color}`,
+                                                        }}
+                                                    />
+                                                )}
+                                                <h1
+                                                    style={{
+                                                        color: `${item.foreground_color}`,
+                                                    }}
+                                                    className="font-black text-black absolute mx-auto text-[10px]"
+                                                >
+                                                    {getInitials(
+                                                        item.name || "FC"
+                                                    )}
+                                                </h1>
+                                            </div>
+
+                                            <span className="flex-1 text-left font-medium">
+                                                {item.name}
+                                            </span>
+
+                                            <Icon
+                                                icon="mdi:chevron-right"
+                                                className={`w-5 h-5 ${"text-muted-foreground"}`}
+                                            />
+                                        </motion.button>
+                                    ))}
+                            </div>
+                        </motion.div>
+                        {menuSections.map((section, index) => {
+                            return (
+                                <motion.div
+                                    key={index}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{
+                                        duration: 0.3,
+                                        delay: 0.1,
+                                    }}
+                                >
+                                    <h3 className="text-sm font-semibold text-foreground">
+                                        {section.title}
+                                    </h3>
+
+                                    <div className="space-y-4 p-3">
+                                        {section.items.map((item, index) => (
+                                            <motion.button
+                                                key={`${item.label}-${index}`}
+                                                whileHover={{
+                                                    scale: 1.02,
+                                                }}
+                                                whileTap={{
+                                                    scale: 0.98,
+                                                }}
+                                                onClick={item.action}
+                                                className={`w-full flex items-center gap-4 rounded-lg transition-colors ${
                                                     item.variant ===
                                                     "destructive"
-                                                        ? "bg-destructive/20"
-                                                        : "bg-muted"
+                                                        ? "hover:bg-destructive/10 text-destructive"
+                                                        : "hover:bg-accent text-foreground"
                                                 }`}
                                             >
+                                                <div
+                                                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                                                        item.variant ===
+                                                        "destructive"
+                                                            ? "bg-destructive/20"
+                                                            : "bg-muted"
+                                                    }`}
+                                                >
+                                                    <Icon
+                                                        icon={item.icon}
+                                                        className={`w-4 h-4 ${
+                                                            item.variant ===
+                                                            "destructive"
+                                                                ? "text-destructive"
+                                                                : "text-muted-foreground"
+                                                        }`}
+                                                    />
+                                                </div>
+
+                                                <span className="flex-1 text-left font-medium">
+                                                    {item.label}
+                                                </span>
+
                                                 <Icon
-                                                    icon={item.icon}
-                                                    className={`w-6 h-6 ${
+                                                    icon="mdi:chevron-right"
+                                                    className={`w-5 h-5 ${
                                                         item.variant ===
                                                         "destructive"
                                                             ? "text-destructive"
                                                             : "text-muted-foreground"
                                                     }`}
                                                 />
-                                            </div>
-
-                                            <span className="flex-1 text-left font-medium">
-                                                {item.label}
-                                            </span>
-
-                                            <Icon
-                                                icon="mdi:chevron-right"
-                                                className={`w-5 h-5 ${
-                                                    item.variant ===
-                                                    "destructive"
-                                                        ? "text-destructive"
-                                                        : "text-muted-foreground"
-                                                }`}
-                                            />
-                                        </motion.button>
-                                    ))}
-                                </div>
-                            </motion.div>
-                        ))}
+                                            </motion.button>
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
                     </div>
                 </motion.div>
             </motion.div>

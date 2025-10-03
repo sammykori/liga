@@ -2,16 +2,15 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
-import { useState, useEffect } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { useState } from "react";
 import MenuOverlay from "./MenuOverlay";
-import { User } from "@supabase/supabase-js";
 import { useAuthUser } from "@/hooks/useAuthUser";
+import { useRouter } from "next/navigation";
 
-export function Navigation() {
-    const supabase = createClient();
-    const { data: user, isLoading } = useAuthUser();
+export function Navigation({ variant }: { variant?: string }) {
+    const { data: user } = useAuthUser();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const router = useRouter();
 
     console.log("Current user:", user);
 
@@ -20,24 +19,47 @@ export function Navigation() {
             <motion.header
                 initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="sticky top-0 z-50 bg-card/80 backdrop-blur-lg border-b border-border shadow-soft"
+                className={`sticky top-0 z-50 ${
+                    variant === "active" ? "bg-card/80" : ""
+                } backdrop-blur-lg shadow-md`}
             >
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
-                        <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            className="flex items-center gap-3"
-                        >
-                            <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center">
-                                <Icon
-                                    icon="mdi:star-circle"
-                                    className="w-6 h-6 text-primary-foreground"
-                                />
-                            </div>
-                            <h1 className="text-xl font-bold text-card-foreground">
-                                {user ? user.email : "PlayerRate"}
-                            </h1>
-                        </motion.div>
+                        {variant ? (
+                            <motion.div
+                                whileHover={{ scale: 1.05 }}
+                                className="flex items-center gap-3"
+                            >
+                                <div
+                                    onClick={() => router.back()}
+                                    className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center"
+                                >
+                                    <Icon
+                                        icon="famicons:arrow-back"
+                                        className={`w-6 h-6 ${
+                                            variant === "action"
+                                                ? "text-white"
+                                                : "text-black"
+                                        }`}
+                                    />
+                                </div>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                whileHover={{ scale: 1.05 }}
+                                className="flex items-center gap-3"
+                            >
+                                <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center">
+                                    <Icon
+                                        icon="mdi:star-circle"
+                                        className="w-6 h-6"
+                                    />
+                                </div>
+                                <h1 className="text-xl font-bold text-card-foreground">
+                                    {user ? user.email : "PlayerRate"}
+                                </h1>
+                            </motion.div>
+                        )}
 
                         <Button
                             variant="ghost"
@@ -46,7 +68,11 @@ export function Navigation() {
                         >
                             <Icon
                                 icon="mdi:dots-horizontal"
-                                className="w-5 h-5 text-muted-foreground"
+                                className={`w-6 h-6 ${
+                                    variant === "action"
+                                        ? "text-white"
+                                        : "text-muted-foreground"
+                                }`}
                             />
                         </Button>
                     </div>

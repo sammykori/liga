@@ -14,7 +14,7 @@ export default function DashboardLayout({
 }) {
     return (
         <div className="min-h-screen bg-background pb-20 relative">
-            <Navigation />
+            <Navigation variant="action" />
 
             {children}
 

@@ -13,7 +13,7 @@ export function AuthWatcher() {
         });
 
         return () => subscription.subscription.unsubscribe();
-    }, [queryClient]);
+    }, [queryClient, supabase]);
 
     return null; // doesn’t render anything
 }
