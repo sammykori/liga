@@ -12,7 +12,21 @@ import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-function MobileTable({ data }: { data: any[] }) {
+export interface Player {
+    id: string;
+    name: string;
+    position: string;
+    role: string;
+    gPts: number;
+    tPts: number;
+    mp: number;
+    w: number;
+    d: number;
+    rank: number;
+    rating: number;
+}
+
+function MobileTable({ data }: { data: Player[] }) {
     return (
         <Tabs defaultValue="short" className="w-full">
             <TabsList className="w-full ">

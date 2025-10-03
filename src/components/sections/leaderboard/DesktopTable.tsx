@@ -11,7 +11,21 @@ import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-function DesktopTable({ data }: { data: any[] }) {
+export interface Player {
+    id: string;
+    name: string;
+    position: string;
+    role: string;
+    gPts: number;
+    tPts: number;
+    mp: number;
+    w: number;
+    d: number;
+    rank: number;
+    rating: number;
+}
+
+function DesktopTable({ data }: { data: Player[] }) {
     return (
         <Card className="py-2 border-none">
             <Table>
