@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { PostgrestError } from "@supabase/supabase-js";
 
 const passwordSchema = z
     .object({
@@ -79,10 +80,13 @@ export default function Page() {
             });
 
             router.push("/");
-        } catch (error: any) {
-            toast("Error updating password", {
-                description: error.message || "An unexpected error occurred.",
-            });
+        } catch (error) {
+            if (error instanceof PostgrestError) {
+                toast("Error updating password", {
+                    description:
+                        error.message || "An unexpected error occurred.",
+                });
+            }
         } finally {
             setIsLoading(false);
         }
