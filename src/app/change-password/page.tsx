@@ -53,7 +53,7 @@ export default function Page() {
             }
         };
         checkSession();
-    }, [router]);
+    }, [router, supabase]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
