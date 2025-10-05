@@ -8,21 +8,19 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const token_hash = searchParams.get("token_hash");
     const type = searchParams.get("type") as EmailOtpType | null;
-    const next = searchParams.get("next") ?? "/";
 
-    if (token_hash && type) {
-        const supabase = await createClient();
+    if (!token_hash || !type) return redirect("/error");
 
-        const { error } = await supabase.auth.verifyOtp({
-            type,
-            token_hash,
-        });
-        if (!error) {
-            // redirect user to specified redirect URL or root of app
-            redirect(next);
-        }
+    const supabase = await createClient();
+    const { error } = await supabase.auth.verifyOtp({ token_hash, type });
+
+    if (error) return redirect("/error");
+
+    if (type === "recovery") {
+        // User came from password reset link
+        redirect("/change-password");
     }
 
-    // redirect the user to an error page with some instructions
-    redirect("/error");
+    // Default: other verification (signup, etc.)
+    redirect("/");
 }

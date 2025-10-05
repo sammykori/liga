@@ -106,7 +106,7 @@ export default function Auth() {
                 const { error } = await supabase.auth.resetPasswordForEmail(
                     formData.email,
                     {
-                        redirectTo: `${window.location.origin}/change-password`,
+                        redirectTo: `${window.location.origin}`,
                     }
                 );
 
@@ -134,11 +134,11 @@ export default function Auth() {
                 }
 
                 if (mode === "signup") {
-                    const { error } = await supabase.auth.signUp({
+                    const { data, error } = await supabase.auth.signUp({
                         email: formData.email,
                         password: formData.password,
                         options: {
-                            emailRedirectTo: `${window.location.origin}/auth/callback`,
+                            emailRedirectTo: `${window.location.origin}/auth/confirm`,
                             data: {
                                 givenName: formData.givenName,
                                 lastName: formData.lastName,
@@ -146,8 +146,22 @@ export default function Auth() {
                             },
                         },
                     });
+                    if (!data.user) {
+                        console.warn(
+                            "User not created: email may already exist."
+                        );
+                        toast.error("User not created:", {
+                            description: "Email may already exist.",
+                        });
+                    }
 
-                    if (error) throw error;
+                    if (error) {
+                        console.error(error);
+
+                        toast.error("Signup error:", {
+                            description: error.name + ": " + error.message,
+                        });
+                    }
 
                     toast.success("Account created successfully", {
                         description:
@@ -160,7 +174,14 @@ export default function Auth() {
                         password: formData.password,
                     });
 
-                    if (error) throw error;
+                    if (error) {
+                        console.error(error);
+
+                        toast.error("Invalid username or password", {
+                            description:
+                                "Please check your email and password are correct.",
+                        });
+                    }
 
                     // Navigation is handled by auth state change
                 }
@@ -245,13 +266,13 @@ export default function Auth() {
                                     >
                                         <div>
                                             <Label
-                                                htmlFor="name"
+                                                htmlFor="givenname"
                                                 className="text-card-foreground"
                                             >
                                                 Given Name
                                             </Label>
                                             <Input
-                                                id="name"
+                                                id="givenname"
                                                 type="text"
                                                 placeholder="Enter your given name"
                                                 value={formData.givenName}
@@ -267,15 +288,15 @@ export default function Auth() {
                                         </div>
                                         <div>
                                             <Label
-                                                htmlFor="name"
+                                                htmlFor="lastname"
                                                 className="text-card-foreground"
                                             >
                                                 Last Name
                                             </Label>
                                             <Input
-                                                id="name"
+                                                id="lastname"
                                                 type="text"
-                                                placeholder="Enter your name"
+                                                placeholder="Enter your last name"
                                                 value={formData.lastName}
                                                 onChange={(e) =>
                                                     handleInputChange(
@@ -289,15 +310,14 @@ export default function Auth() {
                                         </div>
                                         <div>
                                             <Label
-                                                htmlFor="name"
+                                                htmlFor="lastname"
                                                 className="text-card-foreground"
                                             >
                                                 Date of Birth
                                             </Label>
                                             <Input
-                                                id="name"
+                                                id="lastname"
                                                 type="date"
-                                                placeholder="Enter your name"
                                                 value={formData.dob}
                                                 onChange={(e) =>
                                                     handleInputChange(
