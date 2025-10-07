@@ -20,6 +20,10 @@ import {
 import { QRCodeSVG } from "qrcode.react";
 import GroupRequestsPage from "@/components/sections/group/GroupRequestsPage";
 import GroupSquadPage from "@/components/sections/group/GroupSquadPage";
+import GroupEditForm from "@/components/sections/group/GroupEditForm";
+import { useGroupRole } from "@/hooks/useGroupRole";
+import { useAuthUser } from "@/hooks/useAuthUser";
+import { useSingleGroup } from "@/hooks/useSingleGroup";
 
 type Group = Database["public"]["Tables"]["groups"]["Row"];
 function Page() {
@@ -28,33 +32,22 @@ function Page() {
     const [groupData, setGroupData] = useState<Group>();
     const router = useRouter();
     const [copied, setCopied] = useState(false);
+    const [open, setOpen] = useState(false);
+
+    const { data: user, isLoading: isUserLoading } = useAuthUser();
+    const { data: group, isLoading: isGroupLoading } = useSingleGroup(groupId);
+    const { role, loading } = useGroupRole(groupId, user?.id);
 
     const handleCopy = async () => {
-        if (!groupData) return;
+        if (!group) return;
         await navigator.clipboard.writeText(
-            `${window.location.origin}/join/${groupData.join_code}`
+            `${window.location.origin}/join/${group.join_code}`
         );
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
     };
 
-    useEffect(() => {
-        async function fetchGroup() {
-            const { data, error } = await supabase
-                .from("groups")
-                .select("*")
-                .eq("id", groupId)
-                .single();
-
-            if (error) {
-                console.log(error);
-                return router.push("/404");
-            }
-            setGroupData(data);
-        }
-        fetchGroup();
-    }, [groupId, router, supabase]);
-    if (!groupData) {
+    if (isGroupLoading || loading || isUserLoading) {
         return;
     }
     return (
@@ -63,18 +56,36 @@ function Page() {
             <div className="w-full flex flex-col gap-4">
                 <div className="w-full flex justify-between items-end p-4">
                     <div>
-                        <h1 className="font-bold text-2xl">
-                            {groupData?.name}
-                        </h1>
+                        <h1 className="font-bold text-2xl">{group?.name}</h1>
                         <p className="text-sm">{groupData?.country}</p>
                         <p className="text-xs italic line-clamp-3">
-                            {groupData?.description}
+                            {group?.description}
                         </p>
                     </div>
                     <div className="flex gap-3">
-                        <div className="bg-gray-400/50 rounded-full size-8 p-2 flex items-center justify-center">
-                            <Icon icon="mynaui:edit" className="size-4" />
-                        </div>
+                        {role !== "user" && (
+                            <Dialog open={open} onOpenChange={setOpen}>
+                                <DialogTrigger>
+                                    <div className="bg-gray-400/50 rounded-full size-8 p-2 flex items-center justify-center">
+                                        <Icon
+                                            icon="mynaui:edit"
+                                            className="size-4"
+                                        />
+                                    </div>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>
+                                            Edit Group Details
+                                        </DialogTitle>
+                                    </DialogHeader>
+                                    <GroupEditForm
+                                        data={group!}
+                                        closeModal={setOpen}
+                                    />
+                                </DialogContent>
+                            </Dialog>
+                        )}
                         <Dialog>
                             <DialogTrigger>
                                 <div className="bg-gray-400/50 rounded-full size-8 p-2 flex items-center justify-center">
@@ -88,16 +99,16 @@ function Page() {
                                 <DialogHeader>
                                     <DialogTitle>
                                         Share the QR Code or Link below to
-                                        invite friends to {groupData.name}
+                                        invite friends to {group?.name}
                                     </DialogTitle>
                                     <div className="w-full flex flex-col justify-center items-center">
                                         <QRCodeSVG
-                                            value={`${window.location.origin}/join/${groupData.join_code}`}
+                                            value={`${window.location.origin}/join/${group?.join_code}`}
                                             title="QR Code to invite friends to group"
                                             marginSize={4}
                                         />
                                         <div className="flex flex-col w-full p-4 gap-2 items-center">
-                                            <p className="text-base truncate ">{`${window.location.origin}/join/${groupData.join_code}`}</p>
+                                            <p className="text-base truncate ">{`${window.location.origin}/join/${group?.join_code}`}</p>
                                             <Button
                                                 variant="outline"
                                                 size="sm"
