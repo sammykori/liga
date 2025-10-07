@@ -37,6 +37,7 @@ export default function MenuOverlay({
     const supabase = createClient();
 
     const { data: groups } = useGroup(user?.id);
+    console.log(groups);
 
     const handleNavigation = (page: string) => {
         onClose();
@@ -192,7 +193,7 @@ export default function MenuOverlay({
                                 {groups &&
                                     groups.map((item, index) => (
                                         <motion.button
-                                            key={`${item.name}-${index}`}
+                                            key={`${item.groups.name}-${index}`}
                                             whileHover={{
                                                 scale: 1.02,
                                             }}
@@ -200,34 +201,36 @@ export default function MenuOverlay({
                                                 scale: 0.98,
                                             }}
                                             onClick={() =>
-                                                router.push(`groups/${item.id}`)
+                                                router.push(
+                                                    `/groups/${item.groups.id}`
+                                                )
                                             }
                                             className={`w-full flex items-center gap-4 rounded-lg transition-colors ${"hover:bg-accent text-foreground"}`}
                                         >
                                             <div className="w-8 aspect-square border p-1  rounded-full flex justify-center items-center relative">
-                                                {item.badge && (
+                                                {item.groups.badge && (
                                                     <Icon
-                                                        icon={item.badge}
+                                                        icon={item.groups.badge}
                                                         className="h-full w-full"
                                                         style={{
-                                                            color: `${item.background_color}`,
+                                                            color: `${item.groups.background_color}`,
                                                         }}
                                                     />
                                                 )}
                                                 <h1
                                                     style={{
-                                                        color: `${item.foreground_color}`,
+                                                        color: `${item.groups.foreground_color}`,
                                                     }}
                                                     className="font-black text-black absolute mx-auto text-[10px]"
                                                 >
                                                     {getInitials(
-                                                        item.name || "FC"
+                                                        item.groups.name || "FC"
                                                     )}
                                                 </h1>
                                             </div>
 
                                             <span className="flex-1 text-left font-medium">
-                                                {item.name}
+                                                {item.groups.name}
                                             </span>
 
                                             <Icon

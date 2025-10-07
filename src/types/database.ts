@@ -333,7 +333,7 @@ export type Database = {
           {
             foreignKeyName: "player_group_stats_membership_id_fkey"
             columns: ["membership_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "group_memberships"
             referencedColumns: ["id"]
           },

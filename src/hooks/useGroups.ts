@@ -5,7 +5,15 @@ async function fetchProfile(userId?: string) {
     const supabase = createClient();
     if (!userId) throw new Error("No userId provided");
 
-    const { data, error } = await supabase.from("groups").select("*");
+    const { data, error } = await supabase
+        .from("group_memberships")
+        .select(
+            `
+    group_id,
+    groups (*)
+  `
+        )
+        .eq("user_id", userId);
 
     if (error) {
         console.log(error);

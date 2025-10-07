@@ -11,7 +11,7 @@ type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 type PlayerStatsRow = Database["public"]["Tables"]["player_group_stats"]["Row"];
 
 type GroupMembershipWithStats = GroupMembershipRow & {
-    profiles: Pick<ProfileRow, "first_name"> | null;
+    profiles: Pick<ProfileRow, "first_name" | "last_name"> | null;
     player_group_stats: Pick<
         PlayerStatsRow,
         "goals" | "assists" | "matches_played" | "rating"

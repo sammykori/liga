@@ -1,12 +1,48 @@
+"use client";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { Database } from "@/types/database";
 import { getInitials } from "@/lib/helpers";
+import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
-type Group = Database["public"]["Tables"]["groups"]["Row"];
+type GroupMembershipRow =
+    Database["public"]["Tables"]["group_memberships"]["Row"];
+type PickedGM = Pick<GroupMembershipRow, "group_id"> | null;
+type GroupsRow = Database["public"]["Tables"]["groups"]["Row"];
 
-function SelectGroup({ groups }: { groups: Group[] }) {
+type GroupMembershipWithStats = PickedGM & {
+    groups: GroupsRow;
+};
+
+function SelectGroup({ groups }: { groups: GroupMembershipWithStats[] }) {
+    const [groupId, setGroupId] = useState<string>();
+    const [groupName, setGroupName] = useState<string>();
+    const [isSelect, setIsSelect] = useState(false);
+    useEffect(() => {
+        const cookie_groupId = Cookies.get("set_group");
+        const groupExists = groups.filter(
+            (val) => val.group_id === cookie_groupId
+        )[0];
+        console.log(groupExists);
+
+        if (groupExists) {
+            setGroupId(groupExists.group_id);
+            setGroupName(groupExists.groups.name);
+        } else {
+            setGroupId(groups[0].group_id);
+            setGroupName(groups[0].groups.name);
+            Cookies.set("set_group", groups[0].group_id);
+        }
+    }, [groups]);
+
+    function handleSelectGroup(group: GroupMembershipWithStats) {
+        setGroupId(group.group_id);
+        setGroupName(group.groups.name);
+        Cookies.set("set_group", group.group_id);
+    }
+
     return (
         <motion.section
             initial={{ opacity: 0, y: 20 }}
@@ -14,52 +50,87 @@ function SelectGroup({ groups }: { groups: Group[] }) {
             transition={{ duration: 0.5, delay: 0.1 }}
         >
             <div className="flex items-center justify-between">
-                <h3 className="text-base font-semibold text-foreground">
-                    Group: Baller FC
-                </h3>
-                <Button
-                    variant="link"
-                    size="sm"
-                    className="text-xs text-primary font-semibold"
-                >
-                    Explore all{" "}
-                    <Icon icon="mdi:arrow-right" className="w-4 h-4 ml-1" />
-                </Button>
+                <div className="flex gap-2 items-center">
+                    <h3 className="text-base font-semibold text-foreground">
+                        Group:
+                    </h3>
+                    <Button
+                        variant="link"
+                        onClick={() => setIsSelect(!isSelect)}
+                        className="font-bold text-lg"
+                    >
+                        {groupName}
+                        {isSelect ? (
+                            <Icon
+                                icon="basil:caret-up-solid"
+                                className="size-8 ml-1"
+                            />
+                        ) : (
+                            <Icon
+                                icon="basil:caret-down-solid"
+                                className="size-8 ml-1"
+                            />
+                        )}
+                    </Button>
+                </div>
             </div>
 
-            <GroupsFilter groups={groups} />
+            <GroupsFilter
+                groups={groups}
+                groupId={groupId}
+                onSelectGroup={handleSelectGroup}
+                isSelected={isSelect}
+            />
         </motion.section>
     );
 }
 
 export default SelectGroup;
 
-function GroupsFilter({ groups }: { groups: Group[] }) {
+function GroupsFilter({
+    groups,
+    groupId,
+    onSelectGroup,
+    isSelected,
+}: {
+    groups: GroupMembershipWithStats[];
+    groupId?: string;
+    onSelectGroup: (group: GroupMembershipWithStats) => void;
+    isSelected: boolean;
+}) {
+    if (!isSelected) return;
     return (
-        <div className="flex gap-2 overflow-x-auto py-2">
+        <div className="flex gap-2 overflow-x-auto py-2 px-4">
             {groups.map((group, index) => (
                 <motion.div
                     key={index}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                 >
-                    <div className="w-12 aspect-square border p-1  rounded-full flex justify-center items-center relative">
-                        {group.badge && (
+                    <div
+                        onClick={() => onSelectGroup(group)}
+                        className={`w-10 aspect-square p-1 rounded-full flex border justify-center items-center relative ${
+                            group.group_id === groupId
+                                ? "scale-125 transition border-2 border-green-600 shadow-2xl"
+                                : ""
+                        }`}
+                    >
+                        {group.groups.badge && (
                             <Icon
-                                icon={group.badge}
+                                icon={group.groups.badge}
                                 className="h-full w-full"
                                 style={{
-                                    color: `${group.background_color}`,
+                                    color: `${group.groups.background_color}`,
                                 }}
                             />
                         )}
                         <h1
                             style={{
-                                color: `${group.foreground_color}`,
+                                color: `${group.groups.foreground_color}`,
                             }}
                             className="font-black text-white absolute mx-auto text-xs"
                         >
-                            {getInitials(group.name || "FC")}
+                            {getInitials(group.groups.name || "FC")}
                         </h1>
                     </div>
                 </motion.div>
