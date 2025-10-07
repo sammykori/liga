@@ -138,7 +138,7 @@ export default function Auth() {
                         email: formData.email,
                         password: formData.password,
                         options: {
-                            emailRedirectTo: `${window.location.origin}/auth/confirm`,
+                            emailRedirectTo: `${window.location.origin}`,
                             data: {
                                 givenName: formData.givenName,
                                 lastName: formData.lastName,

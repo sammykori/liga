@@ -8,6 +8,18 @@ import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Database } from "@/types/database";
+import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { QRCodeSVG } from "qrcode.react";
+import GroupRequestsPage from "@/components/sections/group/GroupRequestsPage";
+import GroupSquadPage from "@/components/sections/group/GroupSquadPage";
 
 type Group = Database["public"]["Tables"]["groups"]["Row"];
 function Page() {
@@ -15,7 +27,17 @@ function Page() {
     const { groupId } = useParams<{ groupId: string }>();
     const [groupData, setGroupData] = useState<Group>();
     const router = useRouter();
-    console.log(groupId);
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = async () => {
+        if (!groupData) return;
+        await navigator.clipboard.writeText(
+            `${window.location.origin}/join/${groupData.join_code}`
+        );
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+    };
+
     useEffect(() => {
         async function fetchGroup() {
             const { data, error } = await supabase
@@ -53,9 +75,53 @@ function Page() {
                         <div className="bg-gray-400/50 rounded-full size-8 p-2 flex items-center justify-center">
                             <Icon icon="mynaui:edit" className="size-4" />
                         </div>
-                        <div className="bg-gray-400/50 rounded-full size-8 p-2 flex items-center justify-center">
-                            <Icon icon="uil:qrcode-scan" className="size-4" />
-                        </div>
+                        <Dialog>
+                            <DialogTrigger>
+                                <div className="bg-gray-400/50 rounded-full size-8 p-2 flex items-center justify-center">
+                                    <Icon
+                                        icon="uil:qrcode-scan"
+                                        className="size-4"
+                                    />
+                                </div>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>
+                                        Share the QR Code or Link below to
+                                        invite friends to {groupData.name}
+                                    </DialogTitle>
+                                    <div className="w-full flex flex-col justify-center items-center">
+                                        <QRCodeSVG
+                                            value={`${window.location.origin}/join/${groupData.join_code}`}
+                                            title="QR Code to invite friends to group"
+                                            marginSize={4}
+                                        />
+                                        <div className="flex flex-col w-full p-4 gap-2 items-center">
+                                            <p className="text-base truncate ">{`${window.location.origin}/join/${groupData.join_code}`}</p>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={handleCopy}
+                                                className="flex items-center gap-2"
+                                            >
+                                                {copied ? (
+                                                    <Icon
+                                                        icon="octicon:check-16"
+                                                        className="h-4 w-4"
+                                                    />
+                                                ) : (
+                                                    <Icon
+                                                        icon="solar:copy-linear"
+                                                        className="h-4 w-4"
+                                                    />
+                                                )}
+                                                {copied ? "Copied!" : "Copy"}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </DialogHeader>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </div>
 
@@ -78,6 +144,7 @@ function Page() {
                             <TabsTrigger value="matches">Matches</TabsTrigger>
                             <TabsTrigger value="squad">Squad</TabsTrigger>
                             <TabsTrigger value="teams">Teams</TabsTrigger>
+                            <TabsTrigger value="requests">Requests</TabsTrigger>
                         </TabsList>
                         <TabsContent value="matches" className="w-full h-full">
                             <div className="w-full h-full p-4 border rounded-xl">
@@ -86,10 +153,13 @@ function Page() {
                         </TabsContent>
                         <TabsContent value="squad">
                             <div className="w-full h-full p-4 border rounded-xl">
-                                <TopPlayers />
+                                <GroupSquadPage groupId={groupId} />
                             </div>
                         </TabsContent>
                         <TabsContent value="teams">Coming soon.</TabsContent>
+                        <TabsContent value="requests">
+                            <GroupRequestsPage />
+                        </TabsContent>
                     </Tabs>
                 </div>
             </div>

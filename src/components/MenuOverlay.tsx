@@ -67,7 +67,7 @@ export default function MenuOverlay({
                     icon: "mdi:plus-circle",
                     label: "Create a new group",
                     action: () => {
-                        handleNavigation("create-new-group");
+                        handleNavigation("/create-new-group");
                         // Navigate to create group
                     },
                 },
@@ -75,7 +75,7 @@ export default function MenuOverlay({
                     icon: "mdi:soccer",
                     label: "Create a new match",
                     action: () => {
-                        handleNavigation("create-new-match");
+                        handleNavigation("/create-new-match");
                         // Navigate to create match
                     },
                 },

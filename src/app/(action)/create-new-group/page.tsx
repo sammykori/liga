@@ -19,6 +19,7 @@ import { useAuthUser } from "@/hooks/useAuthUser";
 import { Icon } from "@iconify/react";
 import { getInitials } from "@/lib/helpers";
 import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 const badges = [
     {
@@ -51,6 +52,7 @@ const formSchema = z.object({
 
 function Page() {
     const { data: user } = useAuthUser();
+    const router = useRouter();
     const supabase = createClient();
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -72,6 +74,8 @@ function Page() {
             );
         if (data) {
             toast.success("New Group created!");
+            console.log(data);
+            router.push(`/groups/${data[0].id}`);
         }
         if (error) {
             console.log(error);

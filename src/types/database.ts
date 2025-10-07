@@ -49,6 +49,45 @@ export type Database = {
           },
         ]
       }
+      group_join_requests: {
+        Row: {
+          created_at: string | null
+          group_id: string
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          group_id: string
+          id?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          group_id?: string
+          id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_user"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_join_requests_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       group_memberships: {
         Row: {
           group_id: string
@@ -72,6 +111,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_user"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "group_memberships_group_id_fkey"
             columns: ["group_id"]
@@ -243,49 +289,52 @@ export type Database = {
           },
         ]
       }
-      player_stats: {
+      player_group_stats: {
         Row: {
-          assists: number
-          created_at: string
-          goals: number
-          group_id: string
+          assists: number | null
+          created_at: string | null
+          goals: number | null
           id: string
-          matches_played: number
-          points: number
-          rating: number
-          updated_at: string
-          user_id: string
+          matches_lost: number | null
+          matches_played: number | null
+          matches_won: number | null
+          membership_id: string | null
+          points: number | null
+          rating: number | null
+          updated_at: string | null
         }
         Insert: {
-          assists?: number
-          created_at?: string
-          goals?: number
-          group_id: string
+          assists?: number | null
+          created_at?: string | null
+          goals?: number | null
           id?: string
-          matches_played?: number
-          points?: number
-          rating?: number
-          updated_at?: string
-          user_id: string
+          matches_lost?: number | null
+          matches_played?: number | null
+          matches_won?: number | null
+          membership_id?: string | null
+          points?: number | null
+          rating?: number | null
+          updated_at?: string | null
         }
         Update: {
-          assists?: number
-          created_at?: string
-          goals?: number
-          group_id?: string
+          assists?: number | null
+          created_at?: string | null
+          goals?: number | null
           id?: string
-          matches_played?: number
-          points?: number
-          rating?: number
-          updated_at?: string
-          user_id?: string
+          matches_lost?: number | null
+          matches_played?: number | null
+          matches_won?: number | null
+          membership_id?: string | null
+          points?: number | null
+          rating?: number | null
+          updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "player_stats_group_id_fkey"
-            columns: ["group_id"]
+            foreignKeyName: "player_group_stats_membership_id_fkey"
+            columns: ["membership_id"]
             isOneToOne: false
-            referencedRelation: "groups"
+            referencedRelation: "group_memberships"
             referencedColumns: ["id"]
           },
         ]
@@ -377,12 +426,16 @@ export type Database = {
     }
     Functions: {
       can_access_group: {
-        Args: { p_grp_id: string; p_user_id: string }
+        Args: { p_group_id: string; p_user_id: string }
         Returns: boolean
       }
       generate_group_code: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      is_user_in_group: {
+        Args: { g: string; u: string }
+        Returns: boolean
       }
     }
     Enums: {

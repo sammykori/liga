@@ -9,12 +9,37 @@ import { useGroup } from "@/hooks/useGroups";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import LoadingScreen from "@/components/LoadingScreen";
 import NoGroupData from "@/components/sections/home/NoGroupData";
+import { useEffect } from "react";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Home() {
+    const supabase = createClient();
     const { data: user, isLoading: isUserLoading } = useAuthUser();
 
     const { data: groups, isLoading: isGroupsLoading } = useGroup(user?.id);
-    console.log(groups);
+
+    useEffect(() => {
+        async function checkPendingJoin() {
+            const code = localStorage.getItem("pendingJoinCode");
+            if (!code) return;
+
+            const { data: group } = await supabase
+                .from("groups")
+                .select("id")
+                .eq("join_code", code)
+                .maybeSingle();
+
+            if (user && group) {
+                await supabase
+                    .from("group_join_requests")
+                    .insert({ group_id: group.id, user_id: user.id });
+                localStorage.removeItem("pendingJoinCode");
+                window.location.href = `/groups/${group.id}`;
+            }
+        }
+
+        checkPendingJoin();
+    }, []);
     if (isUserLoading || isGroupsLoading) {
         return <LoadingScreen />;
     }

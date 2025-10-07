@@ -38,7 +38,7 @@ export function Navigation({ variant }: { variant?: string }) {
                                         icon="famicons:arrow-back"
                                         className={`w-6 h-6 ${
                                             variant === "action"
-                                                ? "text-white"
+                                                ? "text-gray-400"
                                                 : "text-black"
                                         }`}
                                     />
