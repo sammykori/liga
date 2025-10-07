@@ -164,7 +164,7 @@ function Page() {
                         </TabsContent>
                         <TabsContent value="squad">
                             <div className="w-full h-full p-4 border rounded-xl">
-                                <GroupSquadPage groupId={groupId} />
+                                <GroupSquadPage groupId={groupId} role={role} />
                             </div>
                         </TabsContent>
                         <TabsContent value="teams">Coming soon.</TabsContent>

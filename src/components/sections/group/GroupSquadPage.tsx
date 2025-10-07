@@ -4,9 +4,27 @@ import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { PlayerCard } from "../../PlayerCard";
 import { useGroupPlayers } from "@/hooks/useGroupPlayers";
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "@/components/ui/drawer";
+import { Dialog, DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 
-function GroupSquadPage({ groupId }: { groupId: string }) {
+function GroupSquadPage({
+    groupId,
+    role,
+}: {
+    groupId: string;
+    role: string | null;
+}) {
     const { data: players } = useGroupPlayers(groupId);
+    console.log(role);
     if (!players) {
         return (
             <div>
@@ -32,7 +50,65 @@ function GroupSquadPage({ groupId }: { groupId: string }) {
                                 delay: index * 0.1,
                             }}
                         >
-                            <PlayerCard player={player} variant="simple" />
+                            <Drawer>
+                                <DrawerTrigger
+                                    disabled={!role || role === "user"}
+                                    className="w-full"
+                                >
+                                    <PlayerCard
+                                        player={player}
+                                        variant="simple"
+                                    />
+                                </DrawerTrigger>
+                                <DrawerContent>
+                                    <DrawerHeader>
+                                        <div className="w-full flex flex-col justify-center items-center gap-2">
+                                            <div className="size-28 bg-blue-200"></div>
+                                            <div>
+                                                <DialogTitle>
+                                                    {player.profiles?.last_name}{" "}
+                                                    {
+                                                        player.profiles
+                                                            ?.first_name
+                                                    }
+                                                </DialogTitle>
+                                                <DialogDescription className="text-gray-400 text-xs">
+                                                    {player.profiles.first_name}
+                                                </DialogDescription>
+                                            </div>
+                                        </div>
+                                    </DrawerHeader>
+                                    {player.role !== "owner" && (
+                                        <DrawerFooter>
+                                            <Button
+                                                variant="outline"
+                                                className="rounded-lg border px-4 py-2 items-center flex w-full justify-between"
+                                            >
+                                                {player.role === "user" ? (
+                                                    <h1>Make group admin</h1>
+                                                ) : player.role === "admin" ? (
+                                                    <h1>Dismiss as admin</h1>
+                                                ) : (
+                                                    ""
+                                                )}
+                                                <Icon
+                                                    icon="eos-icons:admin-outlined"
+                                                    className="size-6"
+                                                />
+                                            </Button>
+                                            <Button className="rounded-lg border px-4 py-2 items-center flex w-full justify-between">
+                                                <h1 className="text-red-500">
+                                                    Remove from group
+                                                </h1>
+                                                <Icon
+                                                    icon="gg:remove"
+                                                    className="size-6 text-red-500"
+                                                />
+                                            </Button>
+                                        </DrawerFooter>
+                                    )}
+                                </DrawerContent>
+                            </Drawer>
                         </motion.div>
                     ))}
             </div>
