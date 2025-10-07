@@ -3,69 +3,19 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { PlayerCard } from "../../PlayerCard";
-const players = [
-    {
-        id: "1",
-        name: "Kevin De Bruyne",
-        position: "CM",
-        team: "Team A",
-        rating: 9.2,
-        status: "available" as const,
-        goals: 12,
-        assists: 18,
-    },
-    {
-        id: "2",
-        name: "Mohammed Salah",
-        position: "RW",
-        team: "Team B",
-        rating: 8.8,
-        status: "paid" as const,
-        goals: 24,
-        assists: 8,
-    },
-    {
-        id: "3",
-        name: "Virgil van Dijk",
-        position: "CB",
-        team: "Team A",
-        rating: 8.5,
-        status: "available" as const,
-        goals: 3,
-        assists: 2,
-    },
-    {
-        id: "4",
-        name: "Erling Haaland",
-        position: "ST",
-        team: "Team B",
-        rating: 9.0,
-        status: "unavailable" as const,
-        goals: 31,
-        assists: 5,
-    },
-    {
-        id: "5",
-        name: "Luka Modric",
-        position: "CM",
-        team: "Team A",
-        rating: 8.3,
-        status: "available" as const,
-        goals: 5,
-        assists: 12,
-    },
-    {
-        id: "6",
-        name: "Kylian Mbappe",
-        position: "LW",
-        team: "Team B",
-        rating: 8.9,
-        status: "paid" as const,
-        goals: 28,
-        assists: 11,
-    },
-];
-function TopPlayers() {
+import Cookies from "js-cookie";
+import { useGroupPlayers } from "@/hooks/useGroupPlayers";
+import { useEffect } from "react";
+
+function TopPlayers({ groupId }: { groupId: string | undefined }) {
+    const { data: players } = useGroupPlayers(groupId!);
+    if (!players) {
+        return (
+            <div>
+                <h1>No players have been added yet.</h1>
+            </div>
+        );
+    }
     return (
         <motion.section
             initial={{ opacity: 0, y: 20 }}

@@ -9,11 +9,12 @@ import { useGroup } from "@/hooks/useGroups";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import LoadingScreen from "@/components/LoadingScreen";
 import NoGroupData from "@/components/sections/home/NoGroupData";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 
 export default function Home() {
     const supabase = createClient();
+    const [groupId, setGroupId] = useState<string>();
     const { data: user, isLoading: isUserLoading } = useAuthUser();
 
     const { data: groups, isLoading: isGroupsLoading } = useGroup(user?.id);
@@ -53,7 +54,13 @@ export default function Home() {
             ) : (
                 <div className="container mx-auto px-4 pt-4 pb-8 space-y-8">
                     {/* Group Section */}
-                    {groups && <SelectGroup groups={groups} />}
+                    {groups && (
+                        <SelectGroup
+                            groups={groups}
+                            groupId={groupId}
+                            setGroupId={setGroupId}
+                        />
+                    )}
 
                     {/* Live Match Section */}
                     <LiveMatchesCarousel />
@@ -62,7 +69,7 @@ export default function Home() {
                     <UpcomingMatches />
 
                     {/* Top Players Section */}
-                    <TopPlayers />
+                    <TopPlayers groupId={groupId} />
                 </div>
             )}
 

@@ -10,22 +10,10 @@ import {
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { GroupMembershipWithStats } from "@/components/PlayerCard";
 
-export interface Player {
-    id: string;
-    name: string;
-    position: string;
-    role: string;
-    gPts: number;
-    tPts: number;
-    mp: number;
-    w: number;
-    d: number;
-    rank: number;
-    rating: number;
-}
-
-function DesktopTable({ data }: { data: Player[] }) {
+function DesktopTable({ data }: { data: GroupMembershipWithStats[] }) {
+    if (!data) return;
     return (
         <Card className="py-2 border-none">
             <Table>
@@ -95,39 +83,40 @@ function DesktopTable({ data }: { data: Player[] }) {
                                         <AvatarFallback>CN</AvatarFallback>
                                     </Avatar>
                                     <span className="font-bold truncate text-xs">
-                                        Szobaslia amkkisin asjkdakda aksjdaskj
+                                        {player.profiles?.first_name}{" "}
+                                        {player.profiles?.last_name}
                                     </span>
                                 </div>
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.gPts}
+                                {player.player_group_stats?.rating}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.tPts}
+                                {player.player_group_stats?.rating}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.mp}
+                                {player.player_group_stats?.matches_played}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.w}
+                                {player.player_group_stats?.matches_played}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.d}
+                                {player.player_group_stats?.matches_played}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.d}
+                                {player.player_group_stats?.matches_played}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.d}
+                                {player.player_group_stats?.matches_played}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.d}
+                                {player.player_group_stats?.matches_played}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.d}
+                                {player.player_group_stats?.matches_played}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.d}
+                                {player.player_group_stats?.matches_played}
                             </TableCell>
                         </motion.tr>
                     ))}

@@ -16,8 +16,15 @@ type GroupMembershipWithStats = PickedGM & {
     groups: GroupsRow;
 };
 
-function SelectGroup({ groups }: { groups: GroupMembershipWithStats[] }) {
-    const [groupId, setGroupId] = useState<string>();
+function SelectGroup({
+    groups,
+    groupId,
+    setGroupId,
+}: {
+    groups: GroupMembershipWithStats[];
+    groupId: string | undefined;
+    setGroupId: (g: string) => void;
+}) {
     const [groupName, setGroupName] = useState<string>();
     const [isSelect, setIsSelect] = useState(false);
     useEffect(() => {
@@ -63,12 +70,12 @@ function SelectGroup({ groups }: { groups: GroupMembershipWithStats[] }) {
                         {isSelect ? (
                             <Icon
                                 icon="basil:caret-up-solid"
-                                className="size-8 ml-1"
+                                className="size-6 ml-1"
                             />
                         ) : (
                             <Icon
                                 icon="basil:caret-down-solid"
-                                className="size-8 ml-1"
+                                className="size-6 ml-1"
                             />
                         )}
                     </Button>
