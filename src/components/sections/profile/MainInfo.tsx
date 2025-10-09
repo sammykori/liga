@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import MainInfoForm from "./MainInfoForm";
 import { useState } from "react";
+import { positionInitials } from "@/lib/helpers";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -22,7 +23,7 @@ function MainInfo({ stats }: { stats: Profile }) {
                 <div className="">
                     <div className="flex items-center justify-center mb-4 gap-2">
                         <div className="px-2 rounded-md bg-amber-500 font-bold">
-                            ST
+                            {positionInitials(stats.position)}
                         </div>
                         <h2 className="text-xl font-bold text-foreground">
                             {stats?.first_name || "Player Name"}
@@ -30,17 +31,17 @@ function MainInfo({ stats }: { stats: Profile }) {
                     </div>
 
                     <div className="flex gap-4 justify-center mb-4">
-                        <div className="bg-muted rounded-lg px-4 py-1 flex items-center gap-2">
+                        <div className=" rounded-lg px-4 py-1 flex items-center gap-2">
                             <Icon icon="twemoji:flag-brazil" />
                             <span className="text-sm font-medium">
                                 {stats?.country || "Country"}
                             </span>
                         </div>
-                        <div className="bg-muted rounded-lg px-4 py-1 flex items-center gap-2">
+                        <div className=" rounded-lg px-4 py-1 flex items-center gap-2">
                             <Icon icon="line-md:map-marker-loop" />
                             <span className="text-sm font-medium">
                                 {" "}
-                                {stats?.county_state_city || "Country"}
+                                {stats?.county_state_city || "City"}
                             </span>
                         </div>
                     </div>

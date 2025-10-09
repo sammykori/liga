@@ -64,7 +64,7 @@ export default function Home() {
                 )}
 
                 {/* Live Match Section */}
-                <LiveMatchesCarousel />
+                <LiveMatchesCarousel groupId={groupId} />
 
                 {/* Upcoming Matches Section */}
                 <UpcomingMatches groupId={groupId} />

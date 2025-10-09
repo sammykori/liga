@@ -9,6 +9,7 @@ import { useGroupMatches } from "@/hooks/useGroupMatches";
 function UpcomingMatches({ groupId }: { groupId: string | undefined }) {
     const { data: matches } = useGroupMatches(groupId);
     const router = useRouter();
+    console.log(groupId, matches);
 
     const handleMatchClick = (matchId: string) => {
         router.push(`/match/${matchId}`);
@@ -38,7 +39,7 @@ function UpcomingMatches({ groupId }: { groupId: string | undefined }) {
             </div>
 
             <div className="space-y-3">
-                {matches.slice(1).map((match, index) => (
+                {matches.map((match, index) => (
                     <motion.div
                         key={match.id}
                         initial={{ opacity: 0, x: -20 }}

@@ -1,20 +1,31 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
-// import { MatchCard } from "../../MatchCard";
-// import { useRouter } from "next/navigation";
+import { MatchCard } from "../../MatchCard";
+import { useRouter } from "next/navigation";
+import { useGroupMatches } from "@/hooks/useGroupMatches";
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+} from "@/components/ui/carousel";
 
-// import {
-//     Carousel,
-//     CarouselContent,
-//     CarouselItem,
-// } from "@/components/ui/carousel";
+function LiveMatchesCarousel({ groupId }: { groupId: string | undefined }) {
+    const { data: matches } = useGroupMatches(groupId);
+    const router = useRouter();
+    console.log(groupId, matches);
 
-function LiveMatchesCarousel() {
-    // const router = useRouter();
-    // const handleMatchClick = (matchId: string) => {
-    //     router.push(`/match/${matchId}`);
-    // };
+    const handleMatchClick = (matchId: string) => {
+        router.push(`/match/${matchId}`);
+    };
+
+    if (!matches || matches.length < 1) {
+        return (
+            <div>
+                <h1>No matches have been added yet.</h1>
+            </div>
+        );
+    }
     return (
         <motion.section
             initial={{ opacity: 0, y: 20 }}
@@ -34,7 +45,7 @@ function LiveMatchesCarousel() {
                     <Icon icon="mdi:arrow-right" className="w-4 h-4 ml-1" />
                 </Button>
             </div>
-            {/* <Carousel
+            <Carousel
                 opts={{
                     loop: true,
                     inViewThreshold: 0.5,
@@ -42,17 +53,17 @@ function LiveMatchesCarousel() {
                 }}
             >
                 <CarouselContent>
-                    {matches.map((ma, index) => (
+                    {matches.map((match, index) => (
                         <CarouselItem key={index}>
                             <MatchCard
-                                match={ma}
+                                match={match}
                                 variant="hero"
-                                onClick={() => handleMatchClick(ma.id)}
+                                onClick={() => handleMatchClick(match.id)}
                             />
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-            </Carousel> */}
+            </Carousel>
         </motion.section>
     );
 }

@@ -8,3 +8,24 @@ export const getInitials = (name: string) => {
             ?.toUpperCase() ?? ""
     );
 };
+
+export const positionInitials = (position: string | null) => {
+    switch (position) {
+        case "forware":
+            return "FWD";
+            break;
+        case "defender":
+            return "DEF";
+            break;
+        case "midfielder":
+            return "MD";
+            break;
+        case "goalkeeper":
+            return "GK";
+            break;
+
+        default:
+            return "PL";
+            break;
+    }
+};

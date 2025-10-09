@@ -65,6 +65,7 @@ export function MatchCard({
                                     <Icon
                                         icon="mdi:shield"
                                         className="w-8 h-8"
+                                        color={match.teamA?.color}
                                     />
                                 </div>
                                 <h3 className="font-semibold">
@@ -73,7 +74,7 @@ export function MatchCard({
                             </div>
 
                             <div className="text-center">
-                                {match.status === "confirmed" ? (
+                                {match.status === "completed" ? (
                                     <div className="bg-white/20 rounded-lg px-6 py-3">
                                         <span className="text-3xl font-bold">
                                             {match.teamA_score} :{" "}
@@ -83,7 +84,7 @@ export function MatchCard({
                                 ) : (
                                     <div className="bg-white/20 rounded-lg px-6 py-3">
                                         <span className="text-lg font-semibold">
-                                            {match.match_time}
+                                            {match.match_time?.slice(0, -3)}
                                         </span>
                                     </div>
                                 )}
@@ -94,6 +95,7 @@ export function MatchCard({
                                     <Icon
                                         icon="mdi:shield"
                                         className="w-8 h-8"
+                                        color={match.teamB?.color}
                                     />
                                 </div>
                                 <h3 className="font-semibold">
