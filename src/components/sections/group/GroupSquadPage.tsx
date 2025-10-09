@@ -14,7 +14,6 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Dialog, DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 
 function GroupSquadPage({
     groupId,
@@ -32,6 +31,7 @@ function GroupSquadPage({
             </div>
         );
     }
+
     return (
         <motion.section
             initial={{ opacity: 0, y: 20 }}
@@ -65,16 +65,16 @@ function GroupSquadPage({
                                         <div className="w-full flex flex-col justify-center items-center gap-2">
                                             <div className="size-28 bg-blue-200"></div>
                                             <div>
-                                                <DialogTitle>
+                                                <DrawerTitle>
                                                     {player.profiles?.last_name}{" "}
                                                     {
                                                         player.profiles
                                                             ?.first_name
                                                     }
-                                                </DialogTitle>
-                                                <DialogDescription className="text-gray-400 text-xs">
+                                                </DrawerTitle>
+                                                <DrawerDescription className="text-gray-400 text-xs">
                                                     {player.profiles.first_name}
-                                                </DialogDescription>
+                                                </DrawerDescription>
                                             </div>
                                         </div>
                                     </DrawerHeader>

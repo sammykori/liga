@@ -127,6 +127,44 @@ export type Database = {
           },
         ]
       }
+      group_teams: {
+        Row: {
+          color: string
+          created_at: string | null
+          deleted_at: string | null
+          group_id: string
+          id: string
+          is_active: boolean | null
+          name: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string | null
+          deleted_at?: string | null
+          group_id: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+        }
+        Update: {
+          color?: string
+          created_at?: string | null
+          deleted_at?: string | null
+          group_id?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_teams_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       groups: {
         Row: {
           background_color: string | null
@@ -246,9 +284,14 @@ export type Database = {
           description: string | null
           group_id: string
           id: string
-          is_completed: boolean
-          man_of_the_match_id: string | null
           match_date: string
+          match_time: string | null
+          potm_id: string | null
+          status: Database["public"]["Enums"]["match_status"]
+          teamA_id: string
+          teamA_score: number | null
+          teamB_id: string
+          teamB_score: number
           title: string
           updated_at: string
           venue: string | null
@@ -259,9 +302,14 @@ export type Database = {
           description?: string | null
           group_id: string
           id?: string
-          is_completed?: boolean
-          man_of_the_match_id?: string | null
           match_date: string
+          match_time?: string | null
+          potm_id?: string | null
+          status?: Database["public"]["Enums"]["match_status"]
+          teamA_id: string
+          teamA_score?: number | null
+          teamB_id: string
+          teamB_score?: number
           title: string
           updated_at?: string
           venue?: string | null
@@ -272,9 +320,14 @@ export type Database = {
           description?: string | null
           group_id?: string
           id?: string
-          is_completed?: boolean
-          man_of_the_match_id?: string | null
           match_date?: string
+          match_time?: string | null
+          potm_id?: string | null
+          status?: Database["public"]["Enums"]["match_status"]
+          teamA_id?: string
+          teamA_score?: number | null
+          teamB_id?: string
+          teamB_score?: number
           title?: string
           updated_at?: string
           venue?: string | null
@@ -285,6 +338,71 @@ export type Database = {
             columns: ["group_id"]
             isOneToOne: false
             referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matches_teamA_id_fkey"
+            columns: ["teamA_id"]
+            isOneToOne: false
+            referencedRelation: "group_teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matches_teamB_id_fkey"
+            columns: ["teamB_id"]
+            isOneToOne: false
+            referencedRelation: "group_teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          group_id: string | null
+          id: string
+          link: string | null
+          message: string | null
+          read: boolean
+          title: string | null
+          type: Database["public"]["Enums"]["notification_type"] | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          group_id?: string | null
+          id?: string
+          link?: string | null
+          message?: string | null
+          read?: boolean
+          title?: string | null
+          type?: Database["public"]["Enums"]["notification_type"] | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          group_id?: string | null
+          id?: string
+          link?: string | null
+          message?: string | null
+          read?: boolean
+          title?: string | null
+          type?: Database["public"]["Enums"]["notification_type"] | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -335,6 +453,35 @@ export type Database = {
             columns: ["membership_id"]
             isOneToOne: true
             referencedRelation: "group_memberships"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      player_team_memberships: {
+        Row: {
+          created_at: string | null
+          id: string
+          team_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          team_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          team_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_team_memberships_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "group_teams"
             referencedColumns: ["id"]
           },
         ]
@@ -440,6 +587,13 @@ export type Database = {
     }
     Enums: {
       foot: "left" | "right" | "both"
+      match_status:
+        | "pending"
+        | "confirmed"
+        | "ended"
+        | "cancelled"
+        | "completed"
+      notification_type: "match" | "group" | "user" | "general"
       player_position: "goalkeeper" | "defender" | "midfielder" | "forward"
       sex: "male" | "female"
       user_role: "admin" | "user" | "owner"
@@ -571,6 +725,8 @@ export const Constants = {
   public: {
     Enums: {
       foot: ["left", "right", "both"],
+      match_status: ["pending", "confirmed", "ended", "cancelled", "completed"],
+      notification_type: ["match", "group", "user", "general"],
       player_position: ["goalkeeper", "defender", "midfielder", "forward"],
       sex: ["male", "female"],
       user_role: ["admin", "user", "owner"],

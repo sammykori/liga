@@ -3,20 +3,19 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
+import { Database } from "@/types/database";
+import dayjs from "dayjs";
+import relativeTime from "../../node_modules/dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
+type Match = Database["public"]["Tables"]["matches"]["Row"];
+type Teams = Database["public"]["Tables"]["group_teams"]["Row"];
+type MatchTeams = Match & {
+    teamA: Pick<Teams, "id" | "name" | "color"> | null;
+    teamB: Pick<Teams, "id" | "name" | "color"> | null;
+};
 interface MatchCardProps {
-    match: {
-        id: string;
-        teamA: string;
-        teamB: string;
-        scoreA?: number;
-        scoreB?: number;
-        date: string;
-        time: string;
-        venue: string;
-        isLive?: boolean;
-        status: string;
-    };
+    match: MatchTeams;
     variant?: "compact" | "hero";
     onClick?: () => void;
 }
@@ -36,7 +35,7 @@ export function MatchCard({
             >
                 <Card className="relative overflow-hidden bg-gray-800 text-primary-foreground shadow-strong">
                     <div className="absolute top-4 right-4">
-                        {match.isLive && (
+                        {match.status && (
                             <Button
                                 variant="outline"
                                 className="bg-white/20 text-white border-white/30"
@@ -56,7 +55,7 @@ export function MatchCard({
                                 {match.venue}
                             </h2>
                             <p className="text-primary-foreground/80">
-                                {match.date}
+                                {dayjs(match.match_date).fromNow()}
                             </p>
                         </div>
 
@@ -68,20 +67,23 @@ export function MatchCard({
                                         className="w-8 h-8"
                                     />
                                 </div>
-                                <h3 className="font-semibold">{match.teamA}</h3>
+                                <h3 className="font-semibold">
+                                    {match.teamA?.name}
+                                </h3>
                             </div>
 
                             <div className="text-center">
-                                {match.status === "finished" || match.isLive ? (
+                                {match.status === "confirmed" ? (
                                     <div className="bg-white/20 rounded-lg px-6 py-3">
                                         <span className="text-3xl font-bold">
-                                            {match.scoreA} : {match.scoreB}
+                                            {match.teamA_score} :{" "}
+                                            {match.teamB_score}
                                         </span>
                                     </div>
                                 ) : (
                                     <div className="bg-white/20 rounded-lg px-6 py-3">
                                         <span className="text-lg font-semibold">
-                                            {match.time}
+                                            {match.match_time}
                                         </span>
                                     </div>
                                 )}
@@ -94,7 +96,9 @@ export function MatchCard({
                                         className="w-8 h-8"
                                     />
                                 </div>
-                                <h3 className="font-semibold">{match.teamB}</h3>
+                                <h3 className="font-semibold">
+                                    {match.teamB?.name}
+                                </h3>
                             </div>
                         </div>
                     </div>
@@ -118,21 +122,22 @@ export function MatchCard({
                                 <Icon
                                     icon="mdi:shield"
                                     className="w-6 h-6 text-muted-foreground"
+                                    color={match.teamA?.color}
                                 />
                             </div>
-                            <p className="text-sm font-medium text-card-foreground">
-                                {match.teamA}
+                            <p className="text-xs font-medium text-card-foreground">
+                                {match.teamA?.name}
                             </p>
                         </div>
 
                         <div className="text-center">
-                            {match.status === "finished" || match.isLive ? (
+                            {match.status === "confirmed" ? (
                                 <span className="text-xl font-bold text-card-foreground">
-                                    {match.scoreA} : {match.scoreB}
+                                    {match.teamA_score} : {match.teamB_score}
                                 </span>
                             ) : (
                                 <span className="text-sm text-muted-foreground">
-                                    {match.time}
+                                    {match.match_time?.slice(0, -3)}
                                 </span>
                             )}
                         </div>
@@ -142,19 +147,20 @@ export function MatchCard({
                                 <Icon
                                     icon="mdi:shield"
                                     className="w-6 h-6 text-muted-foreground"
+                                    color={match.teamB?.color}
                                 />
                             </div>
-                            <p className="text-sm font-medium text-card-foreground">
-                                {match.teamB}
+                            <p className="text-xs font-medium text-card-foreground">
+                                {match.teamB?.name}
                             </p>
                         </div>
                     </div>
 
                     <div className="text-right">
-                        <p className="text-sm text-muted-foreground">
-                            {match.date}
+                        <p className="text-xs text-muted-foreground">
+                            {dayjs(match.match_date).fromNow()}
                         </p>
-                        {match.isLive && (
+                        {match.status === "confirmed" && (
                             <Button className="mt-1">
                                 <Icon
                                     icon="mdi:circle"

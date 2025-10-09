@@ -24,6 +24,8 @@ import GroupEditForm from "@/components/sections/group/GroupEditForm";
 import { useGroupRole } from "@/hooks/useGroupRole";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { useSingleGroup } from "@/hooks/useSingleGroup";
+import GroupTeamsPage from "@/components/sections/group/GroupTeamsPage";
+import GroupMatchesPage from "@/components/sections/group/GroupMatchesPage";
 
 type Group = Database["public"]["Tables"]["groups"]["Row"];
 function Page() {
@@ -159,7 +161,10 @@ function Page() {
                         </TabsList>
                         <TabsContent value="matches" className="w-full h-full">
                             <div className="w-full h-full p-4 border rounded-xl">
-                                <UpcomingMatches />
+                                <GroupMatchesPage
+                                    groupId={groupId}
+                                    role={role}
+                                />
                             </div>
                         </TabsContent>
                         <TabsContent value="squad">
@@ -167,9 +172,15 @@ function Page() {
                                 <GroupSquadPage groupId={groupId} role={role} />
                             </div>
                         </TabsContent>
-                        <TabsContent value="teams">Coming soon.</TabsContent>
+                        <TabsContent value="teams">
+                            <div className="w-full h-full p-4 border rounded-xl">
+                                <GroupTeamsPage groupId={groupId} role={role} />
+                            </div>
+                        </TabsContent>
                         <TabsContent value="requests">
-                            <GroupRequestsPage />
+                            <div className="w-full h-full p-4 border rounded-xl">
+                                <GroupRequestsPage />
+                            </div>
                         </TabsContent>
                     </Tabs>
                 </div>

@@ -66,7 +66,7 @@ export default function Home() {
                     <LiveMatchesCarousel />
 
                     {/* Upcoming Matches Section */}
-                    <UpcomingMatches />
+                    <UpcomingMatches groupId={groupId} />
 
                     {/* Top Players Section */}
                     <TopPlayers groupId={groupId} />
