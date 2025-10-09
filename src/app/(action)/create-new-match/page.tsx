@@ -17,7 +17,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { Icon } from "@iconify/react";
-import { getInitials } from "@/lib/helpers";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import {

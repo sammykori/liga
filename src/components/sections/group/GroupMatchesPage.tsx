@@ -4,16 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { MatchCard } from "@/components/MatchCard";
 import { useGroupMatches } from "@/hooks/useGroupMatches";
-import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
-} from "@/components/ui/drawer";
+
 import { useRouter } from "next/navigation";
 
 function GroupMatchesPage({

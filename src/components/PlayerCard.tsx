@@ -1,7 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { Database } from "@/types/database";
 
@@ -35,10 +34,10 @@ export function PlayerCard({ player, variant = "simple" }: PlayerCardProps) {
         }
     };
 
-    const getRatingColor = (rating: number) => {
+    const getRatingColor = (rating?: number | null) => {
+        if (!rating) return "";
         if (rating >= 8) return "bg-success text-success-foreground";
         if (rating >= 6) return "bg-warning text-warning-foreground";
-        return "";
     };
 
     if (variant === "compact") {
@@ -72,7 +71,7 @@ export function PlayerCard({ player, variant = "simple" }: PlayerCardProps) {
                         <div className="flex items-center gap-2">
                             <div
                                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${getRatingColor(
-                                    player.player_group_stats?.rating!
+                                    player.player_group_stats?.rating
                                 )}`}
                             >
                                 {player.player_group_stats?.rating}

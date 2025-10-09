@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Icon } from "@iconify/react";
 import { useGroupRequests } from "@/hooks/useGroupRequests";
 import { useParams } from "next/navigation";
 import dayjs from "dayjs";
@@ -19,6 +18,26 @@ function GroupRequestsPage() {
     const { data: groupRequests } = useGroupRequests(groupId);
     const queryClient = useQueryClient();
 
+    const mutation = useMutation({
+        mutationFn: async (reqId: string) => {
+            const { data, error } = await supabase
+                .from("group_join_requests")
+                .update({ status: "approved" })
+                .eq("id", reqId);
+            if (error) throw error;
+            return data;
+        },
+        onSuccess: (updatedGroupRequest) => {
+            // Update cached profile for this user
+            queryClient.setQueryData(
+                ["groupsRequests", groupId],
+                updatedGroupRequest
+            );
+            // Optionally invalidate related queries
+            queryClient.invalidateQueries({ queryKey: ["groupsRequests"] });
+        },
+    });
+
     if (groupRequests && groupRequests?.length < 1) {
         return (
             <div className="p-4">
@@ -26,35 +45,15 @@ function GroupRequestsPage() {
             </div>
         );
     }
+
     async function approve(
         reqId: string,
         userId: string,
         userName: string | null
     ) {
         if (!groupRequests) return;
-        useMutation({
-            mutationFn: async () => {
-                const { data, error } = await supabase
-                    .from("group_join_requests")
-                    .update({ status: "approved" })
-                    .eq("id", reqId);
-                if (error) throw error;
-                return data;
-            },
-            onSuccess: (updatedGroupRequest) => {
-                // Update cached profile for this user
-                queryClient.setQueryData(
-                    ["groupsRequests", groupId],
-                    updatedGroupRequest
-                );
-                // Optionally invalidate related queries
-                queryClient.invalidateQueries({ queryKey: ["groupsRequests"] });
-            },
-        });
-        await supabase
-            .from("group_join_requests")
-            .update({ status: "approved" })
-            .eq("id", reqId);
+
+        mutation.mutate(reqId);
 
         await supabase
             .from("group_memberships")

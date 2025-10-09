@@ -1,4 +1,3 @@
-import { PlayerRating } from "@/types/mock";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { useIsMobile } from "@/hooks/use-mobile";

@@ -29,7 +29,7 @@ export function useGroupRole(groupId?: string, userId?: string) {
         }
 
         fetchRole();
-    }, [groupId, userId]);
+    }, [groupId, userId, supabase]);
 
     return { role, loading, error };
 }

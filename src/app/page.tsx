@@ -40,7 +40,7 @@ export default function Home() {
         }
 
         checkPendingJoin();
-    }, []);
+    }, [supabase, user]);
     if (isUserLoading || isGroupsLoading) {
         return <LoadingScreen />;
     }

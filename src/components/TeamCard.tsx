@@ -1,13 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { Database } from "@/types/database";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -34,7 +32,7 @@ interface TeamsCardProps {
     variant?: "simple" | "compact";
 }
 
-export function TeamCard({ team, role, variant = "simple" }: TeamsCardProps) {
+export function TeamCard({ team, role }: TeamsCardProps) {
     const [open, setOpen] = useState<boolean>();
     return (
         <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>

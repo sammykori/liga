@@ -6,7 +6,6 @@ import { PlayerCard } from "../../PlayerCard";
 import { useGroupPlayers } from "@/hooks/useGroupPlayers";
 import {
     Drawer,
-    DrawerClose,
     DrawerContent,
     DrawerDescription,
     DrawerFooter,

@@ -83,7 +83,7 @@ function MoreInfoForm({ stats, closeModal }: MainInfoFormProps) {
                     <FormField
                         control={form.control}
                         name="height"
-                        render={({ field }) => (
+                        render={({}) => (
                             <FormItem>
                                 <FormLabel>Height</FormLabel>
                                 <FormControl>
@@ -105,7 +105,7 @@ function MoreInfoForm({ stats, closeModal }: MainInfoFormProps) {
                     <FormField
                         control={form.control}
                         name="weight"
-                        render={({ field }) => (
+                        render={({}) => (
                             <FormItem>
                                 <FormLabel>Weight</FormLabel>
                                 <FormControl>

@@ -2,17 +2,12 @@
 import { Navigation } from "@/components/Navigation";
 import { Icon } from "@iconify/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import UpcomingMatches from "@/components/sections/home/UpcomingMatches";
-import TopPlayers from "@/components/sections/home/TopPlayers";
-import { createClient } from "@/utils/supabase/client";
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { Database } from "@/types/database";
+import { useState } from "react";
+import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -27,12 +22,8 @@ import { useSingleGroup } from "@/hooks/useSingleGroup";
 import GroupTeamsPage from "@/components/sections/group/GroupTeamsPage";
 import GroupMatchesPage from "@/components/sections/group/GroupMatchesPage";
 
-type Group = Database["public"]["Tables"]["groups"]["Row"];
 function Page() {
-    const supabase = createClient();
     const { groupId } = useParams<{ groupId: string }>();
-    const [groupData, setGroupData] = useState<Group>();
-    const router = useRouter();
     const [copied, setCopied] = useState(false);
     const [open, setOpen] = useState(false);
 
@@ -59,7 +50,7 @@ function Page() {
                 <div className="w-full flex justify-between items-end p-4">
                     <div>
                         <h1 className="font-bold text-2xl">{group?.name}</h1>
-                        <p className="text-sm">{groupData?.country}</p>
+                        <p className="text-sm">{group?.country}</p>
                         <p className="text-xs italic line-clamp-3">
                             {group?.description}
                         </p>

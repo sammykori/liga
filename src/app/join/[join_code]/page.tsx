@@ -7,11 +7,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-function page() {
+function Page() {
     const supabase = createClient();
     const router = useRouter();
     const { join_code } = useParams<{ join_code: string }>();
-    const [groupata, setGroupData] = useState();
     const [message, setMessage] = useState<{
         text: string;
         status: string;
@@ -50,7 +49,7 @@ function page() {
             }
 
             // Create join request
-            const { data, error } = await supabase
+            const { error } = await supabase
                 .from("group_join_requests")
                 .insert({
                     group_id: group.id,
@@ -92,7 +91,7 @@ function page() {
         }
 
         handleJoin();
-    }, [join_code]);
+    }, [join_code, router, supabase]);
 
     return (
         <div className="w-full min-h-screen p-6 flex flex-col justify-center items-center">
@@ -126,4 +125,4 @@ function page() {
     );
 }
 
-export default page;
+export default Page;

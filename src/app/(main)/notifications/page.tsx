@@ -2,7 +2,6 @@
 import { motion } from "framer-motion";
 
 import { Card } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Icon } from "@iconify/react";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useAuthUser } from "@/hooks/useAuthUser";

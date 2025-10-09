@@ -2,34 +2,24 @@
 import { Navigation } from "@/components/Navigation";
 import { Icon } from "@iconify/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import UpcomingMatches from "@/components/sections/home/UpcomingMatches";
-import TopPlayers from "@/components/sections/home/TopPlayers";
-import { createClient } from "@/utils/supabase/client";
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { Database } from "@/types/database";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useParams } from "next/navigation";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { QRCodeSVG } from "qrcode.react";
 import GroupRequestsPage from "@/components/sections/group/GroupRequestsPage";
 import { useGroupRole } from "@/hooks/useGroupRole";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { useSingleMatch } from "@/hooks/useSingleMatch";
-import GroupTeamsPage from "@/components/sections/group/GroupTeamsPage";
 import dayjs from "dayjs";
 import MatchEditForm from "@/components/sections/match/MatchEditForm";
 
-type Group = Database["public"]["Tables"]["groups"]["Row"];
 function Page() {
     const { matchId } = useParams<{ matchId: string }>();
-    const router = useRouter();
     const [open, setOpen] = useState(false);
 
     const { data: user, isLoading: isUserLoading } = useAuthUser();

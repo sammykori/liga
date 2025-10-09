@@ -3,9 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { PlayerCard } from "../../PlayerCard";
-import Cookies from "js-cookie";
 import { useGroupPlayers } from "@/hooks/useGroupPlayers";
-import { useEffect } from "react";
 
 function TopPlayers({ groupId }: { groupId: string | undefined }) {
     const { data: players } = useGroupPlayers(groupId!);

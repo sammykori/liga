@@ -42,7 +42,7 @@ function SelectGroup({
             setGroupName(groups[0].groups.name);
             Cookies.set("set_group", groups[0].group_id);
         }
-    }, [groups]);
+    }, [groups, setGroupId]);
 
     function handleSelectGroup(group: GroupMembershipWithStats) {
         setGroupId(group.group_id);

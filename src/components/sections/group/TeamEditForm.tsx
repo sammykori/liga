@@ -11,10 +11,9 @@ import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Textarea } from "@/components/ui/textarea";
-import { useUpdateGroup } from "@/hooks/mutations/useUpdateGroup";
 import { toast } from "sonner";
 import { type Database } from "@/types/database";
+import { useUpdateTeam } from "@/hooks/mutations/useUpdateTeam";
 
 const formSchema = z.object({
     name: z.string().min(2).max(50),
@@ -27,21 +26,22 @@ type MainInfoFormProps = {
     closeModal: (o: boolean) => void;
 };
 function TeamEditForm({ data, closeModal }: MainInfoFormProps) {
-    const updateTeamMutation = useUpdateGroup();
+    const updateTeamMutation = useUpdateTeam();
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        // if (!data) return;
-        // try {
-        //     await updateTeamMutation.mutateAsync({
-        //         name: values.name,
-        //         color: values.color,
-        //     });
-        //     toast.success("Group updated Sucessfully");
-        //     closeModal(false);
-        // } catch (error) {
-        //     console.error("Update failed:", error);
-        //     toast.error("Failed to update group");
-        // }
+        if (!data) return;
+        try {
+            await updateTeamMutation.mutateAsync({
+                name: values.name,
+                color: values.color,
+                id: data.id,
+            });
+            toast.success("Group updated Sucessfully");
+            closeModal(false);
+        } catch (error) {
+            console.error("Update failed:", error);
+            toast.error("Failed to update group");
+        }
         console.log(values);
     }
 
