@@ -177,21 +177,21 @@ export default function MenuOverlay({
 
                     {/* Menu Sections */}
                     <div className="p-6 space-y-8">
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{
-                                duration: 0.3,
-                                delay: 0.1,
-                            }}
-                        >
-                            <h3 className="text-sm font-semibold text-foreground">
-                                Groups
-                            </h3>
+                        {groups && groups.length > 0 && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{
+                                    duration: 0.3,
+                                    delay: 0.1,
+                                }}
+                            >
+                                <h3 className="text-sm font-semibold text-foreground">
+                                    Groups
+                                </h3>
 
-                            <div className="space-y-4 p-3">
-                                {groups &&
-                                    groups.map((item, index) => (
+                                <div className="space-y-4 p-3">
+                                    {groups.map((item, index) => (
                                         <motion.button
                                             key={`${item.groups.name}-${index}`}
                                             whileHover={{
@@ -239,8 +239,9 @@ export default function MenuOverlay({
                                             />
                                         </motion.button>
                                     ))}
-                            </div>
-                        </motion.div>
+                                </div>
+                            </motion.div>
+                        )}
                         {menuSections.map((section, index) => {
                             return (
                                 <motion.div
@@ -257,57 +258,67 @@ export default function MenuOverlay({
                                     </h3>
 
                                     <div className="space-y-4 p-3">
-                                        {section.items.map((item, index) => (
-                                            <motion.button
-                                                key={`${item.label}-${index}`}
-                                                whileHover={{
-                                                    scale: 1.02,
-                                                }}
-                                                whileTap={{
-                                                    scale: 0.98,
-                                                }}
-                                                onClick={item.action}
-                                                className={`w-full flex items-center gap-4 rounded-lg transition-colors ${
-                                                    item.variant ===
-                                                    "destructive"
-                                                        ? "hover:bg-destructive/10 text-destructive"
-                                                        : "hover:bg-accent text-foreground"
-                                                }`}
-                                            >
-                                                <div
-                                                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                                        {section.items.map((item, index) => {
+                                            if (
+                                                groups &&
+                                                groups.length < 1 &&
+                                                item.label ===
+                                                    "Create a new match"
+                                            ) {
+                                                return;
+                                            }
+                                            return (
+                                                <motion.button
+                                                    key={`${item.label}-${index}`}
+                                                    whileHover={{
+                                                        scale: 1.02,
+                                                    }}
+                                                    whileTap={{
+                                                        scale: 0.98,
+                                                    }}
+                                                    onClick={item.action}
+                                                    className={`w-full flex items-center gap-4 rounded-lg transition-colors ${
                                                         item.variant ===
                                                         "destructive"
-                                                            ? "bg-destructive/20"
-                                                            : "bg-muted"
+                                                            ? "hover:bg-destructive/10 text-destructive"
+                                                            : "hover:bg-accent text-foreground"
                                                     }`}
                                                 >
+                                                    <div
+                                                        className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                                                            item.variant ===
+                                                            "destructive"
+                                                                ? "bg-destructive/20"
+                                                                : "bg-muted"
+                                                        }`}
+                                                    >
+                                                        <Icon
+                                                            icon={item.icon}
+                                                            className={`w-4 h-4 ${
+                                                                item.variant ===
+                                                                "destructive"
+                                                                    ? "text-destructive"
+                                                                    : "text-muted-foreground"
+                                                            }`}
+                                                        />
+                                                    </div>
+
+                                                    <span className="flex-1 text-left font-medium">
+                                                        {item.label}
+                                                    </span>
+
                                                     <Icon
-                                                        icon={item.icon}
-                                                        className={`w-4 h-4 ${
+                                                        icon="mdi:chevron-right"
+                                                        className={`w-5 h-5 ${
                                                             item.variant ===
                                                             "destructive"
                                                                 ? "text-destructive"
                                                                 : "text-muted-foreground"
                                                         }`}
                                                     />
-                                                </div>
-
-                                                <span className="flex-1 text-left font-medium">
-                                                    {item.label}
-                                                </span>
-
-                                                <Icon
-                                                    icon="mdi:chevron-right"
-                                                    className={`w-5 h-5 ${
-                                                        item.variant ===
-                                                        "destructive"
-                                                            ? "text-destructive"
-                                                            : "text-muted-foreground"
-                                                    }`}
-                                                />
-                                            </motion.button>
-                                        ))}
+                                                </motion.button>
+                                            );
+                                        })}
                                     </div>
                                 </motion.div>
                             );

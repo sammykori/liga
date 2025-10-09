@@ -21,7 +21,7 @@ function EmptyScreen({
     title = "No Group Yet",
     desc = `You haven&apos;t created any groups yet. Get started by
                     creating your first group.`,
-    icon = `bi:folder-x`,
+    icon = `fa6-solid:people-group`,
 }: EmptyScreenProp) {
     return (
         <Empty>

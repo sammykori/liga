@@ -8,9 +8,9 @@ import TopPlayers from "@/components/sections/home/TopPlayers";
 import { useGroup } from "@/hooks/useGroups";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import LoadingScreen from "@/components/LoadingScreen";
-import NoGroupData from "@/components/sections/home/NoGroupData";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import EmptyScreen from "@/components/EmptyScreen";
 
 export default function Home() {
     const supabase = createClient();
@@ -45,33 +45,33 @@ export default function Home() {
         return <LoadingScreen />;
     }
 
+    if (groups && groups.length < 1) {
+        return <EmptyScreen />;
+    }
+
     return (
         <div className="min-h-screen bg-background pb-20 relative">
             <Navigation />
 
-            {groups && groups?.length < 1 ? (
-                <NoGroupData />
-            ) : (
-                <div className="container mx-auto px-4 pt-4 pb-8 space-y-8">
-                    {/* Group Section */}
-                    {groups && (
-                        <SelectGroup
-                            groups={groups}
-                            groupId={groupId}
-                            setGroupId={setGroupId}
-                        />
-                    )}
+            <div className="container mx-auto px-4 pt-4 pb-8 space-y-8">
+                {/* Group Section */}
+                {groups && (
+                    <SelectGroup
+                        groups={groups}
+                        groupId={groupId}
+                        setGroupId={setGroupId}
+                    />
+                )}
 
-                    {/* Live Match Section */}
-                    <LiveMatchesCarousel />
+                {/* Live Match Section */}
+                <LiveMatchesCarousel />
 
-                    {/* Upcoming Matches Section */}
-                    <UpcomingMatches groupId={groupId} />
+                {/* Upcoming Matches Section */}
+                <UpcomingMatches groupId={groupId} />
 
-                    {/* Top Players Section */}
-                    <TopPlayers groupId={groupId} />
-                </div>
-            )}
+                {/* Top Players Section */}
+                <TopPlayers groupId={groupId} />
+            </div>
 
             <BottomNavigation />
         </div>
