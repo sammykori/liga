@@ -32,7 +32,7 @@ function MainInfo({ stats }: { stats: Profile }) {
 
                     <div className="flex gap-4 justify-center mb-4">
                         <div className=" rounded-lg px-4 py-1 flex items-center gap-2">
-                            <Icon icon="twemoji:flag-brazil" />
+                            <Icon icon="twemoji:flag-united-kingdom" />
                             <span className="text-sm font-medium">
                                 {stats?.country || "Country"}
                             </span>

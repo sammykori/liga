@@ -45,33 +45,32 @@ export default function Home() {
         return <LoadingScreen />;
     }
 
-    if (groups && groups.length < 1) {
-        return <EmptyScreen />;
-    }
-
     return (
         <div className="min-h-screen bg-background pb-20 relative">
             <Navigation />
+            {groups && groups.length < 1 ? (
+                <EmptyScreen />
+            ) : (
+                <div className="container mx-auto px-4 pt-4 pb-8 space-y-8">
+                    {/* Group Section */}
+                    {groups && (
+                        <SelectGroup
+                            groups={groups}
+                            groupId={groupId}
+                            setGroupId={setGroupId}
+                        />
+                    )}
 
-            <div className="container mx-auto px-4 pt-4 pb-8 space-y-8">
-                {/* Group Section */}
-                {groups && (
-                    <SelectGroup
-                        groups={groups}
-                        groupId={groupId}
-                        setGroupId={setGroupId}
-                    />
-                )}
+                    {/* Live Match Section */}
+                    <LiveMatchesCarousel groupId={groupId} />
 
-                {/* Live Match Section */}
-                <LiveMatchesCarousel groupId={groupId} />
+                    {/* Upcoming Matches Section */}
+                    <UpcomingMatches groupId={groupId} />
 
-                {/* Upcoming Matches Section */}
-                <UpcomingMatches groupId={groupId} />
-
-                {/* Top Players Section */}
-                <TopPlayers groupId={groupId} />
-            </div>
+                    {/* Top Players Section */}
+                    <TopPlayers groupId={groupId} />
+                </div>
+            )}
 
             <BottomNavigation />
         </div>
