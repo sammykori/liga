@@ -14,7 +14,7 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer";
 
-function GroupSquadPage({
+function Statistics({
     groupId,
     role,
 }: {
@@ -37,6 +37,24 @@ function GroupSquadPage({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
         >
+            <div className="w-full flex flex-col gap-2 mb-4">
+                <div className="text-xs flex justify-between">
+                    <h1 className="font-bold">0</h1>
+                    <h1>Goal</h1>
+                    <h1 className="font-bold">0</h1>
+                </div>
+                <div className="w-full grid grid-cols-2 gap-2">
+                    <div className="w-full h-2 rounded-full bg-gray-300 flex justify-start">
+                        <div className="w-1/2 h-full rounded-full bg-gradient-to-r from-amber-600 via-amber-400 to-amber-200"></div>
+                    </div>
+                    <div className="w-full h-2 rounded-full bg-gray-300 flex justify-end">
+                        <div className="w-2/3 h-full rounded-full bg-gradient-to-r from-emerald-600 via-emerald-400 to-emerald-200"></div>
+                    </div>
+                </div>
+            </div>
+            <div className="w-full mb-4">
+                <h1 className="font-bold">Goal Scorers</h1>
+            </div>
             <div className="grid grid-cols-1 gap-4">
                 {players &&
                     players.slice(0, 6).map((player, index) => (
@@ -115,4 +133,4 @@ function GroupSquadPage({
     );
 }
 
-export default GroupSquadPage;
+export default Statistics;

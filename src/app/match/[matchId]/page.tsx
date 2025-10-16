@@ -17,6 +17,7 @@ import { useAuthUser } from "@/hooks/useAuthUser";
 import { useSingleMatch } from "@/hooks/useSingleMatch";
 import dayjs from "dayjs";
 import MatchEditForm from "@/components/sections/match/MatchEditForm";
+import Statistics from "@/components/sections/match/Statistics";
 
 function Page() {
     const { matchId } = useParams<{ matchId: string }>();
@@ -119,7 +120,12 @@ function Page() {
                             <TabsTrigger value="requests">POTM</TabsTrigger>
                         </TabsList>
                         <TabsContent value="matches" className="w-full h-full">
-                            <div className="w-full h-full p-4 border rounded-xl"></div>
+                            <div className="w-full h-full p-4 border rounded-xl">
+                                <Statistics
+                                    groupId={match?.group_id!}
+                                    role={role}
+                                />
+                            </div>
                         </TabsContent>
                         <TabsContent value="squad">
                             <div className="w-full h-full p-4 border rounded-xl">

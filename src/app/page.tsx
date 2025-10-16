@@ -46,7 +46,7 @@ export default function Home() {
     }
 
     return (
-        <div className="min-h-screen bg-background pb-20 relative">
+        <div className="w-full max-w-sm mx-auto shadow-2xl min-h-screen bg-background pb-20 relative">
             <Navigation />
             {groups && groups.length < 1 ? (
                 <EmptyScreen />

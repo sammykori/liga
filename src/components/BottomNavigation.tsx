@@ -25,7 +25,7 @@ export function BottomNavigation() {
     ];
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 p-4">
+        <div className="w-full max-w-sm mx-auto fixed bottom-0 left-0 right-0 z-50 p-4">
             <motion.nav
                 initial={{ y: 100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}

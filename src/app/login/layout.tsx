@@ -11,5 +11,11 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode;
 }) {
-    return <Suspense>{children}</Suspense>;
+    return (
+        <Suspense>
+            <div className="w-full max-w-sm mx-auto min-h-screen relative">
+                {children}
+            </div>
+        </Suspense>
+    );
 }

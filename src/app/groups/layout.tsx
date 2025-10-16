@@ -12,7 +12,7 @@ export default function DashboardLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="min-h-screen bg-background pb-20 relative">
+        <div className="w-full max-w-sm mx-auto min-h-screen bg-background pb-20 relative">
             {children}
 
             <BottomNavigation />

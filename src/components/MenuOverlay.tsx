@@ -37,7 +37,7 @@ export default function MenuOverlay({
     const supabase = createClient();
 
     const { data: groups } = useGroup(user?.id);
-    console.log(groups);
+    console.log("groups", groups);
 
     const handleNavigation = (page: string) => {
         onClose();
@@ -137,7 +137,7 @@ export default function MenuOverlay({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
                     transition={{ duration: 0.3 }}
-                    className="relative h-full overflow-y-auto pb-20"
+                    className="w-full max-w-sm mx-auto shadow-2xl relative h-full overflow-y-auto pb-20"
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* Header */}
