@@ -3,7 +3,7 @@ import { Navigation } from "@/components/Navigation";
 import { Icon } from "@iconify/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import {
     Dialog,
     DialogContent,
@@ -32,6 +32,9 @@ function Page() {
         return <LoadingScreen />;
     }
     console.log("match", match);
+    if (!match) {
+        return notFound();
+    }
     return (
         <div className="bg-black w-full h-screen min-h-screen text-white">
             <Navigation variant="action" />
@@ -125,7 +128,7 @@ function Page() {
                         <TabsContent value="matches" className="w-full h-full">
                             <div className="w-full h-full p-4 border rounded-xl">
                                 <Statistics
-                                    groupId={match?.group_id!}
+                                    groupId={match.group_id}
                                     role={role}
                                 />
                             </div>

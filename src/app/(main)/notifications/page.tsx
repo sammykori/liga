@@ -18,7 +18,8 @@ export default function Notifications() {
     const { data: notifications, isLoading: isNotificationsLoading } =
         useNotifications(user?.id);
 
-    function handleClick(link: string) {
+    function handleClick(link: string | null) {
+        if (!link) return;
         router.push(link);
     }
     if (isUserLoading || isNotificationsLoading) {
