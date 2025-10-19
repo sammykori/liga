@@ -146,7 +146,7 @@ function Page() {
                     <Tabs defaultValue="matches" className="w-full h-full">
                         <TabsList className="w-full">
                             <TabsTrigger value="matches">Matches</TabsTrigger>
-                            <TabsTrigger value="squad">Squad</TabsTrigger>
+                            <TabsTrigger value="players">Players</TabsTrigger>
                             <TabsTrigger value="teams">Teams</TabsTrigger>
                             <TabsTrigger value="requests">Requests</TabsTrigger>
                         </TabsList>
@@ -158,7 +158,7 @@ function Page() {
                                 />
                             </div>
                         </TabsContent>
-                        <TabsContent value="squad">
+                        <TabsContent value="players">
                             <div className="w-full h-full p-4 border rounded-xl">
                                 <GroupSquadPage groupId={groupId} role={role} />
                             </div>

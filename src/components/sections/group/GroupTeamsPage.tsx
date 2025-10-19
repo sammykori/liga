@@ -37,7 +37,11 @@ function GroupTeamsPage({
                                 delay: index * 0.1,
                             }}
                         >
-                            <TeamCard team={team} role={role} />
+                            <TeamCard
+                                teamsCount={teams.length}
+                                team={team}
+                                role={role}
+                            />
                         </motion.div>
                     ))}
             </div>

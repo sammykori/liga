@@ -56,7 +56,7 @@ export function Navigation({ variant }: { variant?: string }) {
                                     />
                                 </div>
                                 <h1 className="text-xl font-bold text-card-foreground">
-                                    {user ? user.email : "PlayerRate"}
+                                    Liga
                                 </h1>
                             </motion.div>
                         )}

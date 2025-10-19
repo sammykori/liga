@@ -28,7 +28,7 @@ import {
 
 const formSchema = z
     .object({
-        title: z.string().min(2).max(50).optional(),
+        a_side: z.number().optional(),
         description: z.string().min(2).max(200).optional(),
         match_date: z.string().optional(),
         match_time: z.string().optional(),
@@ -68,12 +68,13 @@ function MatchEditForm({ data, closeModal }: MainInfoFormProps) {
         try {
             await updateMatchMutation.mutateAsync({
                 id: data.id,
-                title: values.title!,
+                a_side: values.a_side!,
                 description: values.description!,
                 match_date: values.match_date!,
                 match_time: values.match_time!,
                 teamA_id: values.teamA!,
                 teamB_id: values.teamB!,
+                venue: values.venue,
             });
             toast.success("Match updated Sucessfully");
             closeModal(false);
@@ -87,7 +88,7 @@ function MatchEditForm({ data, closeModal }: MainInfoFormProps) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            title: data.title,
+            a_side: data.a_side || undefined,
             description: data.description || undefined,
             venue: data.venue || undefined,
             match_date: data.match_date,
@@ -209,12 +210,34 @@ function MatchEditForm({ data, closeModal }: MainInfoFormProps) {
                     </div>
                     <FormField
                         control={form.control}
-                        name="title"
+                        name="venue"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Title</FormLabel>
+                                <FormLabel>Location</FormLabel>
                                 <FormControl>
                                     <Input placeholder="" {...field} />
+                                </FormControl>
+
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="a_side"
+                        render={({}) => (
+                            <FormItem>
+                                <FormLabel>Number of Players a side</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="number"
+                                        placeholder=""
+                                        {...form.register("a_side", {
+                                            valueAsNumber: true,
+                                            setValueAs: (v) =>
+                                                v === "" ? undefined : v, // makes empty string undefined
+                                        })}
+                                    />
                                 </FormControl>
 
                                 <FormMessage />

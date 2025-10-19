@@ -279,6 +279,7 @@ export type Database = {
       }
       matches: {
         Row: {
+          a_side: number | null
           created_at: string
           creator_id: string
           description: string | null
@@ -292,11 +293,12 @@ export type Database = {
           teamA_score: number | null
           teamB_id: string
           teamB_score: number
-          title: string
+          title: string | null
           updated_at: string
           venue: string | null
         }
         Insert: {
+          a_side?: number | null
           created_at?: string
           creator_id: string
           description?: string | null
@@ -310,11 +312,12 @@ export type Database = {
           teamA_score?: number | null
           teamB_id: string
           teamB_score?: number
-          title: string
+          title?: string | null
           updated_at?: string
           venue?: string | null
         }
         Update: {
+          a_side?: number | null
           created_at?: string
           creator_id?: string
           description?: string | null
@@ -328,7 +331,7 @@ export type Database = {
           teamA_score?: number | null
           teamB_id?: string
           teamB_score?: number
-          title?: string
+          title?: string | null
           updated_at?: string
           venue?: string | null
         }
@@ -502,6 +505,7 @@ export type Database = {
           last_name: string | null
           matches_played: number
           matches_won: number
+          measurement_system: Database["public"]["Enums"]["measurement_type"]
           other_name: string | null
           points: number
           position: string | null
@@ -528,6 +532,7 @@ export type Database = {
           last_name?: string | null
           matches_played?: number
           matches_won?: number
+          measurement_system?: Database["public"]["Enums"]["measurement_type"]
           other_name?: string | null
           points?: number
           position?: string | null
@@ -554,6 +559,7 @@ export type Database = {
           last_name?: string | null
           matches_played?: number
           matches_won?: number
+          measurement_system?: Database["public"]["Enums"]["measurement_type"]
           other_name?: string | null
           points?: number
           position?: string | null
@@ -593,6 +599,7 @@ export type Database = {
         | "ended"
         | "cancelled"
         | "completed"
+      measurement_type: "si" | "us"
       notification_type: "match" | "group" | "user" | "general"
       player_position: "goalkeeper" | "defender" | "midfielder" | "forward"
       sex: "male" | "female"
@@ -726,6 +733,7 @@ export const Constants = {
     Enums: {
       foot: ["left", "right", "both"],
       match_status: ["pending", "confirmed", "ended", "cancelled", "completed"],
+      measurement_type: ["si", "us"],
       notification_type: ["match", "group", "user", "general"],
       player_position: ["goalkeeper", "defender", "midfielder", "forward"],
       sex: ["male", "female"],

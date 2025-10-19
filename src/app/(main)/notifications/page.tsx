@@ -9,13 +9,18 @@ import LoadingScreen from "@/components/LoadingScreen";
 import dayjs from "dayjs";
 import relativeTime from "../../../../node_modules/dayjs/plugin/relativeTime";
 import EmptyScreen from "@/components/EmptyScreen";
+import { useRouter } from "next/navigation";
 dayjs.extend(relativeTime);
 
 export default function Notifications() {
     const { data: user, isLoading: isUserLoading } = useAuthUser();
-
+    const router = useRouter();
     const { data: notifications, isLoading: isNotificationsLoading } =
         useNotifications(user?.id);
+
+    function handleClick(link: string) {
+        router.push(link);
+    }
     if (isUserLoading || isNotificationsLoading) {
         return <LoadingScreen />;
     }
@@ -24,7 +29,7 @@ export default function Notifications() {
             <EmptyScreen
                 title="No Notifications Yet"
                 icon="tabler:bell-x"
-                desc={`You haven&apos;t recieved any notifications yet. Get started by
+                desc={`You haven't recieved any notifications yet. Get started by
                     creating your first group.`}
             />
         );
@@ -53,6 +58,7 @@ export default function Notifications() {
                                     duration: 0.3,
                                     delay: index * 0.1,
                                 }}
+                                onClick={() => handleClick(notification.link)}
                             >
                                 <Card className="p-4 hover:shadow-medium transition-all">
                                     <div className="flex items-center gap-4">

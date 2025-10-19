@@ -23,7 +23,7 @@ export function useUpdateTeam() {
             // Update cached profile for this user
             queryClient.setQueryData(["team", updatedGroup.id], updatedGroup);
             // Optionally invalidate related queries
-            queryClient.invalidateQueries({ queryKey: ["teams"] });
+            queryClient.invalidateQueries({ queryKey: ["groupTeams"] });
         },
     });
 }

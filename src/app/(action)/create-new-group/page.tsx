@@ -43,7 +43,6 @@ const badges = [
 const formSchema = z.object({
     name: z.string().min(2).max(50),
     picture_url: z.string().min(2).max(50).optional(),
-    country: z.string().min(2).max(50).optional(),
     foreground_color: z.string("Please select a color").optional(),
     background_color: z.string("Please select a color").optional(),
     description: z.string().min(2).max(200).optional(),
@@ -93,7 +92,6 @@ function Page() {
             badge: "streamline-ultimate:sign-badge-badge-1-bold",
             foreground_color: "#FFFFFF",
             background_color: "#000000",
-            country: "United Kingdom",
         },
     });
     const foregroundColor = form.watch("foreground_color");
@@ -124,21 +122,6 @@ function Page() {
 
                     <FormField
                         control={form.control}
-                        name="country"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Country</FormLabel>
-                                <FormControl>
-                                    <Input {...field} />
-                                </FormControl>
-
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
                         name="description"
                         render={({ field }) => (
                             <FormItem>
@@ -152,6 +135,7 @@ function Page() {
                                         rows={3}
                                     />
                                 </FormControl>
+
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -162,7 +146,7 @@ function Page() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
-                                    Create a badge for you team
+                                    Create a badge for your Group
                                 </FormLabel>
                                 <FormControl>
                                     <div className="w-full flex flex-col justify-center items-center gap-2">

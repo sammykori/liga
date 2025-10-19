@@ -82,41 +82,46 @@ function DesktopTable({ data }: { data: GroupMembershipWithStats[] }) {
                                         <AvatarImage src="/images/avatar.jpeg" />
                                         <AvatarFallback>CN</AvatarFallback>
                                     </Avatar>
-                                    <span className="font-bold truncate text-xs">
-                                        {player.profiles?.first_name}{" "}
-                                        {player.profiles?.last_name}
-                                    </span>
+                                    <div className="w-full flex flex-col ">
+                                        <p className="font-bold truncate text-xs">
+                                            {player.profiles?.first_name}{" "}
+                                            {player.profiles?.last_name}
+                                        </p>
+                                        <p className="text-xs text-gray-400">
+                                            {player.profiles?.position}
+                                        </p>
+                                    </div>
                                 </div>
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.player_group_stats?.rating}
+                                {player.player_group_stats?.rating || 0}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.player_group_stats?.rating}
+                                {player.player_group_stats?.rating || 0}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.player_group_stats?.matches_played}
+                                {player.player_group_stats?.matches_played || 0}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.player_group_stats?.matches_played}
+                                {player.player_group_stats?.matches_played || 0}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.player_group_stats?.matches_played}
+                                {player.player_group_stats?.matches_played || 0}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.player_group_stats?.matches_played}
+                                {player.player_group_stats?.matches_played || 0}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.player_group_stats?.matches_played}
+                                {player.player_group_stats?.matches_played || 0}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.player_group_stats?.matches_played}
+                                {player.player_group_stats?.matches_played || 0}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.player_group_stats?.matches_played}
+                                {player.player_group_stats?.matches_played || 0}
                             </TableCell>
                             <TableCell className="text-center font-light text-xs">
-                                {player.player_group_stats?.matches_played}
+                                {player.player_group_stats?.matches_played || 0}
                             </TableCell>
                         </motion.tr>
                     ))}

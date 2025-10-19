@@ -71,14 +71,22 @@ function MobileTable({ data }: { data: GroupMembershipWithStats[] }) {
                                                     CN
                                                 </AvatarFallback>
                                             </Avatar>
-                                            <span className="font-bold truncate text-xs">
-                                                {player.profiles?.first_name}{" "}
-                                                {player.profiles?.last_name}
-                                            </span>
+                                            <div className="w-[80%] flex flex-col ">
+                                                <p className="font-bold truncate text-xs">
+                                                    {
+                                                        player.profiles
+                                                            ?.first_name
+                                                    }{" "}
+                                                    {player.profiles?.last_name}
+                                                </p>
+                                                <p className="text-xs text-gray-400">
+                                                    {player.profiles?.position}
+                                                </p>
+                                            </div>
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.rating}
+                                        {player.player_group_stats?.rating || 0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
                                         {player.player_group_stats?.rating}
@@ -165,44 +173,57 @@ function MobileTable({ data }: { data: GroupMembershipWithStats[] }) {
                                                     CN
                                                 </AvatarFallback>
                                             </Avatar>
-                                            <span className="font-bold truncate text-xs">
-                                                {player.profiles?.first_name}{" "}
-                                                {player.profiles?.last_name}
-                                            </span>
+                                            <div className="w-[80%] flex flex-col ">
+                                                <p className="font-bold truncate text-xs">
+                                                    {
+                                                        player.profiles
+                                                            ?.first_name
+                                                    }{" "}
+                                                    {player.profiles?.last_name}
+                                                </p>
+                                                <p className="text-xs text-gray-400">
+                                                    {player.profiles?.position}
+                                                </p>
+                                            </div>
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.rating}
+                                        {player.player_group_stats?.rating || 0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.rating}
+                                        {player.player_group_stats?.rating || 0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {
-                                            player.player_group_stats
-                                                ?.matches_played
-                                        }
+                                        {player.player_group_stats
+                                            ?.matches_played || 0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.assists}
+                                        {player.player_group_stats?.assists ||
+                                            0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.assists}
+                                        {player.player_group_stats?.assists ||
+                                            0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.assists}
+                                        {player.player_group_stats?.assists ||
+                                            0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.assists}
+                                        {player.player_group_stats?.assists ||
+                                            0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.assists}
+                                        {player.player_group_stats?.assists ||
+                                            0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.assists}
+                                        {player.player_group_stats?.assists ||
+                                            0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.assists}
+                                        {player.player_group_stats?.assists ||
+                                            0}
                                     </TableCell>
                                 </motion.tr>
                             ))}
@@ -253,10 +274,18 @@ function MobileTable({ data }: { data: GroupMembershipWithStats[] }) {
                                                     CN
                                                 </AvatarFallback>
                                             </Avatar>
-                                            <span className="font-bold truncate text-xs">
-                                                {player.profiles?.first_name}{" "}
-                                                {player.profiles?.last_name}
-                                            </span>
+                                            <div className="w-[80%] flex flex-col ">
+                                                <p className="font-bold truncate text-xs">
+                                                    {
+                                                        player.profiles
+                                                            ?.first_name
+                                                    }{" "}
+                                                    {player.profiles?.last_name}
+                                                </p>
+                                                <p className="text-xs text-gray-400">
+                                                    {player.profiles?.position}
+                                                </p>
+                                            </div>
                                         </div>
                                     </TableCell>
                                     <TableCell className="flex items-center gap-2 text-center text-[9px] text-white font-bold">

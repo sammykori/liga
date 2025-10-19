@@ -1,3 +1,4 @@
+"use client";
 import { Input } from "@/components/ui/input";
 import {
     Form,
@@ -23,6 +24,10 @@ import { useUpdateProfile } from "@/hooks/mutations/useUpdateProfile";
 import { toast } from "sonner";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { type Database } from "@/types/database";
+import { Switch } from "@/components/ui/switch";
+import TooltipInfo from "@/components/TooltipInfo";
+import { useState } from "react";
+import { capitalize } from "@/lib/helpers";
 
 const foots = Constants.public.Enums.foot;
 const sexes = Constants.public.Enums.sex;
@@ -44,12 +49,16 @@ type MainInfoFormProps = {
 function MoreInfoForm({ stats, closeModal }: MainInfoFormProps) {
     const updateProfileMutation = useUpdateProfile();
     const { data: user } = useAuthUser();
+    const [unit, setUnit] = useState(
+        stats.measurement_system === "si" ? false : true
+    );
 
     async function onSubmit(values: FormValues) {
         if (!user) return;
         try {
             await updateProfileMutation.mutateAsync({
                 id: user.id,
+                measurement_system: unit ? "us" : "si",
                 height: values.height,
                 weight: values.weight,
                 foot: values.foot,
@@ -75,6 +84,20 @@ function MoreInfoForm({ stats, closeModal }: MainInfoFormProps) {
     });
     return (
         <div>
+            <div className="flex w-full justify-between my-4">
+                <h1>
+                    Measurement System{" "}
+                    <TooltipInfo content="The primary types of measurement systems are the Metric System (including the global International System of Units (SI)) and the US Customary System (US)" />
+                </h1>
+                <div className="flex gap-2 items-center">
+                    <span>SI</span>
+                    <Switch
+                        checked={unit}
+                        onCheckedChange={() => setUnit(!unit)}
+                    />
+                    <span>US</span>
+                </div>
+            </div>
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
@@ -85,7 +108,9 @@ function MoreInfoForm({ stats, closeModal }: MainInfoFormProps) {
                         name="height"
                         render={({}) => (
                             <FormItem>
-                                <FormLabel>Height</FormLabel>
+                                <FormLabel>
+                                    Height <span>({unit ? "ft" : "cm"})</span>
+                                </FormLabel>
                                 <FormControl>
                                     <Input
                                         type="number"
@@ -107,7 +132,9 @@ function MoreInfoForm({ stats, closeModal }: MainInfoFormProps) {
                         name="weight"
                         render={({}) => (
                             <FormItem>
-                                <FormLabel>Weight</FormLabel>
+                                <FormLabel>
+                                    Weight <span>({unit ? "lb" : "kg"})</span>
+                                </FormLabel>
                                 <FormControl>
                                     <Input
                                         type="number"
@@ -140,12 +167,12 @@ function MoreInfoForm({ stats, closeModal }: MainInfoFormProps) {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {foots.map((position, index) => (
+                                        {foots.map((foot, index) => (
                                             <SelectItem
-                                                value={position}
+                                                value={foot}
                                                 key={index}
                                             >
-                                                {position}
+                                                {capitalize(foot)}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -171,12 +198,9 @@ function MoreInfoForm({ stats, closeModal }: MainInfoFormProps) {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {sexes.map((position, index) => (
-                                            <SelectItem
-                                                value={position}
-                                                key={index}
-                                            >
-                                                {position}
+                                        {sexes.map((sex, index) => (
+                                            <SelectItem value={sex} key={index}>
+                                                {capitalize(sex)}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>

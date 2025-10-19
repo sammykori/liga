@@ -13,7 +13,7 @@ export default function DashboardLayout({
 }) {
     return (
         <Suspense>
-            <div className="w-full max-w-sm mx-auto min-h-screen relative">
+            <div className="w-full md:max-w-sm mx-auto min-h-screen relative">
                 {children}
             </div>
         </Suspense>

@@ -27,12 +27,13 @@ import { useState } from "react";
 type GroupTeams = Database["public"]["Tables"]["group_teams"]["Row"];
 
 interface TeamsCardProps {
+    teamsCount: number;
     team: GroupTeams;
     role: string | null;
     variant?: "simple" | "compact";
 }
 
-export function TeamCard({ team, role }: TeamsCardProps) {
+export function TeamCard({ teamsCount, team, role }: TeamsCardProps) {
     const [open, setOpen] = useState<boolean>();
     return (
         <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
@@ -71,35 +72,37 @@ export function TeamCard({ team, role }: TeamsCardProps) {
                                     />
                                 </DialogContent>
                             </Dialog>
-                            <AlertDialog>
-                                <AlertDialogTrigger>
-                                    {" "}
-                                    <div className="bg-red-200 p-2 rounded-full size-8 items-center justify-center">
-                                        <Icon icon="fluent:delete-20-regular" />
-                                    </div>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                        <AlertDialogTitle>
-                                            Are you absolutely sure?
-                                        </AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            This action cannot be undone. This
-                                            will permanently delete your account
-                                            and remove your data from our
-                                            servers.
-                                        </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        <AlertDialogCancel>
-                                            Cancel
-                                        </AlertDialogCancel>
-                                        <AlertDialogAction>
-                                            Continue
-                                        </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
+                            {teamsCount > 2 && (
+                                <AlertDialog>
+                                    <AlertDialogTrigger>
+                                        {" "}
+                                        <div className="bg-red-200 p-2 rounded-full size-8 items-center justify-center">
+                                            <Icon icon="fluent:delete-20-regular" />
+                                        </div>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>
+                                                Are you absolutely sure?
+                                            </AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone.
+                                                This will permanently delete
+                                                your account and remove your
+                                                data from our servers.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>
+                                                Cancel
+                                            </AlertDialogCancel>
+                                            <AlertDialogAction>
+                                                Continue
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            )}
                         </div>
                     )}
                 </div>

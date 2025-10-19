@@ -24,6 +24,8 @@ import { useUpdateProfile } from "@/hooks/mutations/useUpdateProfile";
 import { toast } from "sonner";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { type Database } from "@/types/database";
+import { getCountryList } from "@/lib/helpers";
+import { Icon } from "@iconify/react";
 
 const positions = Constants.public.Enums.player_position;
 
@@ -31,7 +33,7 @@ const formSchema = z.object({
     firstName: z.string().min(2).max(50).optional(),
     lastName: z.string().min(2).max(50).optional(),
     position: z.string("Please select a position you play in.").optional(),
-    country: z.string().min(2).max(50).optional(),
+    country: z.string().min(2).max(100).optional(),
     city: z.string().min(2).max(50).optional(),
     bio: z.string().min(2).max(100).optional(),
 });
@@ -44,6 +46,7 @@ type MainInfoFormProps = {
 function MainInfoForm({ stats, closeModal }: MainInfoFormProps) {
     const updateProfileMutation = useUpdateProfile();
     const { data: user } = useAuthUser();
+    const countryOptions = getCountryList();
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         if (!user) return;
@@ -74,7 +77,7 @@ function MainInfoForm({ stats, closeModal }: MainInfoFormProps) {
             position: stats.position || undefined,
             city: stats.county_state_city || undefined,
             bio: stats.bio || undefined,
-            country: "United Kingdom",
+            country: stats.country || undefined,
         },
     });
     return (
@@ -143,26 +146,49 @@ function MainInfoForm({ stats, closeModal }: MainInfoFormProps) {
                             </FormItem>
                         )}
                     />
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-2">
                         <FormField
                             control={form.control}
                             name="country"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Country</FormLabel>
-                                    <FormControl>
-                                        <Input {...field} />
-                                    </FormControl>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger className="w-40">
+                                                <SelectValue placeholder="Country" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent className="max-w-sm">
+                                            {countryOptions.map(
+                                                (country, index) => (
+                                                    <SelectItem
+                                                        value={country.name}
+                                                        key={index}
+                                                    >
+                                                        <Icon
+                                                            icon={country.icon}
+                                                        />
+                                                        {country.name}
+                                                    </SelectItem>
+                                                )
+                                            )}
+                                        </SelectContent>
+                                    </Select>
 
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
+
                         <FormField
                             control={form.control}
                             name="city"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="w-1/3">
                                     <FormLabel>City/State/County</FormLabel>
                                     <FormControl>
                                         <Input placeholder="" {...field} />
@@ -173,6 +199,7 @@ function MainInfoForm({ stats, closeModal }: MainInfoFormProps) {
                             )}
                         />
                     </div>
+
                     <FormField
                         control={form.control}
                         name="bio"

@@ -18,6 +18,7 @@ import { useSingleMatch } from "@/hooks/useSingleMatch";
 import dayjs from "dayjs";
 import MatchEditForm from "@/components/sections/match/MatchEditForm";
 import Statistics from "@/components/sections/match/Statistics";
+import LoadingScreen from "@/components/LoadingScreen";
 
 function Page() {
     const { matchId } = useParams<{ matchId: string }>();
@@ -28,7 +29,7 @@ function Page() {
     const { role, loading } = useGroupRole(match?.group_id, user?.id);
 
     if (isGroupLoading || isUserLoading || loading) {
-        return;
+        return <LoadingScreen />;
     }
     console.log("match", match);
     return (
@@ -36,7 +37,9 @@ function Page() {
             <Navigation variant="action" />
             <div className="w-full flex flex-col gap-4">
                 <div className="w-full flex justify-between items-center gap-4 px-4">
-                    <h1 className="text-xs">{match?.venue}</h1>
+                    <h1 className="text-sm font-bold">
+                        {match?.a_side ? `${match?.a_side} A-side` : ""}
+                    </h1>
 
                     <h1 className="text-xs">LIVE</h1>
                 </div>
@@ -46,13 +49,13 @@ function Page() {
                             <Icon
                                 icon="ion:shirt"
                                 className={`size-12`}
-                                color={match?.teamA.color || "black"}
+                                color={match?.teamA?.color || "black"}
                             />
                         </div>
-                        <h1 className="text-xs">{match?.teamA.name}</h1>
+                        <h1 className="text-xs">{match?.teamA?.name}</h1>
                     </div>
                     <div className="flex flex-col justify-center items-center gap-2">
-                        <h1 className="text-xs">{match?.title}</h1>
+                        <h1 className="text-xs">{match?.venue}</h1>
                         <h1 className="text-xs">
                             {dayjs(match?.match_date).format("dddd, D MMM")} -
                             12:30 PM
@@ -67,10 +70,10 @@ function Page() {
                             <Icon
                                 icon="ion:shirt"
                                 className={`size-12`}
-                                color={match?.teamB.color || "black"}
+                                color={match?.teamB?.color || "black"}
                             />
                         </div>
-                        <h1 className="text-xs">{match?.teamB.name}</h1>
+                        <h1 className="text-xs">{match?.teamB?.name}</h1>
                     </div>
                 </div>
                 <div className="w-full flex justify-between items-center gap-4 px-4">

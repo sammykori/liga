@@ -26,15 +26,15 @@ export default function Profile() {
                 transition={{ duration: 0.5 }}
             >
                 {profile && (
-                    <div className="w-full flex flex-col md:flex-row">
+                    <div className="w-full flex flex-col">
                         {/* Profile Header */}
-                        <div className="w-full md:w-2/5 xl:w-1/5 md:pl-6">
+                        <div className="w-full">
                             <ProfileImage profileImage={profile?.profile_url} />
                         </div>
 
                         {/* Main Info */}
                         {/* Match Stats */}
-                        <div className="w-full md:w-3/5 xl:w-4/5 md:pl-6">
+                        <div className="w-full">
                             <MainInfo stats={profile} />
 
                             {/* More Info */}

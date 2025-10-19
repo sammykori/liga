@@ -19,7 +19,7 @@ type EmptyScreenProp = {
 
 function EmptyScreen({
     title = "No Group Yet",
-    desc = `You haven&apos;t created any groups yet. Get started by
+    desc = `You haven't created any groups yet. Get started by
                     creating your first group.`,
     icon = `fa6-solid:people-group`,
 }: EmptyScreenProp) {
@@ -38,7 +38,7 @@ function EmptyScreen({
                         <Button>Create a Group</Button>
                     </Link>
                     <Link href="">
-                        <Button variant="outline">Fix Match</Button>
+                        <Button variant="outline">Create Match</Button>
                     </Link>
                 </div>
             </EmptyContent>

@@ -11,15 +11,20 @@ import {
 } from "@/components/ui/dialog";
 import MainInfoForm from "./MainInfoForm";
 import { useState } from "react";
-import { positionInitials } from "@/lib/helpers";
+import {
+    getCountryIcon,
+    getCountryCode,
+    positionInitials,
+} from "@/lib/helpers";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
 function MainInfo({ stats }: { stats: Profile }) {
     const [open, setOpen] = useState(false);
+    const icon = getCountryIcon(stats.country ? stats.country : "");
     return (
         <div className="w-full bg-muted/30 rounded-2xl p-6 mb-6 text-center">
-            <div className="flex flex-col xl:flex-row justify-around">
+            <div className="flex flex-col justify-around">
                 <div className="">
                     <div className="flex items-center justify-center mb-4 gap-2">
                         <div className="px-2 rounded-md bg-amber-500 font-bold">
@@ -32,9 +37,10 @@ function MainInfo({ stats }: { stats: Profile }) {
 
                     <div className="flex gap-4 justify-center mb-4">
                         <div className=" rounded-lg px-4 py-1 flex items-center gap-2">
-                            <Icon icon="twemoji:flag-united-kingdom" />
+                            {icon && <Icon icon={icon} />}
                             <span className="text-sm font-medium">
-                                {stats?.country || "Country"}
+                                {getCountryCode(stats?.country || "") ||
+                                    "Country"}
                             </span>
                         </div>
                         <div className=" rounded-lg px-4 py-1 flex items-center gap-2">
