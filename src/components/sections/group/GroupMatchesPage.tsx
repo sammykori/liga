@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { MatchCard } from "@/components/MatchCard";
 import { useGroupMatches } from "@/hooks/useGroupMatches";
-
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 function GroupMatchesPage({
@@ -29,21 +29,29 @@ function GroupMatchesPage({
         );
     }
 
+    function handleCreateNewMatch() {
+        Cookies.set("set_group", groupId);
+        router.push("/create-new-match");
+    }
+
     return (
         <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
         >
-            <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-foreground">
-                    Upcoming Match
-                </h3>
-                <Button variant="link" size="sm" className="text-primary">
-                    See all{" "}
-                    <Icon icon="mdi:arrow-right" className="w-4 h-4 ml-1" />
-                </Button>
-            </div>
+            {role !== "user" && (
+                <div className="flex items-center justify-start mb-4">
+                    <Button
+                        variant="default"
+                        className="w-full bg-gray-700"
+                        onClick={() => handleCreateNewMatch()}
+                    >
+                        Create new match
+                        <Icon icon="mdi:arrow-right" className="w-4 h-4 ml-1" />
+                    </Button>
+                </div>
+            )}
             <div className="grid grid-cols-1 gap-4">
                 {matches &&
                     matches.map((match, index) => (

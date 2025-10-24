@@ -15,29 +15,71 @@ import GroupRequestsPage from "@/components/sections/group/GroupRequestsPage";
 import { useGroupRole } from "@/hooks/useGroupRole";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { useSingleMatch } from "@/hooks/useSingleMatch";
+import { usePlayerMatchResponse } from "@/hooks/usePlayerMatchResponse";
 import dayjs from "dayjs";
 import MatchEditForm from "@/components/sections/match/MatchEditForm";
 import Statistics from "@/components/sections/match/Statistics";
 import LoadingScreen from "@/components/LoadingScreen";
+import { Button } from "@/components/ui/button";
+import AcceptResponseForm from "@/components/sections/match/AcceptResponseForm";
+import DeclineResponseDialog from "@/components/sections/match/DeclineResponseDialog";
+import Lineup from "@/components/sections/match/Lineup";
+import Actions from "@/components/sections/match/Actions";
 
 function Page() {
     const { matchId } = useParams<{ matchId: string }>();
     const [open, setOpen] = useState(false);
+    const [acceptModalOpen, setAcceptModalOpen] = useState(false);
 
     const { data: user, isLoading: isUserLoading } = useAuthUser();
     const { data: match, isLoading: isGroupLoading } = useSingleMatch(matchId);
     const { role, loading } = useGroupRole(match?.group_id, user?.id);
+    const { data: matchResponse, isLoading: isLoadingMatchResponse } =
+        usePlayerMatchResponse(matchId, user?.id);
 
-    if (isGroupLoading || isUserLoading || loading) {
+    if (isGroupLoading || isUserLoading || loading || isLoadingMatchResponse) {
         return <LoadingScreen />;
     }
-    console.log("match", match);
+    console.log(matchId, user?.id);
+    console.log("matchresponse", matchResponse);
     if (!match) {
         return notFound();
     }
     return (
         <div className="bg-black w-full h-screen min-h-screen text-white">
             <Navigation variant="action" />
+            {matchResponse?.status === "pending" && (
+                <div className="w-full px-4 py-2">
+                    <div className="w-full flex  justify-between items-center p-4 rounded-2xl bg-white">
+                        <h1 className="text-black font-bold">Join match</h1>
+                        <div className="flex gap-4">
+                            <Dialog
+                                open={acceptModalOpen}
+                                onOpenChange={setAcceptModalOpen}
+                            >
+                                <DialogTrigger asChild>
+                                    <Button variant="secondary" className="">
+                                        Accept
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>
+                                            Join Match Lineup
+                                        </DialogTitle>
+                                    </DialogHeader>
+                                    <AcceptResponseForm
+                                        data={matchResponse!}
+                                        closeModal={setAcceptModalOpen}
+                                    />
+                                </DialogContent>
+                            </Dialog>
+
+                            <DeclineResponseDialog data={matchResponse!} />
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="w-full flex flex-col gap-4">
                 <div className="w-full flex justify-between items-center gap-4 px-4">
                     <h1 className="text-sm font-bold">
@@ -79,71 +121,69 @@ function Page() {
                         <h1 className="text-xs">{match?.teamB?.name}</h1>
                     </div>
                 </div>
-                <div className="w-full flex justify-between items-center gap-4 px-4">
-                    <h1 className="text-xs">{match?.venue}</h1>
-
-                    <div className="flex gap-3">
-                        {role !== "user" && (
-                            <Dialog open={open} onOpenChange={setOpen}>
-                                <DialogTrigger>
-                                    <div className="bg-gray-400/50 rounded-full size-8 p-2 flex items-center justify-center">
-                                        <Icon
-                                            icon="mynaui:edit"
-                                            className="size-4"
-                                        />
-                                    </div>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <DialogTitle>
-                                            Edit Group Details
-                                        </DialogTitle>
-                                    </DialogHeader>
-                                    <MatchEditForm
-                                        data={match!}
-                                        closeModal={setOpen}
+                {role !== "user" && (
+                    <div className="w-full flex justify-between items-center gap-4 px-4">
+                        <Dialog open={open} onOpenChange={setOpen}>
+                            <DialogTrigger asChild>
+                                <Button className="bg-gray-400/50 rounded-md p-2 flex items-center justify-center">
+                                    <Icon
+                                        icon="mynaui:edit"
+                                        className="size-4"
                                     />
-                                </DialogContent>
-                            </Dialog>
+                                    <p>Edit</p>
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>
+                                        Edit Group Details
+                                    </DialogTitle>
+                                </DialogHeader>
+                                <MatchEditForm
+                                    data={match!}
+                                    closeModal={setOpen}
+                                />
+                            </DialogContent>
+                        </Dialog>
+                        {(match.status === "pending" ||
+                            match.status === "confirmed") && (
+                            <Actions
+                                matchId={matchId}
+                                matchStatus={match.status}
+                            />
                         )}
-
-                        {/* <div className="bg-gray-400/50 rounded-full size-8 p-2 flex items-center justify-center">
-                            <Icon icon="uil:qrcode-scan" className="size-4" />
-                        </div> */}
                     </div>
-                </div>
+                )}
             </div>
             <div className="w-full h-full flex flex-col gap-4 bg-white text-black rounded-t-2xl mt-6 justify-center items-center">
                 <hr className="w-10 rounded-full h-1 bg-gray-200 my-2"></hr>
                 <div className="w-full h-full p-4">
-                    <Tabs defaultValue="matches" className="w-full h-full">
+                    <Tabs defaultValue="statistics" className="w-full h-full">
                         <TabsList className="w-full">
-                            <TabsTrigger value="matches">
+                            <TabsTrigger value="statistics">
                                 Statistics
                             </TabsTrigger>
-                            <TabsTrigger value="squad">Lineup</TabsTrigger>
-                            <TabsTrigger value="teams">Ratings</TabsTrigger>
-                            <TabsTrigger value="requests">POTM</TabsTrigger>
+                            <TabsTrigger value="lineup">Lineup</TabsTrigger>
+                            <TabsTrigger value="potm">POTM</TabsTrigger>
                         </TabsList>
-                        <TabsContent value="matches" className="w-full h-full">
+                        <TabsContent
+                            value="statistics"
+                            className="w-full h-full"
+                        >
                             <div className="w-full h-full p-4 border rounded-xl">
                                 <Statistics
-                                    groupId={match.group_id}
+                                    matchId={matchId}
+                                    matchData={match}
                                     role={role}
                                 />
                             </div>
                         </TabsContent>
-                        <TabsContent value="squad">
+                        <TabsContent value="lineup">
                             <div className="w-full h-full p-4 border rounded-xl">
-                                {/* <GroupSquadPage groupId={groupId} role={role} /> */}
+                                <Lineup role={role} matchData={match} />
                             </div>
                         </TabsContent>
-                        <TabsContent value="teams">
-                            <div className="w-full h-full p-4 border rounded-xl">
-                                {/* <GroupTeamsPage groupId={groupId} role={role} /> */}
-                            </div>
-                        </TabsContent>
-                        <TabsContent value="requests">
+                        <TabsContent value="potm">
                             <div className="w-full h-full p-4 border rounded-xl">
                                 <GroupRequestsPage />
                             </div>

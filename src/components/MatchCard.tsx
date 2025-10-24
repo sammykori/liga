@@ -10,7 +10,7 @@ dayjs.extend(relativeTime);
 
 type Match = Database["public"]["Tables"]["matches"]["Row"];
 type Teams = Database["public"]["Tables"]["group_teams"]["Row"];
-type MatchTeams = Match & {
+export type MatchTeams = Match & {
     teamA: Pick<Teams, "id" | "name" | "color"> | null;
     teamB: Pick<Teams, "id" | "name" | "color"> | null;
 };

@@ -20,7 +20,7 @@ export type Database = {
           created_at: string
           id: string
           match_id: string
-          minute: number
+          minute: number | null
           scorer_id: string
         }
         Insert: {
@@ -28,7 +28,7 @@ export type Database = {
           created_at?: string
           id?: string
           match_id: string
-          minute: number
+          minute?: number | null
           scorer_id: string
         }
         Update: {
@@ -36,15 +36,29 @@ export type Database = {
           created_at?: string
           id?: string
           match_id?: string
-          minute?: number
+          minute?: number | null
           scorer_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "goals_assist_id_fkey1"
+            columns: ["assist_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "goals_match_id_fkey"
             columns: ["match_id"]
             isOneToOne: false
             referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "goals_scorer_id_fkey1"
+            columns: ["scorer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -241,6 +255,64 @@ export type Database = {
             columns: ["match_id"]
             isOneToOne: false
             referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      match_responses: {
+        Row: {
+          availability: boolean | null
+          created_at: string | null
+          id: string
+          match_id: string | null
+          payment_made: boolean | null
+          status: string | null
+          team_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          availability?: boolean | null
+          created_at?: string | null
+          id?: string
+          match_id?: string | null
+          payment_made?: boolean | null
+          status?: string | null
+          team_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          availability?: boolean | null
+          created_at?: string | null
+          id?: string
+          match_id?: string | null
+          payment_made?: boolean | null
+          status?: string | null
+          team_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_responses_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "match_responses_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "group_teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "match_responses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -582,17 +654,12 @@ export type Database = {
         Args: { p_group_id: string; p_user_id: string }
         Returns: boolean
       }
-      generate_group_code: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      is_user_in_group: {
-        Args: { g: string; u: string }
-        Returns: boolean
-      }
+      generate_group_code: { Args: never; Returns: string }
+      is_user_in_group: { Args: { g: string; u: string }; Returns: boolean }
     }
     Enums: {
       foot: "left" | "right" | "both"
+      match_response_status: "pending" | "join" | "decline"
       match_status:
         | "pending"
         | "confirmed"
@@ -732,6 +799,7 @@ export const Constants = {
   public: {
     Enums: {
       foot: ["left", "right", "both"],
+      match_response_status: ["pending", "join", "decline"],
       match_status: ["pending", "confirmed", "ended", "cancelled", "completed"],
       measurement_type: ["si", "us"],
       notification_type: ["match", "group", "user", "general"],
