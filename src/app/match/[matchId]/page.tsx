@@ -11,7 +11,6 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import GroupRequestsPage from "@/components/sections/group/GroupRequestsPage";
 import { useGroupRole } from "@/hooks/useGroupRole";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { useSingleMatch } from "@/hooks/useSingleMatch";
@@ -25,6 +24,8 @@ import AcceptResponseForm from "@/components/sections/match/AcceptResponseForm";
 import DeclineResponseDialog from "@/components/sections/match/DeclineResponseDialog";
 import Lineup from "@/components/sections/match/Lineup";
 import Actions from "@/components/sections/match/Actions";
+import POTMPage from "@/components/sections/match/POTMPage";
+import { getMatchStatus } from "@/lib/helpers";
 
 function Page() {
     const { matchId } = useParams<{ matchId: string }>();
@@ -36,6 +37,21 @@ function Page() {
     const { role, loading } = useGroupRole(match?.group_id, user?.id);
     const { data: matchResponse, isLoading: isLoadingMatchResponse } =
         usePlayerMatchResponse(matchId, user?.id);
+
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case "cancelled":
+                return "bg-orange-500 text-success-foreground";
+            case "confirmed":
+                return "bg-green-500 text-success-foreground";
+            case "live":
+                return "bg-red-500 text-success-foreground";
+            case "pending":
+                return "bg-yellow-500 text-accent-foreground";
+            default:
+                return "bg-muted text-muted-foreground";
+        }
+    };
 
     if (isGroupLoading || isUserLoading || loading || isLoadingMatchResponse) {
         return <LoadingScreen />;
@@ -86,7 +102,16 @@ function Page() {
                         {match?.a_side ? `${match?.a_side} A-side` : ""}
                     </h1>
 
-                    <h1 className="text-xs">LIVE</h1>
+                    <div className="flex gap-1 items-center">
+                        <div
+                            className={`size-2 rounded-full ${getStatusColor(
+                                match.status
+                            )}`}
+                        ></div>
+                        <h1 className="text-xs font-bold">
+                            {getMatchStatus(match)?.toUpperCase()}
+                        </h1>
+                    </div>
                 </div>
                 <div className="w-full flex justify-between items-center p-4 gap-4">
                     <div className="flex flex-col gap-2 items-center justify-center">
@@ -164,7 +189,12 @@ function Page() {
                                 Statistics
                             </TabsTrigger>
                             <TabsTrigger value="lineup">Lineup</TabsTrigger>
-                            <TabsTrigger value="potm">POTM</TabsTrigger>
+                            <TabsTrigger
+                                value="potm"
+                                className="text-green-700 animate-pulse font-bold"
+                            >
+                                POTM
+                            </TabsTrigger>
                         </TabsList>
                         <TabsContent
                             value="statistics"
@@ -180,12 +210,20 @@ function Page() {
                         </TabsContent>
                         <TabsContent value="lineup">
                             <div className="w-full h-full p-4 border rounded-xl">
-                                <Lineup role={role} matchData={match} />
+                                <Lineup
+                                    role={role}
+                                    matchData={match}
+                                    matchId={matchId}
+                                />
                             </div>
                         </TabsContent>
                         <TabsContent value="potm">
                             <div className="w-full h-full p-4 border rounded-xl">
-                                <GroupRequestsPage />
+                                <POTMPage
+                                    role={role}
+                                    matchData={match}
+                                    matchId={matchId}
+                                />
                             </div>
                         </TabsContent>
                     </Tabs>

@@ -17,6 +17,7 @@ import { Icon } from "@iconify/react";
 import { z } from "zod";
 import { useState, useEffect } from "react";
 import { PostgrestError } from "@supabase/supabase-js";
+import lodash from "lodash";
 
 const authSchema = z.object({
     email: z
@@ -47,8 +48,7 @@ export default function Auth() {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
-        givenName: "",
-        lastName: "",
+        userName: "",
         dob: "",
     });
 
@@ -120,9 +120,7 @@ export default function Auth() {
             } else {
                 const validation = authSchema.safeParse({
                     ...formData,
-                    givenName:
-                        mode === "signup" ? formData.givenName : undefined,
-                    lastName: mode === "signup" ? formData.lastName : undefined,
+                    userName: mode === "signup" ? formData.userName : undefined,
                     dob: mode === "signup" ? formData.dob : undefined,
                 });
 
@@ -140,8 +138,7 @@ export default function Auth() {
                         options: {
                             emailRedirectTo: `${window.location.origin}`,
                             data: {
-                                givenName: formData.givenName,
-                                lastName: formData.lastName,
+                                givenName: formData.userName,
                                 dob: formData.dob,
                             },
                         },
@@ -224,6 +221,35 @@ export default function Auth() {
         }
     };
 
+    const handleCheckUsername = async (username: string) => {
+        console.log(username);
+        handleInputChange("username", username);
+        if (username.length < 2) return;
+
+        const { data, error } = await supabase
+            .from("profiles")
+            .select("id")
+            .eq("username", username)
+            .maybeSingle();
+
+        if (error && error.code !== "PGRST116") {
+            toast.error("Error checking username:", {
+                description: error.message,
+            });
+            console.error("Error", error.message, error.details, error);
+            return;
+        }
+        if (error) {
+            console.error("Error", error.message, error.details, error);
+        }
+
+        if (data) {
+            toast.error("Username already taken");
+            console.log(data);
+        }
+    };
+    const debouncedCheck = lodash.debounce(handleCheckUsername, 500);
+
     return (
         <div className="min-h-screen bg-background flex items-center justify-center p-4">
             <motion.div
@@ -266,19 +292,17 @@ export default function Auth() {
                                     >
                                         <div>
                                             <Label
-                                                htmlFor="givenname"
+                                                htmlFor="userName"
                                                 className="text-card-foreground"
                                             >
-                                                Given Name
+                                                Username
                                             </Label>
                                             <Input
-                                                id="givenname"
+                                                id="userName"
                                                 type="text"
-                                                placeholder="Enter your given name"
-                                                value={formData.givenName}
+                                                placeholder="Enter your username"
                                                 onChange={(e) =>
-                                                    handleInputChange(
-                                                        "givenName",
+                                                    debouncedCheck(
                                                         e.target.value
                                                     )
                                                 }
@@ -288,35 +312,13 @@ export default function Auth() {
                                         </div>
                                         <div>
                                             <Label
-                                                htmlFor="lastname"
-                                                className="text-card-foreground"
-                                            >
-                                                Last Name
-                                            </Label>
-                                            <Input
-                                                id="lastname"
-                                                type="text"
-                                                placeholder="Enter your last name"
-                                                value={formData.lastName}
-                                                onChange={(e) =>
-                                                    handleInputChange(
-                                                        "lastName",
-                                                        e.target.value
-                                                    )
-                                                }
-                                                required={mode === "signup"}
-                                                className="mt-1"
-                                            />
-                                        </div>
-                                        <div>
-                                            <Label
-                                                htmlFor="lastname"
+                                                htmlFor="dob"
                                                 className="text-card-foreground"
                                             >
                                                 Date of Birth
                                             </Label>
                                             <Input
-                                                id="lastname"
+                                                id="dob"
                                                 type="date"
                                                 value={formData.dob}
                                                 onChange={(e) =>
@@ -340,20 +342,25 @@ export default function Auth() {
                                 >
                                     Email
                                 </Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    placeholder="Enter your email"
-                                    value={formData.email}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "email",
-                                            e.target.value
-                                        )
-                                    }
-                                    required
-                                    className="mt-1"
-                                />
+                                <div>
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        placeholder="Enter your email"
+                                        value={formData.email}
+                                        onChange={(e) =>
+                                            handleInputChange(
+                                                "email",
+                                                e.target.value
+                                            )
+                                        }
+                                        required
+                                        className="mt-1"
+                                    />
+                                    <div>
+                                        <Icon icon="" />
+                                    </div>
+                                </div>
                             </div>
 
                             {mode !== "forgot-password" && (

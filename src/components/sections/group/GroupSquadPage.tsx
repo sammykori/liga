@@ -65,14 +65,10 @@ function GroupSquadPage({
                                             <div className="size-28 bg-blue-200"></div>
                                             <div>
                                                 <DrawerTitle>
-                                                    {player.profiles?.last_name}{" "}
-                                                    {
-                                                        player.profiles
-                                                            ?.first_name
-                                                    }
+                                                    {player.profiles?.username}
                                                 </DrawerTitle>
                                                 <DrawerDescription className="text-gray-400 text-xs">
-                                                    {player.profiles.first_name}
+                                                    {player.profiles.full_name}
                                                 </DrawerDescription>
                                             </div>
                                         </div>

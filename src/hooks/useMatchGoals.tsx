@@ -8,7 +8,7 @@ async function fetchMatchGoals(matchId: string) {
     const { data, error } = await supabase
         .from("goals")
         .select(
-            `*, scorer:profiles!scorer_id(first_name,last_name, position), assist:profiles!assist_id(first_name,last_name, position)`
+            `*, scorer:profiles!scorer_id(username,full_name, position), assist:profiles!assist_id(username,full_name, position)`
         )
         .eq("match_id", matchId);
 

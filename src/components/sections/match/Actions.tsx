@@ -121,7 +121,7 @@ function ActionButton({
 }: ActionButtonProps) {
     return (
         <AlertDialog>
-            <AlertDialogTrigger>
+            <AlertDialogTrigger asChild>
                 <Button
                     className={`w-full `}
                     disabled={disabled}

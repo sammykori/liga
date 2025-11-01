@@ -1,5 +1,6 @@
 import { Area } from "react-easy-crop";
 import countries from "country-list";
+import { Database } from "@/types/database";
 
 export const getInitials = (name: string) => {
     return (
@@ -131,3 +132,18 @@ export const getCountryIcon = (country: string) => {
 export const getCountryCode = (country: string) => {
     return countries.getCode(country);
 };
+
+type Match = Database["public"]["Tables"]["matches"]["Row"];
+export function getMatchStatus(match: Match) {
+    if (!match) return;
+    const { status, match_date, match_time } = match;
+
+    if (status !== "confirmed") return status;
+
+    const matchStart = new Date(`${match_date.split("T")[0]}T${match_time}Z`);
+    const now = new Date();
+
+    if (now >= matchStart) {
+        return "live";
+    }
+}

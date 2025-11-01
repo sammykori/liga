@@ -12,8 +12,6 @@ export function Navigation({ variant }: { variant?: string }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const router = useRouter();
 
-    console.log("Current user:", user);
-
     return (
         <>
             <motion.header

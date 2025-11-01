@@ -7,7 +7,7 @@ async function fetchResponse(matchId?: string) {
 
     const { data, error } = await supabase
         .from("match_responses")
-        .select(`*, profiles(first_name, last_name, position)`)
+        .select(`*, profiles(username, full_name, position)`)
         .eq("match_id", matchId);
 
     if (error) {

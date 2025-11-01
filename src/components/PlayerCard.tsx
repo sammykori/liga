@@ -10,7 +10,7 @@ type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 type PlayerStatsRow = Database["public"]["Tables"]["player_group_stats"]["Row"];
 
 export type GroupMembershipWithStats = GroupMembershipRow & {
-    profiles: Pick<ProfileRow, "first_name" | "last_name" | "position"> | null;
+    profiles: Pick<ProfileRow, "username" | "full_name" | "position"> | null;
     player_group_stats: Pick<
         PlayerStatsRow,
         "goals" | "assists" | "matches_played" | "rating"
@@ -57,7 +57,7 @@ export function PlayerCard({ player, variant = "simple" }: PlayerCardProps) {
                             </div>
                             <div>
                                 <h3 className="font-semibold text-card-foreground">
-                                    {player.profiles?.first_name}
+                                    {player.profiles?.username}
                                 </h3>
                                 <p
                                     className={`text-sm ${getStatusColor(
@@ -96,7 +96,7 @@ export function PlayerCard({ player, variant = "simple" }: PlayerCardProps) {
                         </div>
                         <div>
                             <h3 className="font-semibold text-xs text-card-foreground">
-                                {player.profiles?.first_name}
+                                {player.profiles?.username}
                             </h3>
                             <p
                                 className={`w-fit text-xs text-center px-2 ${getStatusColor(

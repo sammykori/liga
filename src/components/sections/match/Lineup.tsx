@@ -1,6 +1,5 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useParams } from "next/navigation";
 import LoadingScreen from "@/components/LoadingScreen";
 import { useGroupMatchResponse } from "@/hooks/useGroupMatchResponse";
 import { ParticipantCard } from "./ParticipantCard";
@@ -10,12 +9,12 @@ import { MatchTeams } from "@/components/MatchCard";
 function Lineup({
     role,
     matchData,
+    matchId,
 }: {
     role: string | null;
     matchData: MatchTeams;
+    matchId: string;
 }) {
-    const { matchId } = useParams<{ matchId: string }>();
-
     const { data: groupMatchResponse, isLoading: isGroupLoading } =
         useGroupMatchResponse(matchId);
 

@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 
 export function BottomNavigation() {
     const pathname = usePathname();
-    console.log(pathname);
 
     const navItems = [
         { path: "/", icon: "ri:football-fill", label: "Home" },

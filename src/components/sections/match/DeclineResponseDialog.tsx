@@ -32,7 +32,7 @@ function DeclineResponseDialog({ data }: { data: MatchResponse }) {
     }
     return (
         <AlertDialog>
-            <AlertDialogTrigger>
+            <AlertDialogTrigger asChild>
                 <Button variant="destructive">Decline</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>

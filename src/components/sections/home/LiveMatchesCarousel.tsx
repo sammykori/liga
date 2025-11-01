@@ -13,7 +13,6 @@ import {
 function LiveMatchesCarousel({ groupId }: { groupId: string | undefined }) {
     const { data: matches } = useGroupMatches(groupId);
     const router = useRouter();
-    console.log(groupId, matches);
 
     const handleMatchClick = (matchId: string) => {
         router.push(`/match/${matchId}`);

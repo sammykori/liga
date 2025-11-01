@@ -9,7 +9,6 @@ import { useGroupMatches } from "@/hooks/useGroupMatches";
 function UpcomingMatches({ groupId }: { groupId: string | undefined }) {
     const { data: matches } = useGroupMatches(groupId);
     const router = useRouter();
-    console.log(groupId, matches);
 
     const handleMatchClick = (matchId: string) => {
         router.push(`/match/${matchId}`);

@@ -569,12 +569,11 @@ export type Database = {
           county_state_city: string | null
           created_at: string
           dob: string | null
-          first_name: string | null
           foot: Database["public"]["Enums"]["foot"] | null
+          full_name: string | null
           goals: number
           height: number | null
           id: string
-          last_name: string | null
           matches_played: number
           matches_won: number
           measurement_system: Database["public"]["Enums"]["measurement_type"]
@@ -587,6 +586,7 @@ export type Database = {
           role: Database["public"]["Enums"]["user_role"]
           sex: Database["public"]["Enums"]["sex"] | null
           updated_at: string
+          username: string | null
           weight: number | null
         }
         Insert: {
@@ -596,12 +596,11 @@ export type Database = {
           county_state_city?: string | null
           created_at?: string
           dob?: string | null
-          first_name?: string | null
           foot?: Database["public"]["Enums"]["foot"] | null
+          full_name?: string | null
           goals?: number
           height?: number | null
           id: string
-          last_name?: string | null
           matches_played?: number
           matches_won?: number
           measurement_system?: Database["public"]["Enums"]["measurement_type"]
@@ -614,6 +613,7 @@ export type Database = {
           role?: Database["public"]["Enums"]["user_role"]
           sex?: Database["public"]["Enums"]["sex"] | null
           updated_at?: string
+          username?: string | null
           weight?: number | null
         }
         Update: {
@@ -623,12 +623,11 @@ export type Database = {
           county_state_city?: string | null
           created_at?: string
           dob?: string | null
-          first_name?: string | null
           foot?: Database["public"]["Enums"]["foot"] | null
+          full_name?: string | null
           goals?: number
           height?: number | null
           id?: string
-          last_name?: string | null
           matches_played?: number
           matches_won?: number
           measurement_system?: Database["public"]["Enums"]["measurement_type"]
@@ -641,6 +640,7 @@ export type Database = {
           role?: Database["public"]["Enums"]["user_role"]
           sex?: Database["public"]["Enums"]["sex"] | null
           updated_at?: string
+          username?: string | null
           weight?: number | null
         }
         Relationships: []

@@ -112,10 +112,7 @@ function GroupRequestsPage() {
                                                     Player
                                                 </span>{" "}
                                                 <span className="text-primary font-medium">
-                                                    {
-                                                        request.profiles
-                                                            ?.first_name
-                                                    }
+                                                    {request.profiles?.username}
                                                 </span>{" "}
                                                 <span className="font-medium">
                                                     request to join
@@ -134,7 +131,7 @@ function GroupRequestsPage() {
                                                 approve(
                                                     request.id,
                                                     request.user_id,
-                                                    request.profiles?.first_name
+                                                    request.profiles?.username
                                                 )
                                             }
                                             className="w-full text-xs"

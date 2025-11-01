@@ -8,8 +8,8 @@ type GoalRow = Database["public"]["Tables"]["goals"]["Row"];
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 
 export type GoalProp = GoalRow & {
-    scorer: Pick<ProfileRow, "first_name" | "last_name" | "position"> | null;
-    assist: Pick<ProfileRow, "first_name" | "last_name" | "position"> | null;
+    scorer: Pick<ProfileRow, "username" | "full_name" | "position"> | null;
+    assist: Pick<ProfileRow, "username" | "full_name" | "position"> | null;
 };
 
 interface GoalCardProps {
@@ -30,7 +30,7 @@ export function GoalCard({ goal }: GoalCardProps) {
                         </div>
                         <div>
                             <h3 className="font-semibold text-xs text-card-foreground">
-                                {goal.scorer?.first_name}
+                                {goal.scorer?.username}
                             </h3>
                             <p
                                 className={`w-fit text-xs text-center px-2  rounded-full`}

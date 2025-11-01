@@ -37,7 +37,6 @@ export default function MenuOverlay({
     const supabase = createClient();
 
     const { data: groups } = useGroup(user?.id);
-    console.log("groups", groups);
 
     const handleNavigation = (page: string) => {
         onClose();

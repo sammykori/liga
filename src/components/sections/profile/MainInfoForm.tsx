@@ -53,8 +53,7 @@ function MainInfoForm({ stats, closeModal }: MainInfoFormProps) {
         try {
             await updateProfileMutation.mutateAsync({
                 id: user.id,
-                first_name: values.firstName,
-                last_name: values.lastName,
+                full_name: values.lastName,
                 position: values.position,
                 country: values.country,
                 county_state_city: values.city,
@@ -72,8 +71,8 @@ function MainInfoForm({ stats, closeModal }: MainInfoFormProps) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            firstName: stats.first_name || undefined,
-            lastName: stats.last_name || undefined,
+            firstName: stats.username || undefined,
+            lastName: stats.full_name || undefined,
             position: stats.position || undefined,
             city: stats.county_state_city || undefined,
             bio: stats.bio || undefined,
@@ -89,24 +88,10 @@ function MainInfoForm({ stats, closeModal }: MainInfoFormProps) {
                 >
                     <FormField
                         control={form.control}
-                        name="firstName"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>First Name</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="" {...field} />
-                                </FormControl>
-
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
                         name="lastName"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Last Name</FormLabel>
+                                <FormLabel>Full Name</FormLabel>
                                 <FormControl>
                                     <Input placeholder="" {...field} />
                                 </FormControl>

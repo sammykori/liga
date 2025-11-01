@@ -96,10 +96,7 @@ function AddGoalForm({ matchId, closeModal }: MainInfoFormProps) {
                                                     value={player.user_id!}
                                                     key={index}
                                                 >
-                                                    {
-                                                        player.profiles
-                                                            ?.first_name
-                                                    }
+                                                    {player.profiles?.username}
                                                 </SelectItem>
                                             ))}
                                     </SelectContent>
@@ -133,10 +130,7 @@ function AddGoalForm({ matchId, closeModal }: MainInfoFormProps) {
                                                     value={player.user_id!}
                                                     key={index}
                                                 >
-                                                    {
-                                                        player.profiles
-                                                            ?.first_name
-                                                    }
+                                                    {player.profiles?.username}
                                                 </SelectItem>
                                             ))}
                                     </SelectContent>

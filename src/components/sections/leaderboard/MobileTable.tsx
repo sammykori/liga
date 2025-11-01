@@ -73,11 +73,8 @@ function MobileTable({ data }: { data: GroupMembershipWithStats[] }) {
                                             </Avatar>
                                             <div className="w-[80%] flex flex-col ">
                                                 <p className="font-bold truncate text-xs">
-                                                    {
-                                                        player.profiles
-                                                            ?.first_name
-                                                    }{" "}
-                                                    {player.profiles?.last_name}
+                                                    {player.profiles?.username}{" "}
+                                                    {player.profiles?.full_name}
                                                 </p>
                                                 <p className="text-xs text-gray-400">
                                                     {player.profiles?.position}
@@ -175,11 +172,8 @@ function MobileTable({ data }: { data: GroupMembershipWithStats[] }) {
                                             </Avatar>
                                             <div className="w-[80%] flex flex-col ">
                                                 <p className="font-bold truncate text-xs">
-                                                    {
-                                                        player.profiles
-                                                            ?.first_name
-                                                    }{" "}
-                                                    {player.profiles?.last_name}
+                                                    {player.profiles?.username}{" "}
+                                                    {player.profiles?.full_name}
                                                 </p>
                                                 <p className="text-xs text-gray-400">
                                                     {player.profiles?.position}
@@ -276,11 +270,8 @@ function MobileTable({ data }: { data: GroupMembershipWithStats[] }) {
                                             </Avatar>
                                             <div className="w-[80%] flex flex-col ">
                                                 <p className="font-bold truncate text-xs">
-                                                    {
-                                                        player.profiles
-                                                            ?.first_name
-                                                    }{" "}
-                                                    {player.profiles?.last_name}
+                                                    {player.profiles?.username}{" "}
+                                                    {player.profiles?.full_name}
                                                 </p>
                                                 <p className="text-xs text-gray-400">
                                                     {player.profiles?.position}

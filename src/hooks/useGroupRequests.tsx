@@ -8,7 +8,7 @@ async function fetchRequests(groupId: string) {
     const { data, error } = await supabase
         .from("group_join_requests")
         .select(
-            `id, user_id, status, created_at, profiles(first_name, last_name)`
+            `id, user_id, status, created_at, profiles(username, full_name)`
         )
         .eq("group_id", groupId)
         .eq("status", "pending");

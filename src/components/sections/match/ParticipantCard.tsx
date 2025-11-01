@@ -21,7 +21,7 @@ type GroupResponsesRow = Database["public"]["Tables"]["match_responses"]["Row"];
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 
 export type GroupMembershipWithStats = GroupResponsesRow & {
-    profiles: Pick<ProfileRow, "first_name" | "last_name" | "position"> | null;
+    profiles: Pick<ProfileRow, "username" | "full_name" | "position"> | null;
 };
 type Teams = Database["public"]["Tables"]["group_teams"]["Row"];
 type TeamData = Pick<Teams, "id" | "name" | "color"> | null;
@@ -83,8 +83,8 @@ export function ParticipantCard({
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <h3 className="font-semibold text-xs text-card-foreground">
-                                        {playerResponse.profiles?.first_name}{" "}
-                                        {playerResponse.profiles?.last_name} -{" "}
+                                        {playerResponse.profiles?.username}{" "}
+                                        {playerResponse.profiles?.full_name} -{" "}
                                         {playerResponse.profiles?.position}
                                     </h3>
                                     <div className="flex items-center gap-2">

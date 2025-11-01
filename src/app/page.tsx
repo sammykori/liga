@@ -11,18 +11,23 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import EmptyScreen from "@/components/EmptyScreen";
+import { JoinGroupModal } from "@/components/JoinGroupModal";
 
 export default function Home() {
     const supabase = createClient();
     const [groupId, setGroupId] = useState<string>();
     const { data: user, isLoading: isUserLoading } = useAuthUser();
+    const [openJoinModal, setOpenJoinModal] = useState(false);
 
     const { data: groups, isLoading: isGroupsLoading } = useGroup(user?.id);
 
     useEffect(() => {
         async function checkPendingJoin() {
+            if (!user) return;
             const code = localStorage.getItem("pendingJoinCode");
-            if (!code) return;
+            if (!code) {
+                return;
+            }
 
             const { data: group } = await supabase
                 .from("groups")
@@ -30,12 +35,23 @@ export default function Home() {
                 .eq("join_code", code)
                 .maybeSingle();
 
-            if (user && group) {
-                await supabase
+            if (group) {
+                const { data: request, error } = await supabase
                     .from("group_join_requests")
                     .insert({ group_id: group.id, user_id: user.id });
-                localStorage.removeItem("pendingJoinCode");
-                window.location.href = `/groups/${group.id}`;
+
+                if (error) {
+                    console.error("Join request error:", error);
+                    localStorage.removeItem("pendingJoinCode");
+                    return;
+                }
+                if (request) {
+                    console.log("Join request created:", request);
+                    localStorage.removeItem("pendingJoinCode");
+                    setOpenJoinModal(true);
+                }
+            } else {
+                console.error("No group by joincode found");
             }
         }
 
@@ -71,6 +87,10 @@ export default function Home() {
                     <TopPlayers groupId={groupId} />
                 </div>
             )}
+            <JoinGroupModal
+                open={openJoinModal}
+                onOpenChange={setOpenJoinModal}
+            />
 
             <BottomNavigation />
         </div>
