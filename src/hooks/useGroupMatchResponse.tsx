@@ -8,7 +8,8 @@ async function fetchResponse(matchId?: string) {
     const { data, error } = await supabase
         .from("match_responses")
         .select(`*, profiles(username, full_name, position)`)
-        .eq("match_id", matchId);
+        .eq("match_id", matchId)
+        .eq("status", "accepted");
 
     if (error) {
         console.log(error);

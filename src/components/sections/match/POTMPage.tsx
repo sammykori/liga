@@ -1,17 +1,15 @@
 "use client";
 import LoadingScreen from "@/components/LoadingScreen";
-import { useGroupMatchResponse } from "@/hooks/useGroupMatchResponse";
-import { MatchTeams } from "@/components/MatchCard";
 import { VoteCard } from "./VoteCard";
 import { useMatchPotm } from "@/hooks/useMatchPotm";
 
 function POTMPage({
     role,
-    matchData,
+
     matchId,
 }: {
     role: string | null;
-    matchData: MatchTeams;
+
     matchId: string;
 }) {
     const { data: matchPotmData, isLoading } = useMatchPotm(matchId);

@@ -43,6 +43,23 @@ function Statistics({
         );
     }
 
+    const goalPercentageA =
+        (matchData.teamA_score /
+            (matchData.teamA_score + matchData.teamB_score)) *
+        100;
+    const goalPercentageB =
+        (matchData.teamB_score /
+            (matchData.teamA_score + matchData.teamB_score)) *
+        100;
+
+    function hexToRgba(hex: string, alpha: number) {
+        const cleanHex = hex.replace("#", "");
+        const r = parseInt(cleanHex.substring(0, 2), 16);
+        const g = parseInt(cleanHex.substring(2, 4), 16);
+        const b = parseInt(cleanHex.substring(4, 6), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
     return (
         <motion.section
             initial={{ opacity: 0, y: 20 }}
@@ -57,10 +74,30 @@ function Statistics({
                 </div>
                 <div className="w-full grid grid-cols-2 gap-2">
                     <div className="w-full h-2 rounded-full bg-gray-300 flex justify-start">
-                        <div className="w-1/2 h-full rounded-full bg-gradient-to-r from-amber-600 via-amber-400 to-amber-200"></div>
+                        <div
+                            style={{
+                                backgroundImage: `linear-gradient(to right, 
+      ${hexToRgba(matchData.teamA?.color || "#FF0000", 0.1)}, 
+      ${hexToRgba(matchData.teamA?.color || "#FF0000", 0.8)}, 
+      ${hexToRgba(matchData.teamA?.color || "#FF0000", 1)}
+    )`,
+                                width: `${goalPercentageA}%`,
+                            }}
+                            className={` h-full rounded-full `}
+                        ></div>
                     </div>
                     <div className="w-full h-2 rounded-full bg-gray-300 flex justify-end">
-                        <div className="w-2/3 h-full rounded-full bg-gradient-to-r from-emerald-600 via-emerald-400 to-emerald-200"></div>
+                        <div
+                            style={{
+                                backgroundImage: `linear-gradient(to right, 
+      ${hexToRgba(matchData.teamB?.color || "#FF0000", 1)}, 
+      ${hexToRgba(matchData.teamB?.color || "#FF0000", 0.8)}, 
+      ${hexToRgba(matchData.teamB?.color || "#FF0000", 0.1)}
+    )`,
+                                width: `${goalPercentageB}%`,
+                            }}
+                            className={` h-full rounded-full `}
+                        ></div>
                     </div>
                 </div>
             </div>

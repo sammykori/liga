@@ -2,7 +2,6 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Icon } from "@iconify/react";
-import { Database } from "@/types/database";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,9 +13,6 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
-type GroupResponsesRow = Database["public"]["Tables"]["match_responses"]["Row"];
-type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 
 type VotedPlayer = {
     player_id: string;

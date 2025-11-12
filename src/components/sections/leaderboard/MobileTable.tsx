@@ -86,13 +86,10 @@ function MobileTable({ data }: { data: GroupMembershipWithStats[] }) {
                                         {player.player_group_stats?.rating || 0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.rating}
+                                        {player.player_group_stats?.points || 0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {
-                                            player.player_group_stats
-                                                ?.matches_played
-                                        }
+                                        0
                                     </TableCell>
                                 </motion.tr>
                             ))}
@@ -112,34 +109,28 @@ function MobileTable({ data }: { data: GroupMembershipWithStats[] }) {
                                     Name
                                 </TableHead>
                                 <TableHead className="text-center font-light text-xs">
-                                    G Pts
+                                    Pts
                                 </TableHead>
                                 <TableHead className="text-center font-light text-xs">
-                                    T Pts
+                                    Rtg
                                 </TableHead>
                                 <TableHead className="text-center font-light text-xs">
                                     MP
                                 </TableHead>
                                 <TableHead className="text-center font-light text-xs">
-                                    W
+                                    MW
                                 </TableHead>
                                 <TableHead className="text-center font-light text-xs">
-                                    D
+                                    ML
                                 </TableHead>
                                 <TableHead className="text-center font-light text-xs">
-                                    D
+                                    MD
                                 </TableHead>
                                 <TableHead className="text-center font-light text-xs">
-                                    D
+                                    Gls
                                 </TableHead>
                                 <TableHead className="text-center font-light text-xs">
-                                    D
-                                </TableHead>
-                                <TableHead className="text-center font-light text-xs">
-                                    D
-                                </TableHead>
-                                <TableHead className="text-center font-light text-xs">
-                                    D
+                                    Asts
                                 </TableHead>
                             </TableRow>
                         </TableHeader>
@@ -182,38 +173,30 @@ function MobileTable({ data }: { data: GroupMembershipWithStats[] }) {
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.rating || 0}
+                                        {player.player_group_stats?.points || 0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
                                         {player.player_group_stats?.rating || 0}
                                     </TableCell>
+
                                     <TableCell className="text-center font-light text-xs">
                                         {player.player_group_stats
                                             ?.matches_played || 0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.assists ||
-                                            0}
+                                        {player.player_group_stats
+                                            ?.matches_won || 0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.assists ||
-                                            0}
+                                        {player.player_group_stats
+                                            ?.matches_lost || 0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.assists ||
-                                            0}
+                                        {player.player_group_stats
+                                            ?.matches_drawn || 0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.assists ||
-                                            0}
-                                    </TableCell>
-                                    <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.assists ||
-                                            0}
-                                    </TableCell>
-                                    <TableCell className="text-center font-light text-xs">
-                                        {player.player_group_stats?.assists ||
-                                            0}
+                                        {player.player_group_stats?.goals || 0}
                                     </TableCell>
                                     <TableCell className="text-center font-light text-xs">
                                         {player.player_group_stats?.assists ||

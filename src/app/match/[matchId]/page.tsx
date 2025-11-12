@@ -65,38 +65,43 @@ function Page() {
     return (
         <div className="bg-black w-full h-screen min-h-screen text-white">
             <Navigation variant="action" />
-            {matchResponse?.status === "pending" && (
-                <div className="w-full px-4 py-2">
-                    <div className="w-full flex  justify-between items-center p-4 rounded-2xl bg-white">
-                        <h1 className="text-black font-bold">Join match</h1>
-                        <div className="flex gap-4">
-                            <Dialog
-                                open={acceptModalOpen}
-                                onOpenChange={setAcceptModalOpen}
-                            >
-                                <DialogTrigger asChild>
-                                    <Button variant="secondary" className="">
-                                        Accept
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <DialogTitle>
-                                            Join Match Lineup
-                                        </DialogTitle>
-                                    </DialogHeader>
-                                    <AcceptResponseForm
-                                        data={matchResponse!}
-                                        closeModal={setAcceptModalOpen}
-                                    />
-                                </DialogContent>
-                            </Dialog>
+            {matchResponse?.status === "pending" &&
+                (match.status === "pending" ||
+                    match.status === "confirmed") && (
+                    <div className="w-full px-4 py-2">
+                        <div className="w-full flex  justify-between items-center p-4 rounded-2xl bg-white">
+                            <h1 className="text-black font-bold">Join match</h1>
+                            <div className="flex gap-4">
+                                <Dialog
+                                    open={acceptModalOpen}
+                                    onOpenChange={setAcceptModalOpen}
+                                >
+                                    <DialogTrigger asChild>
+                                        <Button
+                                            variant="secondary"
+                                            className=""
+                                        >
+                                            Accept
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>
+                                                Join Match Lineup
+                                            </DialogTitle>
+                                        </DialogHeader>
+                                        <AcceptResponseForm
+                                            data={matchResponse!}
+                                            closeModal={setAcceptModalOpen}
+                                        />
+                                    </DialogContent>
+                                </Dialog>
 
-                            <DeclineResponseDialog data={matchResponse!} />
+                                <DeclineResponseDialog data={matchResponse!} />
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
             {match?.status === "ended" && matchResponse?.voted === false && (
                 <div className="w-full px-4 py-2">
                     <div className="w-full flex  justify-between items-center p-4 rounded-2xl bg-white">
@@ -160,11 +165,19 @@ function Page() {
                         <h1 className="text-xs">{match?.venue}</h1>
                         <h1 className="text-xs">
                             {dayjs(match?.match_date).format("dddd, D MMM")} -
-                            12:30 PM
+                            {dayjs(match?.match_date).format("hh:mm A")}
                         </h1>
                         <div className="px-6 py-2 bg-white text-black rounded-md flex justify-center items-center flex-col">
                             <h1>Results</h1>
-                            <h1>0 - 0</h1>
+                            {getMatchStatus(match) === "live" ||
+                            getMatchStatus(match) === "voting" ||
+                            getMatchStatus(match) === "completed" ? (
+                                <h1>
+                                    {match.teamA_score} - {match.teamB_score}
+                                </h1>
+                            ) : (
+                                <h1>-</h1>
+                            )}
                         </div>
                     </div>
                     <div className="flex flex-col gap-2 items-center justify-center">
@@ -257,11 +270,7 @@ function Page() {
                         </TabsContent>
                         <TabsContent value="potm">
                             <div className="w-full h-full p-4 border rounded-xl">
-                                <POTMPage
-                                    role={role}
-                                    matchData={match}
-                                    matchId={matchId}
-                                />
+                                <POTMPage role={role} matchId={matchId} />
                             </div>
                         </TabsContent>
                     </Tabs>

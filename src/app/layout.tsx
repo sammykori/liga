@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Lobster, Lexend } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ReactQueryProvider } from "@/lib/ReactQueryProvider";
@@ -12,6 +12,16 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
     variable: "--font-geist-mono",
+    subsets: ["latin"],
+});
+const lobster = Lobster({
+    variable: "--font-lobster",
+    subsets: ["latin"],
+    weight: ["400"],
+});
+
+const lexend = Lexend({
+    variable: "--font-lexend",
     subsets: ["latin"],
 });
 
@@ -28,7 +38,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                className={`${geistSans.variable} ${geistMono.variable} ${lobster.variable} ${lexend.className} antialiased`}
             >
                 <ReactQueryProvider>
                     <AuthWatcher />

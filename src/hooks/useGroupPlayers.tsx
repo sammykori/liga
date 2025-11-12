@@ -8,7 +8,7 @@ async function fetchPlayers(groupId: string) {
     const { data, error } = await supabase
         .from("group_memberships")
         .select(
-            `id, user_id, group_id, role, joined_at, profiles(username, full_name, position), player_group_stats ( goals, assists, matches_played, rating )`
+            `id, user_id, group_id, role, joined_at, profiles(username, full_name, position), player_group_stats( goals, assists, matches_played, matches_won, matches_lost, matches_drawn, points, rating )`
         )
         .eq("group_id", groupId);
 

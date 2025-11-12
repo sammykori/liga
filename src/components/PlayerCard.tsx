@@ -13,7 +13,14 @@ export type GroupMembershipWithStats = GroupMembershipRow & {
     profiles: Pick<ProfileRow, "username" | "full_name" | "position"> | null;
     player_group_stats: Pick<
         PlayerStatsRow,
-        "goals" | "assists" | "matches_played" | "rating"
+        | "goals"
+        | "assists"
+        | "matches_played"
+        | "matches_won"
+        | "matches_lost"
+        | "matches_drawn"
+        | "rating"
+        | "points"
     > | null;
 };
 

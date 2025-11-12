@@ -55,7 +55,6 @@ function AddGoalForm({ matchId, matchData, closeModal }: MainInfoFormProps) {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            
             const { error: incrementError } = await supabase.rpc(
                 "increment_team_score",
                 {
@@ -69,7 +68,7 @@ function AddGoalForm({ matchId, matchData, closeModal }: MainInfoFormProps) {
                 return;
             }
             if (values.scorer_id) {
-                const { data, error } = await supabase
+                const { data } = await supabase
                     .from("goals")
                     .insert({
                         match_id: matchId,

@@ -47,7 +47,7 @@ function PotmForm({ matchId, responseDate, closeModal }: MainInfoFormProps) {
     const supabase = createClient();
     const [filteredResponses, setFilteredResponses] =
         useState<MatchResponseProfile[]>();
-    const { data: groupResponse, isLoading } = useGroupMatchResponse(matchId);
+    const { data: groupResponse } = useGroupMatchResponse(matchId);
     const { data: user } = useAuthUser();
     console.log(user?.id);
 
@@ -65,7 +65,7 @@ function PotmForm({ matchId, responseDate, closeModal }: MainInfoFormProps) {
         try {
             await supabase.from("match_votes").insert({
                 match_id: matchId!,
-                voter_id: user?.id!,
+                voter_id: user.id!,
                 player_id: values.player_id,
             });
             await updateMatchResponse.mutateAsync({
@@ -112,27 +112,33 @@ function PotmForm({ matchId, responseDate, closeModal }: MainInfoFormProps) {
                                         </FormControl>
                                         <SelectContent>
                                             {filteredResponses.map(
-                                                (players, index) => (
-                                                    <SelectItem
-                                                        value={players.user_id!}
-                                                        key={index}
-                                                    >
-                                                        <Avatar>
-                                                            <AvatarImage src="/images/avatar.jpeg" />
-                                                            <AvatarFallback>
-                                                                {getInitials(
-                                                                    players
-                                                                        .profiles
-                                                                        ?.full_name!
-                                                                )}
-                                                            </AvatarFallback>
-                                                        </Avatar>
-                                                        {
-                                                            players.profiles
-                                                                ?.username
-                                                        }
-                                                    </SelectItem>
-                                                )
+                                                (players, index) => {
+                                                    if (!players.profiles)
+                                                        return;
+                                                    return (
+                                                        <SelectItem
+                                                            value={
+                                                                players.user_id!
+                                                            }
+                                                            key={index}
+                                                        >
+                                                            <Avatar>
+                                                                <AvatarImage src="/images/avatar.jpeg" />
+                                                                <AvatarFallback>
+                                                                    {getInitials(
+                                                                        players
+                                                                            .profiles
+                                                                            .full_name!
+                                                                    )}
+                                                                </AvatarFallback>
+                                                            </Avatar>
+                                                            {
+                                                                players.profiles
+                                                                    ?.username
+                                                            }
+                                                        </SelectItem>
+                                                    );
+                                                }
                                             )}
                                         </SelectContent>
                                     </Select>

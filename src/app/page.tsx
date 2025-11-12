@@ -91,7 +91,6 @@ export default function Home() {
                 open={openJoinModal}
                 onOpenChange={setOpenJoinModal}
             />
-
             <BottomNavigation />
         </div>
     );

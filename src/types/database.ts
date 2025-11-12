@@ -358,6 +358,7 @@ export type Database = {
           created_at: string
           creator_id: string
           description: string | null
+          ended_at: string | null
           group_id: string
           id: string
           match_date: string
@@ -366,7 +367,7 @@ export type Database = {
           potm_id: string | null
           status: Database["public"]["Enums"]["match_status"]
           teamA_id: string
-          teamA_score: number | null
+          teamA_score: number
           teamB_id: string
           teamB_score: number
           title: string | null
@@ -378,6 +379,7 @@ export type Database = {
           created_at?: string
           creator_id: string
           description?: string | null
+          ended_at?: string | null
           group_id: string
           id?: string
           match_date: string
@@ -386,7 +388,7 @@ export type Database = {
           potm_id?: string | null
           status?: Database["public"]["Enums"]["match_status"]
           teamA_id: string
-          teamA_score?: number | null
+          teamA_score?: number
           teamB_id: string
           teamB_score?: number
           title?: string | null
@@ -398,6 +400,7 @@ export type Database = {
           created_at?: string
           creator_id?: string
           description?: string | null
+          ended_at?: string | null
           group_id?: string
           id?: string
           match_date?: string
@@ -406,7 +409,7 @@ export type Database = {
           potm_id?: string | null
           status?: Database["public"]["Enums"]["match_status"]
           teamA_id?: string
-          teamA_score?: number | null
+          teamA_score?: number
           teamB_id?: string
           teamB_score?: number
           title?: string | null
@@ -663,6 +666,7 @@ export type Database = {
         Args: { p_group_id: string; p_user_id: string }
         Returns: boolean
       }
+      complete_ended_matches: { Args: never; Returns: undefined }
       generate_group_code: { Args: never; Returns: string }
       get_top_potm: {
         Args: { match: string }

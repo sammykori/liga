@@ -45,16 +45,16 @@ export function Navigation({ variant }: { variant?: string }) {
                         ) : (
                             <motion.div
                                 whileHover={{ scale: 1.05 }}
-                                className="flex items-center gap-3"
+                                className="flex items-center"
                             >
                                 <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center">
                                     <Icon
                                         icon="mdi:star-circle"
-                                        className="w-6 h-6"
+                                        className="w-8 h-8"
                                     />
                                 </div>
-                                <h1 className="text-xl font-bold text-card-foreground">
-                                    Liga
+                                <h1 className="font-lobster text-4xl font-bold text-card-foreground">
+                                    liga
                                 </h1>
                             </motion.div>
                         )}

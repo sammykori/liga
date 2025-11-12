@@ -40,6 +40,7 @@ function Actions({
             await updateMatchMutation.mutateAsync({
                 id: matchId,
                 status: status,
+                ended_at: status === "ended" ? new Date().toISOString() : null,
             });
             toast.success(`Match has been ${status}!`);
         } catch (error) {
