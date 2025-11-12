@@ -18,18 +18,18 @@ import {
 type GroupResponsesRow = Database["public"]["Tables"]["match_responses"]["Row"];
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 
-export type GroupMembershipWithStats = GroupResponsesRow & {
-    profiles: Pick<ProfileRow, "username" | "full_name" | "position"> | null;
+type VotedPlayer = {
+    player_id: string;
+    username: string;
+    full_name: string;
+    votes: number;
 };
-type Teams = Database["public"]["Tables"]["group_teams"]["Row"];
-type TeamData = Pick<Teams, "id" | "name" | "color"> | null;
-
 interface ParticipantCardProps {
-    playerResponse: GroupMembershipWithStats;
+    votedPlayer: VotedPlayer;
     role: string | null;
 }
 
-export function VoteCard({ role, playerResponse }: ParticipantCardProps) {
+export function VoteCard({ role, votedPlayer }: ParticipantCardProps) {
     const [open, setOpen] = React.useState(false);
     console.log(role);
 
@@ -51,14 +51,16 @@ export function VoteCard({ role, playerResponse }: ParticipantCardProps) {
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <h3 className="font-semibold text-xs text-card-foreground">
-                                        {playerResponse.profiles?.username} -{" "}
-                                        {playerResponse.profiles?.position}
+                                        {votedPlayer.username}
                                     </h3>
                                 </div>
                             </div>
                             <div>
-                                <p className="text-xs italic text-gray-400">
-                                    Voted
+                                <p className="text-lg font-bold text-gray-400">
+                                    {votedPlayer.votes}{" "}
+                                    <span className="italic text-xs">
+                                        vote{votedPlayer.votes > 1 ? "s" : ""}
+                                    </span>
                                 </p>
                             </div>
                         </div>

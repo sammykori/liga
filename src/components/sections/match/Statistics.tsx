@@ -15,7 +15,12 @@ import {
 import AddGoalForm from "./AddGoalForm";
 import { useState } from "react";
 
-type MatchProps = Database["public"]["Tables"]["matches"]["Row"];
+type Match = Database["public"]["Tables"]["matches"]["Row"];
+type Teams = Database["public"]["Tables"]["group_teams"]["Row"];
+type MatchTeams = Match & {
+    teamA: Pick<Teams, "id" | "name" | "color"> | null;
+    teamB: Pick<Teams, "id" | "name" | "color"> | null;
+};
 
 function Statistics({
     matchId,
@@ -23,7 +28,7 @@ function Statistics({
     role,
 }: {
     matchId: string;
-    matchData: MatchProps;
+    matchData: MatchTeams;
     role: string | null;
 }) {
     const { data: goals } = useMatchGoals(matchId);
@@ -48,7 +53,7 @@ function Statistics({
                 <div className="text-xs flex justify-between">
                     <h1 className="font-bold">{matchData.teamA_score}</h1>
                     <h1>Goal</h1>
-                    <h1 className="font-bold">{matchData.teamA_score}</h1>
+                    <h1 className="font-bold">{matchData.teamB_score}</h1>
                 </div>
                 <div className="w-full grid grid-cols-2 gap-2">
                     <div className="w-full h-2 rounded-full bg-gray-300 flex justify-start">
@@ -62,28 +67,31 @@ function Statistics({
             <div className="w-full mb-4">
                 <h1 className="font-bold">Goal Scorers</h1>
             </div>
-            {role !== "user" && (
-                <Dialog
-                    open={acceptModalOpen}
-                    onOpenChange={setAcceptModalOpen}
-                >
-                    <DialogTrigger asChild>
-                        <Button variant="secondary" className="">
-                            <Icon icon="mdi:plus" className="size-4" />
-                            Add Goal Scorer
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Add Goal</DialogTitle>
-                        </DialogHeader>
-                        <AddGoalForm
-                            matchId={matchId}
-                            closeModal={setAcceptModalOpen}
-                        />
-                    </DialogContent>
-                </Dialog>
-            )}
+            {role !== "user" &&
+                (matchData.status === "pending" ||
+                    matchData.status === "confirmed") && (
+                    <Dialog
+                        open={acceptModalOpen}
+                        onOpenChange={setAcceptModalOpen}
+                    >
+                        <DialogTrigger asChild>
+                            <Button variant="secondary" className="">
+                                <Icon icon="mdi:plus" className="size-4" />
+                                Add Goal
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Add Goal</DialogTitle>
+                            </DialogHeader>
+                            <AddGoalForm
+                                matchId={matchId}
+                                matchData={matchData}
+                                closeModal={setAcceptModalOpen}
+                            />
+                        </DialogContent>
+                    </Dialog>
+                )}
             <div className="grid grid-cols-1 gap-4 mt-4">
                 {goals &&
                     goals.slice(0, 6).map((goal, index) => (

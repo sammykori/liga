@@ -25,12 +25,14 @@ export type GroupMembershipWithStats = GroupResponsesRow & {
 };
 type Teams = Database["public"]["Tables"]["group_teams"]["Row"];
 type TeamData = Pick<Teams, "id" | "name" | "color"> | null;
+type MatchStatus = Database["public"]["Enums"]["match_status"];
 
 interface ParticipantCardProps {
     playerResponse: GroupMembershipWithStats;
     role: string | null;
     teamA?: TeamData;
     teamB?: TeamData;
+    status?: MatchStatus;
     list?: "A" | "B" | "All";
 }
 
@@ -39,6 +41,7 @@ export function ParticipantCard({
     playerResponse,
     teamA,
     teamB,
+    status,
     list,
 }: ParticipantCardProps) {
     const updateMatchResponseMutation = useUpdateMatchResponse();
@@ -65,7 +68,13 @@ export function ParticipantCard({
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerTrigger
-                disabled={!role || role === "user"}
+                disabled={
+                    !role ||
+                    role === "user" ||
+                    status === "ended" ||
+                    status === "cancelled" ||
+                    status === "completed"
+                }
                 className="w-full"
             >
                 <motion.div

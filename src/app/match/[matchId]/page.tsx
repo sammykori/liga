@@ -26,6 +26,7 @@ import Lineup from "@/components/sections/match/Lineup";
 import Actions from "@/components/sections/match/Actions";
 import POTMPage from "@/components/sections/match/POTMPage";
 import { getMatchStatus } from "@/lib/helpers";
+import PotmForm from "@/components/sections/match/POTMForm";
 
 function Page() {
     const { matchId } = useParams<{ matchId: string }>();
@@ -96,6 +97,37 @@ function Page() {
                     </div>
                 </div>
             )}
+            {match?.status === "ended" && matchResponse?.voted === false && (
+                <div className="w-full px-4 py-2">
+                    <div className="w-full flex  justify-between items-center p-4 rounded-2xl bg-white">
+                        <h1 className="text-black font-bold">Vote for POTM</h1>
+                        <div className="flex gap-4">
+                            <Dialog
+                                open={acceptModalOpen}
+                                onOpenChange={setAcceptModalOpen}
+                            >
+                                <DialogTrigger asChild>
+                                    <Button variant="default" className="">
+                                        Vote
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>
+                                            Select your Player of the Match
+                                        </DialogTitle>
+                                    </DialogHeader>
+                                    <PotmForm
+                                        matchId={matchId}
+                                        responseDate={matchResponse!}
+                                        closeModal={setAcceptModalOpen}
+                                    />
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="w-full flex flex-col gap-4">
                 <div className="w-full flex justify-between items-center gap-4 px-4">
                     <h1 className="text-sm font-bold">
@@ -146,39 +178,41 @@ function Page() {
                         <h1 className="text-xs">{match?.teamB?.name}</h1>
                     </div>
                 </div>
-                {role !== "user" && (
-                    <div className="w-full flex justify-between items-center gap-4 px-4">
-                        <Dialog open={open} onOpenChange={setOpen}>
-                            <DialogTrigger asChild>
-                                <Button className="bg-gray-400/50 rounded-md p-2 flex items-center justify-center">
-                                    <Icon
-                                        icon="mynaui:edit"
-                                        className="size-4"
+                {role !== "user" &&
+                    (match.status === "pending" ||
+                        match.status === "confirmed") && (
+                        <div className="w-full flex justify-between items-center gap-4 px-4">
+                            <Dialog open={open} onOpenChange={setOpen}>
+                                <DialogTrigger asChild>
+                                    <Button className="bg-gray-400/50 rounded-md p-2 flex items-center justify-center">
+                                        <Icon
+                                            icon="mynaui:edit"
+                                            className="size-4"
+                                        />
+                                        <p>Edit</p>
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>
+                                            Edit Group Details
+                                        </DialogTitle>
+                                    </DialogHeader>
+                                    <MatchEditForm
+                                        data={match!}
+                                        closeModal={setOpen}
                                     />
-                                    <p>Edit</p>
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>
-                                        Edit Group Details
-                                    </DialogTitle>
-                                </DialogHeader>
-                                <MatchEditForm
-                                    data={match!}
-                                    closeModal={setOpen}
+                                </DialogContent>
+                            </Dialog>
+                            {(match.status === "pending" ||
+                                match.status === "confirmed") && (
+                                <Actions
+                                    matchId={matchId}
+                                    matchStatus={match.status}
                                 />
-                            </DialogContent>
-                        </Dialog>
-                        {(match.status === "pending" ||
-                            match.status === "confirmed") && (
-                            <Actions
-                                matchId={matchId}
-                                matchStatus={match.status}
-                            />
-                        )}
-                    </div>
-                )}
+                            )}
+                        </div>
+                    )}
             </div>
             <div className="w-full h-full flex flex-col gap-4 bg-white text-black rounded-t-2xl mt-6 justify-center items-center">
                 <hr className="w-10 rounded-full h-1 bg-gray-200 my-2"></hr>
@@ -191,7 +225,11 @@ function Page() {
                             <TabsTrigger value="lineup">Lineup</TabsTrigger>
                             <TabsTrigger
                                 value="potm"
-                                className="text-green-700 animate-pulse font-bold"
+                                className={`${
+                                    match.status === "ended"
+                                        ? "text-green-700 animate-pulse font-bold"
+                                        : ""
+                                }`}
                             >
                                 POTM
                             </TabsTrigger>

@@ -138,12 +138,18 @@ export function getMatchStatus(match: Match) {
     if (!match) return;
     const { status, match_date, match_time } = match;
 
-    if (status !== "confirmed") return status;
+    if (status === "confirmed") {
+        const matchStart = new Date(
+            `${match_date.split("T")[0]}T${match_time}Z`
+        );
+        const now = new Date();
 
-    const matchStart = new Date(`${match_date.split("T")[0]}T${match_time}Z`);
-    const now = new Date();
-
-    if (now >= matchStart) {
-        return "live";
+        if (now >= matchStart) {
+            return "live";
+        }
     }
+    if (status === "ended") {
+        return "voting";
+    }
+    return status;
 }

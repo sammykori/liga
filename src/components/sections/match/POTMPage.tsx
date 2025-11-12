@@ -3,6 +3,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { useGroupMatchResponse } from "@/hooks/useGroupMatchResponse";
 import { MatchTeams } from "@/components/MatchCard";
 import { VoteCard } from "./VoteCard";
+import { useMatchPotm } from "@/hooks/useMatchPotm";
 
 function POTMPage({
     role,
@@ -13,18 +14,17 @@ function POTMPage({
     matchData: MatchTeams;
     matchId: string;
 }) {
-    const { data: groupMatchResponse, isLoading: isGroupLoading } =
-        useGroupMatchResponse(matchId);
+    const { data: matchPotmData, isLoading } = useMatchPotm(matchId);
 
-    if (isGroupLoading) {
+    if (isLoading) {
         return <LoadingScreen />;
     }
 
-    console.log("matchresponse", groupMatchResponse);
-    if (!groupMatchResponse) {
+    console.log("matchresponse", matchPotmData);
+    if (!matchPotmData) {
         return (
             <div>
-                <h1>No players have joined the match yet.</h1>
+                <h1>No players been voted POTM yet.</h1>
             </div>
         );
     }
@@ -35,27 +35,9 @@ function POTMPage({
                 the game differently. Be fair, avoid bias, and keep it fun.
             </p>
             <div className="w-full h-full flex flex-col gap-2">
-                {(() => {
-                    const filteredResponses = groupMatchResponse.filter(
-                        (response) => response.team_id !== null
-                    );
-
-                    if (filteredResponses.length === 0) {
-                        return (
-                            <p className="text-gray-500">
-                                No Players in {matchData.teamB?.name}
-                            </p>
-                        );
-                    }
-
-                    return filteredResponses.map((response, index) => (
-                        <VoteCard
-                            key={index}
-                            playerResponse={response}
-                            role={role}
-                        />
-                    ));
-                })()}
+                {matchPotmData.map((response, index) => (
+                    <VoteCard key={index} votedPlayer={response} role={role} />
+                ))}
             </div>
         </div>
     );

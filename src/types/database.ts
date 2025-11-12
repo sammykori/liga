@@ -270,6 +270,7 @@ export type Database = {
           team_id: string | null
           updated_at: string | null
           user_id: string | null
+          voted: boolean
         }
         Insert: {
           availability?: boolean | null
@@ -281,6 +282,7 @@ export type Database = {
           team_id?: string | null
           updated_at?: string | null
           user_id?: string | null
+          voted?: boolean
         }
         Update: {
           availability?: boolean | null
@@ -292,6 +294,7 @@ export type Database = {
           team_id?: string | null
           updated_at?: string | null
           user_id?: string | null
+          voted?: boolean
         }
         Relationships: [
           {
@@ -359,6 +362,7 @@ export type Database = {
           id: string
           match_date: string
           match_time: string | null
+          points_awarded: boolean | null
           potm_id: string | null
           status: Database["public"]["Enums"]["match_status"]
           teamA_id: string
@@ -378,6 +382,7 @@ export type Database = {
           id?: string
           match_date: string
           match_time?: string | null
+          points_awarded?: boolean | null
           potm_id?: string | null
           status?: Database["public"]["Enums"]["match_status"]
           teamA_id: string
@@ -397,6 +402,7 @@ export type Database = {
           id?: string
           match_date?: string
           match_time?: string | null
+          points_awarded?: boolean | null
           potm_id?: string | null
           status?: Database["public"]["Enums"]["match_status"]
           teamA_id?: string
@@ -488,6 +494,7 @@ export type Database = {
           created_at: string | null
           goals: number | null
           id: string
+          matches_drawn: number
           matches_lost: number | null
           matches_played: number | null
           matches_won: number | null
@@ -501,6 +508,7 @@ export type Database = {
           created_at?: string | null
           goals?: number | null
           id?: string
+          matches_drawn?: number
           matches_lost?: number | null
           matches_played?: number | null
           matches_won?: number | null
@@ -514,6 +522,7 @@ export type Database = {
           created_at?: string | null
           goals?: number | null
           id?: string
+          matches_drawn?: number
           matches_lost?: number | null
           matches_played?: number | null
           matches_won?: number | null
@@ -655,6 +664,19 @@ export type Database = {
         Returns: boolean
       }
       generate_group_code: { Args: never; Returns: string }
+      get_top_potm: {
+        Args: { match: string }
+        Returns: {
+          full_name: string
+          player_id: string
+          username: string
+          votes: number
+        }[]
+      }
+      increment_team_score: {
+        Args: { increment_value?: number; match_id: string; team_id: string }
+        Returns: undefined
+      }
       is_user_in_group: { Args: { g: string; u: string }; Returns: boolean }
     }
     Enums: {

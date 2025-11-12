@@ -71,6 +71,7 @@ function Lineup({
                                     role={role}
                                     teamA={matchData.teamA}
                                     teamB={matchData.teamB}
+                                    status={matchData.status}
                                     list="All"
                                 />
                             ));
@@ -100,6 +101,7 @@ function Lineup({
                                     role={role}
                                     teamA={matchData.teamA}
                                     teamB={matchData.teamB}
+                                    status={matchData.status}
                                     list="A"
                                 />
                             ));
@@ -129,6 +131,7 @@ function Lineup({
                                     role={role}
                                     teamA={matchData.teamA}
                                     teamB={matchData.teamB}
+                                    status={matchData.status}
                                     list="B"
                                 />
                             ));
