@@ -8,7 +8,7 @@ export default function InstallPrompt() {
     useEffect(() => {
         setIsIOS(
             /iPad|iPhone|iPod/.test(navigator.userAgent) &&
-                !(window as any).MSStream
+                !("MSStream" in window)
         );
 
         setIsStandalone(
@@ -31,12 +31,7 @@ export default function InstallPrompt() {
                         {" "}
                         ⎋{" "}
                     </span>
-                    and then "Add to Home Screen"
-                    <span role="img" aria-label="plus icon">
-                        {" "}
-                        ➕{" "}
-                    </span>
-                    .
+                    and then &ldquo;Add to Home Screen&ldquo; .
                 </p>
             )}
         </div>

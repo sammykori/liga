@@ -3,8 +3,8 @@ self.addEventListener("push", function (event) {
         const data = event.data.json();
         const options = {
             body: data.body,
-            icon: data.icon || "/icons/apple-touch-icon.png",
-            badge: "/icons/apple-touch-icon.png",
+            icon: data.icon || "/apple-touch-icon.png",
+            badge: "/apple-touch-icon.png",
             vibrate: [100, 50, 100],
             data: {
                 dateOfArrival: Date.now(),
