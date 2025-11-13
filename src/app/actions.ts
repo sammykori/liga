@@ -1,46 +1,47 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import webpush from "web-push";
 
-import { createClient } from "@/utils/supabase/server";
+webpush.setVapidDetails(
+    "mailto:sammykori72@gmail.com",
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+    process.env.VAPID_PRIVATE_KEY!
+);
 
-export async function login(formData: FormData) {
-    const supabase = await createClient();
+let subscription: PushSubscription | null = null;
 
-    // type-casting here for convenience
-    // in practice, you should validate your inputs
-    const data = {
-        email: formData.get("email") as string,
-        password: formData.get("password") as string,
-    };
-
-    const { error } = await supabase.auth.signInWithPassword(data);
-
-    if (error) {
-        redirect("/error");
-    }
-
-    revalidatePath("/", "layout");
-    redirect("/");
+export async function subscribeUser(sub: PushSubscription) {
+    subscription = sub;
+    // In a production environment, you would want to store the subscription in a database
+    // For example: await db.subscriptions.create({ data: sub })
+    return { success: true };
 }
 
-export async function signup(formData: FormData) {
-    const supabase = await createClient();
+export async function unsubscribeUser() {
+    subscription = null;
+    // In a production environment, you would want to remove the subscription from the database
+    // For example: await db.subscriptions.delete({ where: { ... } })
+    return { success: true };
+}
 
-    // type-casting here for convenience
-    // in practice, you should validate your inputs
-    const data = {
-        email: formData.get("email") as string,
-        password: formData.get("password") as string,
-    };
-
-    const { error } = await supabase.auth.signUp(data);
-
-    if (error) {
-        redirect("/error");
+export async function sendNotification(message: string) {
+    if (!subscription) {
+        throw new Error("No subscription available");
     }
-
-    revalidatePath("/", "layout");
-    redirect("/");
+    const PushSubscription =
+        subscription as unknown as webpush.PushSubscription;
+    try {
+        await webpush.sendNotification(
+            PushSubscription,
+            JSON.stringify({
+                title: "Test Notification",
+                body: message,
+                icon: "/icon.png",
+            })
+        );
+        return { success: true };
+    } catch (error) {
+        console.error("Error sending push notification:", error);
+        return { success: false, error: "Failed to send notification" };
+    }
 }

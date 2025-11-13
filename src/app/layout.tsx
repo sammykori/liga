@@ -4,6 +4,8 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ReactQueryProvider } from "@/lib/ReactQueryProvider";
 import { AuthWatcher } from "@/lib/AuthWatcher";
+import InstallPrompt from "@/components/sections/notifications/install-prompt";
+import PushNotificationManager from "@/components/sections/notifications/push-notification-manager";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -42,6 +44,8 @@ export default function RootLayout({
             >
                 <ReactQueryProvider>
                     <AuthWatcher />
+                    <PushNotificationManager />
+                    <InstallPrompt />
                     <Toaster position="top-right" richColors />
                     {children}
                 </ReactQueryProvider>
