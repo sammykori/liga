@@ -1,6 +1,7 @@
 "use server";
 
 import webpush from "web-push";
+import { createClient } from "@/utils/supabase/client";
 
 webpush.setVapidDetails(
     "mailto:sammykori72@gmail.com",
@@ -10,26 +11,51 @@ webpush.setVapidDetails(
 
 let subscription: PushSubscription | null = null;
 
-export async function subscribeUser(sub: PushSubscription) {
+export async function subscribeUser(
+    sub: PushSubscription,
+    userId: string
+) {
+    const supabase = createClient();
     subscription = sub;
-    // In a production environment, you would want to store the subscription in a database
-    // For example: await db.subscriptions.create({ data: sub })
+    const PushSubscription = sub as unknown as webpush.PushSubscription;
+
+    const { error } = await supabase.from("push_subscriptions").upsert(
+        {
+            user_id: userId,
+            endpoint: PushSubscription.endpoint,
+            p256dh: PushSubscription.keys.p256dh,
+            auth: PushSubscription.keys.auth,
+        },
+        { onConflict: "endpoint" }
+    );
+
+    if (error) {
+        console.error("Error saving subscription:", error);
+        return { success: false, error };
+    }
+
     return { success: true };
 }
 
 export async function unsubscribeUser() {
+    const supabase = createClient();
+    if (subscription) {
+        await supabase
+            .from("push_subscriptions")
+            .delete()
+            .eq("endpoint", subscription.endpoint);
+    }
     subscription = null;
-    // In a production environment, you would want to remove the subscription from the database
-    // For example: await db.subscriptions.delete({ where: { ... } })
+
     return { success: true };
 }
 
-export async function sendNotification(message: string) {
-    if (!subscription) {
+export async function sendNotification(sub: PushSubscription, message: string) {
+    if (!sub) {
         throw new Error("No subscription available");
     }
-    const PushSubscription =
-        subscription as unknown as webpush.PushSubscription;
+    console.log("notme", sub, message);
+    const PushSubscription = sub as unknown as webpush.PushSubscription;
     try {
         await webpush.sendNotification(
             PushSubscription,

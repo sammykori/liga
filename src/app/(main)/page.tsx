@@ -1,6 +1,4 @@
 "use client";
-import { Navigation } from "@/components/Navigation";
-import { BottomNavigation } from "@/components/BottomNavigation";
 import LiveMatchesCarousel from "@/components/sections/home/LiveMatchesCarousel";
 import SelectGroup from "@/components/sections/SelectGroup";
 import UpcomingMatches from "@/components/sections/home/UpcomingMatches";
@@ -62,8 +60,7 @@ export default function Home() {
     }
 
     return (
-        <div className="w-full md:max-w-sm mx-auto shadow-2xl min-h-screen bg-background pb-20 relative">
-            <Navigation />
+        <>
             {groups && groups.length < 1 ? (
                 <EmptyScreen />
             ) : (
@@ -91,7 +88,6 @@ export default function Home() {
                 open={openJoinModal}
                 onOpenChange={setOpenJoinModal}
             />
-            <BottomNavigation />
-        </div>
+        </>
     );
 }

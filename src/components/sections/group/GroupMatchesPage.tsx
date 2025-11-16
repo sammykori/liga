@@ -21,13 +21,6 @@ function GroupMatchesPage({
         router.push(`/match/${matchId}`);
     };
     console.log(role);
-    if (!matches || matches.length < 1) {
-        return (
-            <div>
-                <h1>No matches have been added yet.</h1>
-            </div>
-        );
-    }
 
     function handleCreateNewMatch() {
         Cookies.set("set_group", groupId);
@@ -52,6 +45,12 @@ function GroupMatchesPage({
                     </Button>
                 </div>
             )}
+            {!matches ||
+                (matches.length < 1 && (
+                    <div>
+                        <h1>No matches have been added yet.</h1>
+                    </div>
+                ))}
             <div className="grid grid-cols-1 gap-4">
                 {matches &&
                     matches.map((match, index) => (

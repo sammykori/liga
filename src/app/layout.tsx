@@ -4,8 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ReactQueryProvider } from "@/lib/ReactQueryProvider";
 import { AuthWatcher } from "@/lib/AuthWatcher";
-import InstallPrompt from "@/components/sections/notifications/install-prompt";
-import PushNotificationManager from "@/components/sections/notifications/push-notification-manager";
+import { PushNotificationProvider } from "@/lib/PushNotificationProvider";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -43,11 +42,12 @@ export default function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} ${lobster.variable} ${lexend.className} antialiased`}
             >
                 <ReactQueryProvider>
-                    <AuthWatcher />
-                    <PushNotificationManager />
-                    <InstallPrompt />
-                    <Toaster position="top-right" richColors />
-                    {children}
+                    <PushNotificationProvider>
+                        <AuthWatcher />
+
+                        <Toaster position="top-right" richColors />
+                        {children}
+                    </PushNotificationProvider>
                 </ReactQueryProvider>
             </body>
         </html>

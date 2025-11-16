@@ -10,9 +10,14 @@ import dayjs from "dayjs";
 import relativeTime from "../../../../node_modules/dayjs/plugin/relativeTime";
 import EmptyScreen from "@/components/EmptyScreen";
 import { useRouter } from "next/navigation";
+import { usePushNotifications } from "@/lib/PushNotificationProvider";
+import { Button } from "@/components/ui/button";
 dayjs.extend(relativeTime);
 
 export default function Notifications() {
+    const { isSupported, subscription, subscribeToPush } =
+        usePushNotifications();
+    console.log(subscription);
     const { data: user, isLoading: isUserLoading } = useAuthUser();
     const router = useRouter();
     const { data: notifications, isLoading: isNotificationsLoading } =
@@ -37,6 +42,35 @@ export default function Notifications() {
     }
     return (
         <div className="container mx-auto px-4 pt-4 pb-8 overflow-hidden">
+            {!isSupported && (
+                <motion.section
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-full rounded-xl shadow-xl p-4 mb-4 flex gap-2"
+                >
+                    <Icon
+                        icon="famicons:notifications-off-outline"
+                        className="size-10"
+                    />
+                    <p>Push notifications are not supported in this browser.</p>
+                </motion.section>
+            )}
+            {!subscription && (
+                <motion.section
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-full rounded-xl shadow-xl p-4 mb-4 flex gap-2"
+                >
+                    <Icon
+                        icon="famicons:notifications-off-outline"
+                        className="size-10"
+                    />
+                    <p>You are not subscribed to push notifications.</p>
+                    <Button onClick={() => subscribeToPush()}>Subscribe</Button>
+                </motion.section>
+            )}
             <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

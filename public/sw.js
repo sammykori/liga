@@ -9,6 +9,7 @@ self.addEventListener("push", function (event) {
             data: {
                 dateOfArrival: Date.now(),
                 primaryKey: "2",
+                url: data.link || "/notifications",
             },
         };
         event.waitUntil(
@@ -21,5 +22,13 @@ self.addEventListener("notificationclick", function (event) {
     console.log("Notification click received.");
     console.log(process.env.APP_URL);
     event.notification.close();
-    event.waitUntil(clients.openWindow(process.env.APP_URL));
+    const urlToOpen = event.notification.data.url; // Retrieve the URL
+
+    if (urlToOpen) {
+        // Open the window and focus on it
+        event.waitUntil(
+            clients.openWindow(`${process.env.APP_URL}${urlToOpen}`)
+        );
+    }
+    // event.waitUntil(clients.openWindow(process.env.APP_URL));
 });

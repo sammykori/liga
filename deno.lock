@@ -1,0 +1,94 @@
+{
+  "version": "5",
+  "specifiers": {
+    "jsr:@negrel/http-ece@0.7.0": "0.7.0",
+    "jsr:@negrel/webpush@*": "0.5.0",
+    "jsr:@negrel/webpush@0.5.0": "0.5.0",
+    "jsr:@std/bytes@1": "1.0.6",
+    "jsr:@std/encoding@1": "1.0.10"
+  },
+  "jsr": {
+    "@negrel/http-ece@0.7.0": {
+      "integrity": "068e61ba6f52da5454051a283cc19621607f8dd6e74d55c01bb365b8c6644076",
+      "dependencies": [
+        "jsr:@std/bytes",
+        "jsr:@std/encoding"
+      ]
+    },
+    "@negrel/webpush@0.5.0": {
+      "integrity": "919ed5bf4d676923667c5278093f36ffb2efe7fe2f155b6d32723ea3b73fa693",
+      "dependencies": [
+        "jsr:@negrel/http-ece",
+        "jsr:@std/bytes",
+        "jsr:@std/encoding"
+      ]
+    },
+    "@std/bytes@1.0.6": {
+      "integrity": "f6ac6adbd8ccd99314045f5703e23af0a68d7f7e58364b47d2c7f408aeb5820a"
+    },
+    "@std/encoding@1.0.10": {
+      "integrity": "8783c6384a2d13abd5e9e87a7ae0520a30e9f56aeeaa3bdf910a3eaaf5c811a1"
+    }
+  },
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:@eslint/eslintrc@3",
+        "npm:@hookform/resolvers@^5.2.2",
+        "npm:@iconify/react@^6.0.2",
+        "npm:@radix-ui/react-alert-dialog@^1.1.15",
+        "npm:@radix-ui/react-avatar@^1.1.10",
+        "npm:@radix-ui/react-checkbox@^1.3.3",
+        "npm:@radix-ui/react-collapsible@^1.1.12",
+        "npm:@radix-ui/react-dialog@^1.1.15",
+        "npm:@radix-ui/react-label@^2.1.7",
+        "npm:@radix-ui/react-popover@^1.1.15",
+        "npm:@radix-ui/react-select@^2.2.6",
+        "npm:@radix-ui/react-separator@^1.1.8",
+        "npm:@radix-ui/react-slot@^1.2.4",
+        "npm:@radix-ui/react-switch@^1.2.6",
+        "npm:@radix-ui/react-tabs@^1.1.13",
+        "npm:@radix-ui/react-tooltip@^1.2.8",
+        "npm:@supabase/ssr@0.7",
+        "npm:@supabase/supabase-js@^2.58.0",
+        "npm:@tailwindcss/postcss@4",
+        "npm:@tanstack/react-query@^5.90.2",
+        "npm:@types/country-list@^2.1.4",
+        "npm:@types/js-cookie@^3.0.6",
+        "npm:@types/lodash@^4.17.20",
+        "npm:@types/node@20",
+        "npm:@types/react-dom@19",
+        "npm:@types/react@19",
+        "npm:@types/web-push@^3.6.4",
+        "npm:class-variance-authority@~0.7.1",
+        "npm:clsx@^2.1.1",
+        "npm:country-list@^2.4.1",
+        "npm:date-fns@^4.1.0",
+        "npm:dayjs@^1.11.18",
+        "npm:embla-carousel-react@^8.6.0",
+        "npm:eslint-config-next@15.5.4",
+        "npm:eslint@9",
+        "npm:js-cookie@^3.0.5",
+        "npm:lodash@^4.17.21",
+        "npm:lucide-react@0.544",
+        "npm:motion@^12.23.21",
+        "npm:next-themes@~0.4.6",
+        "npm:next@15.5.4",
+        "npm:qrcode.react@^4.2.0",
+        "npm:react-day-picker@^9.11.1",
+        "npm:react-dom@19.1.0",
+        "npm:react-easy-crop@^5.5.3",
+        "npm:react-hook-form@^7.63.0",
+        "npm:react@19.1.0",
+        "npm:sonner@^2.0.7",
+        "npm:tailwind-merge@^3.3.1",
+        "npm:tailwindcss@4",
+        "npm:tw-animate-css@^1.4.0",
+        "npm:typescript@5",
+        "npm:vaul@^1.1.2",
+        "npm:web-push@^3.6.7",
+        "npm:zod@^4.1.11"
+      ]
+    }
+  }
+}

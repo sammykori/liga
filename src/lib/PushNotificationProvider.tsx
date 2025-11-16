@@ -1,10 +1,17 @@
 "use client";
-import { useState, useEffect } from "react";
+import {
+    createContext,
+    useContext,
+    useState,
+    useEffect,
+    ReactNode,
+} from "react";
 import {
     subscribeUser,
     unsubscribeUser,
     sendNotification,
 } from "@/app/actions";
+import { useAuthUser } from "@/hooks/useAuthUser";
 
 function urlBase64ToUint8Array(base64String: string) {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -20,12 +27,28 @@ function urlBase64ToUint8Array(base64String: string) {
     }
     return outputArray;
 }
-export default function PushNotificationManager() {
+
+type PushNotificationContextType = {
+    isSupported: boolean;
+    subscription: PushSubscription | null;
+    subscribeToPush: () => Promise<void>;
+    unsubscribeFromPush: () => Promise<void>;
+    sendTestNotification: (message: string) => Promise<void>;
+};
+
+const PushNotificationContext =
+    createContext<PushNotificationContextType | null>(null);
+
+export function PushNotificationProvider({
+    children,
+}: {
+    children: ReactNode;
+}) {
     const [isSupported, setIsSupported] = useState(false);
     const [subscription, setSubscription] = useState<PushSubscription | null>(
         null
     );
-    const [message, setMessage] = useState("");
+    const { data: user } = useAuthUser();
 
     useEffect(() => {
         if ("serviceWorker" in navigator && "PushManager" in window) {
@@ -44,6 +67,7 @@ export default function PushNotificationManager() {
     }
 
     async function subscribeToPush() {
+        if (!user) return;
         const registration = await navigator.serviceWorker.ready;
         const sub = await registration.pushManager.subscribe({
             userVisibleOnly: true,
@@ -52,8 +76,7 @@ export default function PushNotificationManager() {
             ),
         });
         setSubscription(sub);
-        const serializedSub = JSON.parse(JSON.stringify(sub));
-        await subscribeUser(serializedSub);
+        await subscribeUser(sub, user.id);
     }
 
     async function unsubscribeFromPush() {
@@ -62,38 +85,33 @@ export default function PushNotificationManager() {
         await unsubscribeUser();
     }
 
-    async function sendTestNotification() {
+    async function sendTestNotification(message: string) {
         if (subscription) {
-            await sendNotification(message);
-            setMessage("");
+            console.log("hook", subscription);
+            await sendNotification(subscription, message);
         }
     }
 
-    if (!isSupported) {
-        return <p>Push notifications are not supported in this browser.</p>;
-    }
-
     return (
-        <div>
-            <h3>Push Notifications</h3>
-            {subscription ? (
-                <>
-                    <p>You are subscribed to push notifications.</p>
-                    <button onClick={unsubscribeFromPush}>Unsubscribe</button>
-                    <input
-                        type="text"
-                        placeholder="Enter notification message"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                    />
-                    <button onClick={sendTestNotification}>Send Test</button>
-                </>
-            ) : (
-                <>
-                    <p>You are not subscribed to push notifications.</p>
-                    <button onClick={subscribeToPush}>Subscribe</button>
-                </>
-            )}
-        </div>
+        <PushNotificationContext.Provider
+            value={{
+                isSupported,
+                subscription,
+                subscribeToPush,
+                unsubscribeFromPush,
+                sendTestNotification,
+            }}
+        >
+            {children}
+        </PushNotificationContext.Provider>
     );
+}
+
+export function usePushNotifications() {
+    const ctx = useContext(PushNotificationContext);
+    if (!ctx)
+        throw new Error(
+            "usePushNotifications must be used within PushNotificationProvider"
+        );
+    return ctx;
 }

@@ -10,6 +10,7 @@ import { User } from "@supabase/supabase-js";
 import { AuthError } from "@supabase/supabase-js";
 import { useGroup } from "@/hooks/useGroups";
 import { getInitials } from "@/lib/helpers";
+import { usePushNotifications } from "@/lib/PushNotificationProvider";
 interface MenuOverlayProps {
     isOpen: boolean;
     onClose: () => void;
@@ -19,6 +20,7 @@ interface MenuOverlayProps {
 interface MenuItem {
     icon: string;
     label: string;
+    disabled?: boolean;
     action: () => void;
     variant?: "default" | "destructive";
 }
@@ -35,7 +37,9 @@ export default function MenuOverlay({
 }: MenuOverlayProps) {
     const router = useRouter();
     const supabase = createClient();
-
+    const { isSupported, unsubscribeFromPush, sendTestNotification } =
+        usePushNotifications();
+    // console.log(JSON.stringify(subscription));
     const { data: groups } = useGroup(user?.id);
 
     const handleNavigation = (page: string) => {
@@ -103,6 +107,27 @@ export default function MenuOverlay({
                     label: "FAQ",
                     action: () => {
                         handleNavigation("faq");
+                    },
+                },
+            ],
+        },
+        {
+            title: "Settings",
+            items: [
+                {
+                    icon: "mdi:information",
+                    label: "Unsubscribe Push Notifications",
+                    disabled: isSupported ? false : true,
+                    action: () => {
+                        unsubscribeFromPush();
+                    },
+                },
+                {
+                    icon: "mdi:information",
+                    label: "Test",
+                    disabled: isSupported ? false : true,
+                    action: () => {
+                        sendTestNotification("WWOWO!");
                     },
                 },
             ],
@@ -275,6 +300,7 @@ export default function MenuOverlay({
                                                     whileTap={{
                                                         scale: 0.98,
                                                     }}
+                                                    disabled={item.disabled}
                                                     onClick={item.action}
                                                     className={`w-full flex items-center gap-4 rounded-lg transition-colors ${
                                                         item.variant ===

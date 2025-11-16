@@ -29,5 +29,5 @@
         ".next/types/**/*.ts",
         "public/sw.js"
     ],
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules", "src/supabase/functions"]
 }
