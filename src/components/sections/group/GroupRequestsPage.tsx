@@ -53,14 +53,17 @@ function GroupRequestsPage() {
     ) {
         if (!groupRequests) return;
         try {
-            mutation.mutate(reqId);
+            // mutation.mutate(reqId);
 
-            await supabase
+            const { data, error } = await supabase
                 .from("group_memberships")
-                .insert({ group_id: groupId, user_id: userId, role: "user" });
+                .insert({ group_id: groupId, user_id: userId, role: "user" })
+                .single();
 
-            groupRequests.filter((req) => req.id !== reqId);
-            toast.success(`${userName || "User"} has been added to group!`);
+            // groupRequests.filter((req) => req.id !== reqId);
+            if (data) {
+                toast.success(`${userName || "User"} has been added to group!`);
+            }
         } catch (error) {
             console.error("Error approving User request: ", error);
             toast.error(`Failed to add ${userName || "User"} to group!`);

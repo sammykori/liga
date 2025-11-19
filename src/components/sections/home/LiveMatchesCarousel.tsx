@@ -20,9 +20,21 @@ function LiveMatchesCarousel({ groupId }: { groupId: string | undefined }) {
 
     if (!matches || matches.length < 1) {
         return (
-            <div>
-                <h1>No matches have been added yet.</h1>
-            </div>
+            <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+            >
+                <h3 className="text-lg font-semibold text-foreground">
+                    Live Match
+                </h3>
+                <div className="bg-red-50 w-full aspect-video rounded-xl flex justify-center-safe items-center-safe">
+                    <div className="flex gap-2 justify-center items-center">
+                        <div className="size-4 bg-red-500 animate-pulse rounded-full"></div>
+                        <h1 className="font-bold text-xl">NO LIVE MATCH</h1>
+                    </div>
+                </div>
+            </motion.section>
         );
     }
     return (

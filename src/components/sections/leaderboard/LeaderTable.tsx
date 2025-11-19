@@ -1,15 +1,23 @@
-import { Button } from "@/components/ui/button";
-import { Icon } from "@iconify/react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobileTable from "./MobileTable";
 import DesktopTable from "./DesktopTable";
 import { useGroupPlayers } from "@/hooks/useGroupPlayers";
+import LeaderboardFilter from "./LeaderboardFilter";
+import { useEffect, useState } from "react";
+import { GroupMembershipWithStats } from "@/components/PlayerCard";
 
 function LeaderTable({ groupId }: { groupId: string | undefined }) {
+    const [filteredData, setFilteredData] =
+        useState<GroupMembershipWithStats[]>();
     const isMobile = useIsMobile();
     console.log(groupId);
     const { data: players } = useGroupPlayers(groupId!);
-    if (!players) {
+
+    useEffect(() => {
+        if (!players) return;
+        setFilteredData(players);
+    }, [players]);
+    if (!filteredData) {
         return (
             <div>
                 <h1>No players have been added yet.</h1>
@@ -24,15 +32,16 @@ function LeaderTable({ groupId }: { groupId: string | undefined }) {
                 </h1>
             </div>
             <div className="mt-10 mb-4 flex flex-row px-4 ">
-                <Button variant="outline">
-                    <Icon icon="mi:filter" />
-                </Button>
+                <LeaderboardFilter
+                    data={filteredData}
+                    setData={setFilteredData}
+                />
             </div>
             <div className="w-full px-4">
                 {isMobile ? (
-                    <MobileTable data={players} />
+                    <MobileTable data={filteredData!} />
                 ) : (
-                    <DesktopTable data={players} />
+                    <DesktopTable data={filteredData!} />
                 )}
             </div>
         </div>

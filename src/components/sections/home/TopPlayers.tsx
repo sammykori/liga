@@ -1,9 +1,9 @@
 "use client";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { PlayerCard } from "../../PlayerCard";
 import { useGroupPlayers } from "@/hooks/useGroupPlayers";
+import Link from "next/link";
 
 function TopPlayers({ groupId }: { groupId: string | undefined }) {
     const { data: players } = useGroupPlayers(groupId!);
@@ -24,10 +24,11 @@ function TopPlayers({ groupId }: { groupId: string | undefined }) {
                 <h3 className="text-lg font-semibold text-foreground">
                     Top Players
                 </h3>
-                <Button variant="link" size="sm" className="text-primary">
-                    View all{" "}
+
+                <Link href="/leaderboard" className={"text-primary"}>
+                    View all
                     <Icon icon="mdi:arrow-right" className="w-4 h-4 ml-1" />
-                </Button>
+                </Link>
             </div>
 
             <div className="grid grid-cols-1 gap-4">

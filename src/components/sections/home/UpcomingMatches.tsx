@@ -16,9 +16,17 @@ function UpcomingMatches({ groupId }: { groupId: string | undefined }) {
 
     if (!matches || matches.length < 1) {
         return (
-            <div>
-                <h1>No matches have been added yet.</h1>
-            </div>
+            <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+            >
+                <h3 className="text-lg font-semibold text-foreground">
+                    Live Match
+                </h3>
+
+                <h1 className="font-bold text-xl py-4">No Upcoming Matches </h1>
+            </motion.section>
         );
     }
     return (
