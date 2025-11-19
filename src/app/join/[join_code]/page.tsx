@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import Cookies from "js-cookie";
 
 function Page() {
     const supabase = createClient();
@@ -44,7 +45,8 @@ function Page() {
 
             // If not signed in, redirect to login with code stored
             if (!session) {
-                localStorage.setItem("pendingJoinCode", join_code);
+                // localStorage.setItem("pendingJoinCode", join_code);
+                Cookies.set("pendingJoinCode", join_code, { expires: 1 });
                 return router.push("/login");
             }
 

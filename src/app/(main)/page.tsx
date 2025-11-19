@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import EmptyScreen from "@/components/EmptyScreen";
 import { JoinGroupModal } from "@/components/JoinGroupModal";
+import Cookies from "js-cookie";
 
 export default function Home() {
     const supabase = createClient();
@@ -22,7 +23,7 @@ export default function Home() {
     useEffect(() => {
         async function checkPendingJoin() {
             if (!user) return;
-            const code = localStorage.getItem("pendingJoinCode");
+            const code = Cookies.get("pendingJoinCode");
             if (!code) {
                 return;
             }
@@ -40,12 +41,12 @@ export default function Home() {
 
                 if (error) {
                     console.error("Join request error:", error);
-                    localStorage.removeItem("pendingJoinCode");
+                    Cookies.remove("pendingJoinCode");
                     return;
                 }
                 if (request) {
                     console.log("Join request created:", request);
-                    localStorage.removeItem("pendingJoinCode");
+                    Cookies.remove("pendingJoinCode");
                     setOpenJoinModal(true);
                 }
             } else {
