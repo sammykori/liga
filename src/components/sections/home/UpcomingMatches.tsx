@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import { MatchCard } from "../../MatchCard";
 import { useRouter } from "next/navigation";
 import { useGroupMatches } from "@/hooks/useGroupMatches";
+import Link from "next/link";
 
 function UpcomingMatches({ groupId }: { groupId: string | undefined }) {
     const { data: matches } = useGroupMatches(groupId);
@@ -39,10 +40,13 @@ function UpcomingMatches({ groupId }: { groupId: string | undefined }) {
                 <h3 className="text-lg font-semibold text-foreground">
                     Upcoming Match
                 </h3>
-                <Button variant="link" size="sm" className="text-primary">
+                <Link
+                    href={`/groups/${groupId}`}
+                    className="text-primary flex items-center"
+                >
                     See all{" "}
                     <Icon icon="mdi:arrow-right" className="w-4 h-4 ml-1" />
-                </Button>
+                </Link>
             </div>
 
             <div className="space-y-3">

@@ -21,6 +21,8 @@ import { useAuthUser } from "@/hooks/useAuthUser";
 import { useSingleGroup } from "@/hooks/useSingleGroup";
 import GroupTeamsPage from "@/components/sections/group/GroupTeamsPage";
 import GroupMatchesPage from "@/components/sections/group/GroupMatchesPage";
+import { useGroupPlayers } from "@/hooks/useGroupPlayers";
+import { useGroupMatchesPlayed } from "@/hooks/useGroupMatchesPlayed";
 
 function Page() {
     const { groupId } = useParams<{ groupId: string }>();
@@ -30,7 +32,12 @@ function Page() {
     const { data: user, isLoading: isUserLoading } = useAuthUser();
     const { data: group, isLoading: isGroupLoading } = useSingleGroup(groupId);
     const { role, loading } = useGroupRole(groupId, user?.id);
+    const { data: players, isLoading: isPlayersLoading } =
+        useGroupPlayers(groupId);
+    const { data: matchesPlayed, isLoading: isMatchesPlayedLoading } =
+        useGroupMatchesPlayed();
 
+    console.log(matchesPlayed);
     const handleCopy = async () => {
         if (!group) return;
         await navigator.clipboard.writeText(
@@ -40,7 +47,13 @@ function Page() {
         setTimeout(() => setCopied(false), 1500);
     };
 
-    if (isGroupLoading || loading || isUserLoading) {
+    if (
+        isGroupLoading ||
+        loading ||
+        isUserLoading ||
+        isPlayersLoading ||
+        isMatchesPlayedLoading
+    ) {
         return;
     }
     return (
@@ -131,12 +144,16 @@ function Page() {
 
                 <div className="w-full flex flex-row justify-center items-center gap-4">
                     <div className="flex flex-col items-center text-black justify-center bg-white rounded-md w-32 aspect-video p-2">
-                        <h1 className="font-bold text-2xl">24</h1>
-                        <p className="text-sm">Matches played</p>
+                        <h1 className="font-bold text-2xl">
+                            {matchesPlayed?.length || 0}
+                        </h1>
+                        <p className="text-xs">Matches played</p>
                     </div>
                     <div className="flex flex-col items-center text-black justify-center bg-white rounded-md w-32 aspect-video p-2">
-                        <h1 className="font-bold text-2xl">24</h1>
-                        <p className="text-sm">Available players</p>
+                        <h1 className="font-bold text-2xl">
+                            {players?.length}
+                        </h1>
+                        <p className="text-xs">Available players</p>
                     </div>
                 </div>
             </div>

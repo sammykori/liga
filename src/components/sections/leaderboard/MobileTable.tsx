@@ -66,15 +66,22 @@ function MobileTable({ data }: { data: GroupMembershipWithStats[] }) {
                                     <TableCell className="max-w-[150px] sticky left-0 z-10 bg-white">
                                         <div className="flex items-center gap-2">
                                             <Avatar>
-                                                <AvatarImage src="/images/avatar.jpeg" />
+                                                <AvatarImage
+                                                    src={
+                                                        player.profiles
+                                                            ?.profile_url
+                                                            ? player.profiles
+                                                                  ?.profile_url
+                                                            : "/images/avatar.jpeg"
+                                                    }
+                                                />
                                                 <AvatarFallback>
                                                     CN
                                                 </AvatarFallback>
                                             </Avatar>
                                             <div className="w-[80%] flex flex-col ">
                                                 <p className="font-bold truncate text-xs">
-                                                    {player.profiles?.username}{" "}
-                                                    {player.profiles?.full_name}
+                                                    {player.profiles?.username}
                                                 </p>
                                                 <p className="text-xs text-gray-400">
                                                     {player.profiles?.position}

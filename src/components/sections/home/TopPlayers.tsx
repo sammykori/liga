@@ -25,7 +25,10 @@ function TopPlayers({ groupId }: { groupId: string | undefined }) {
                     Top Players
                 </h3>
 
-                <Link href="/leaderboard" className={"text-primary"}>
+                <Link
+                    href="/leaderboard"
+                    className={"text-primary flex items-center"}
+                >
                     View all
                     <Icon icon="mdi:arrow-right" className="w-4 h-4 ml-1" />
                 </Link>

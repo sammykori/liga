@@ -31,7 +31,7 @@ function MainInfo({ stats }: { stats: Profile }) {
                             {positionInitials(stats.position)}
                         </div>
                         <h2 className="text-xl font-bold text-foreground">
-                            {stats?.username || "Player Name"}
+                            {stats?.full_name || "Player Name"}
                         </h2>
                     </div>
 

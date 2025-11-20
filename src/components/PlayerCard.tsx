@@ -10,7 +10,10 @@ type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 type PlayerStatsRow = Database["public"]["Tables"]["player_group_stats"]["Row"];
 
 export type GroupMembershipWithStats = GroupMembershipRow & {
-    profiles: Pick<ProfileRow, "username" | "full_name" | "position"> | null;
+    profiles: Pick<
+        ProfileRow,
+        "username" | "full_name" | "position" | "profile_url"
+    > | null;
     player_group_stats: Pick<
         PlayerStatsRow,
         | "goals"

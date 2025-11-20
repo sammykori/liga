@@ -53,7 +53,7 @@ function GroupRequestsPage() {
     ) {
         if (!groupRequests) return;
         try {
-            // mutation.mutate(reqId);
+            mutation.mutate(reqId);
 
             const { data, error } = await supabase
                 .from("group_memberships")
@@ -61,6 +61,9 @@ function GroupRequestsPage() {
                 .single();
 
             // groupRequests.filter((req) => req.id !== reqId);
+            if (error) {
+                console.log(error);
+            }
             if (data) {
                 toast.success(`${userName || "User"} has been added to group!`);
             }
