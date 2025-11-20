@@ -664,7 +664,7 @@ export type Database = {
           endpoint: string
           id: string
           p256dh: string
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           auth: string
@@ -672,7 +672,7 @@ export type Database = {
           endpoint: string
           id?: string
           p256dh: string
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           auth?: string
@@ -680,9 +680,17 @@ export type Database = {
           endpoint?: string
           id?: string
           p256dh?: string
-          user_id?: string | null
+          user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "push_subscriptions_user_id_fkey1"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -702,6 +710,28 @@ export type Database = {
           player_id: string
           username: string
           votes: number
+        }[]
+      }
+      get_top_voted_players: {
+        Args: { matchid: string }
+        Returns: {
+          full_name: string
+          player_position: string
+          profile_url: string
+          rank: number
+          voted_player_id: string
+          votes: number
+        }[]
+      }
+      get_user_accumulated_group_stats: {
+        Args: { user_id: string }
+        Returns: {
+          avg_points: number
+          avg_rating: number
+          total_goals: number
+          total_matches_lost: number
+          total_matches_played: number
+          total_matches_won: number
         }[]
       }
       increment_team_score: {

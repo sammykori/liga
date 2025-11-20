@@ -265,8 +265,8 @@ export default function Auth() {
                             className="w-16 h-16 bg-gradient-primary rounded-xl flex items-center justify-center mx-auto"
                         >
                             <Icon
-                                icon="mdi:star-circle"
-                                className="w-8 h-8 text-primary-foreground"
+                                icon="noto-v1:soccer-ball"
+                                className="size-10 text-primary-foreground"
                             />
                         </motion.div>
                         <div>

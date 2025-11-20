@@ -13,22 +13,49 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Database } from "@/types/database";
 
 type VotedPlayer = {
-    player_id: string;
-    username: string;
+    voted_player_id: string;
     full_name: string;
+    player_position: string;
+    profile_url: string;
     votes: number;
+    rank: number;
 };
+type MatchStatus = Database["public"]["Tables"]["matches"]["Row"]["status"];
+
 interface ParticipantCardProps {
     votedPlayer: VotedPlayer;
     role: string | null;
+    matchStatus: MatchStatus;
 }
 
-export function VoteCard({ role, votedPlayer }: ParticipantCardProps) {
+export function VoteCard({
+    role,
+    votedPlayer,
+    matchStatus,
+}: ParticipantCardProps) {
     const [open, setOpen] = React.useState(false);
-    console.log(role);
+    console.log(matchStatus);
 
+    const positionMedal = (rank: number) => {
+        switch (rank) {
+            case 1:
+                return "noto:1st-place-medal";
+                break;
+            case 2:
+                return "noto:2nd-place-medal";
+                break;
+            case 1:
+                return "noto:3rd-place-medal";
+                break;
+
+            default:
+                return "iconoir:medal";
+                break;
+        }
+    };
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger>
@@ -47,17 +74,29 @@ export function VoteCard({ role, votedPlayer }: ParticipantCardProps) {
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <h3 className="font-semibold text-xs text-card-foreground">
-                                        {votedPlayer.username}
+                                        {votedPlayer.full_name}
                                     </h3>
                                 </div>
                             </div>
                             <div>
-                                <p className="text-lg font-bold text-gray-400">
-                                    {votedPlayer.votes}{" "}
-                                    <span className="italic text-xs">
-                                        vote{votedPlayer.votes > 1 ? "s" : ""}
-                                    </span>
-                                </p>
+                                {matchStatus === "completed" ? (
+                                    <div>
+                                        <Icon
+                                            icon={positionMedal(
+                                                votedPlayer.rank
+                                            )}
+                                            className="size-8"
+                                        />
+                                    </div>
+                                ) : (
+                                    <p className="text-lg font-bold text-gray-400">
+                                        {votedPlayer.votes}{" "}
+                                        <span className="italic text-xs">
+                                            vote
+                                            {votedPlayer.votes > 1 ? "s" : ""}
+                                        </span>
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </Card>

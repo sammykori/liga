@@ -5,8 +5,8 @@ async function fetchMatchPotm(matchId: string) {
     const supabase = createClient();
     if (!matchId) throw new Error("No matchId provided");
 
-    const { data, error } = await supabase.rpc("get_top_potm", {
-        match: matchId,
+    const { data, error } = await supabase.rpc("get_top_voted_players", {
+        matchid: matchId,
     });
 
     if (error) {

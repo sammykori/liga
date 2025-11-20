@@ -6,6 +6,7 @@ import { useState } from "react";
 import MenuOverlay from "./MenuOverlay";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export function Navigation({ variant }: { variant?: string }) {
     const { data: user } = useAuthUser();
@@ -43,20 +44,22 @@ export function Navigation({ variant }: { variant?: string }) {
                                 </div>
                             </motion.div>
                         ) : (
-                            <motion.div
-                                whileHover={{ scale: 1.05 }}
-                                className="flex items-center"
-                            >
-                                <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center">
-                                    <Icon
-                                        icon="mdi:star-circle"
-                                        className="w-8 h-8"
-                                    />
-                                </div>
-                                <h1 className="font-lobster text-4xl font-bold text-card-foreground">
-                                    liga
-                                </h1>
-                            </motion.div>
+                            <Link href="/">
+                                <motion.div
+                                    whileHover={{ scale: 1.05 }}
+                                    className="flex items-center"
+                                >
+                                    <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center">
+                                        <Icon
+                                            icon="noto-v1:soccer-ball"
+                                            className="w-8 h-8"
+                                        />
+                                    </div>
+                                    <h1 className="font-lobster text-4xl font-bold text-card-foreground">
+                                        liga
+                                    </h1>
+                                </motion.div>
+                            </Link>
                         )}
 
                         <Button
@@ -65,8 +68,8 @@ export function Navigation({ variant }: { variant?: string }) {
                             onClick={() => setIsMenuOpen(true)}
                         >
                             <Icon
-                                icon="mdi:dots-horizontal"
-                                className={`w-6 h-6 ${
+                                icon="charm:menu-meatball"
+                                className={`size-8 ${
                                     variant === "action"
                                         ? "text-white"
                                         : "text-muted-foreground"

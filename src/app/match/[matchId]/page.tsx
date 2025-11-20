@@ -270,7 +270,11 @@ function Page() {
                         </TabsContent>
                         <TabsContent value="potm">
                             <div className="w-full h-full p-4 border rounded-xl">
-                                <POTMPage role={role} matchId={matchId} />
+                                <POTMPage
+                                    role={role}
+                                    matchId={matchId}
+                                    matchStatus={match.status}
+                                />
                             </div>
                         </TabsContent>
                     </Tabs>

@@ -35,7 +35,7 @@ export default function Profile() {
                         {/* Main Info */}
                         {/* Match Stats */}
                         <div className="w-full">
-                            <MainInfo stats={profile} />
+                            <MainInfo stats={profile} userId={user.id} />
 
                             {/* More Info */}
                             <MoreInfo stats={profile} />

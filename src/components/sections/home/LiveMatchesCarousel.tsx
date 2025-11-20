@@ -26,7 +26,7 @@ function LiveMatchesCarousel({ groupId }: { groupId: string | undefined }) {
                 transition={{ duration: 0.5, delay: 0.2 }}
             >
                 <h3 className="text-lg font-semibold text-foreground">
-                    Live Match
+                    Live Matches
                 </h3>
                 <div className="bg-red-50 w-full aspect-video rounded-xl flex justify-center-safe items-center-safe">
                     <div className="flex gap-2 justify-center items-center">
@@ -45,16 +45,8 @@ function LiveMatchesCarousel({ groupId }: { groupId: string | undefined }) {
         >
             <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-foreground">
-                    Live Match
+                    Live Matches
                 </h3>
-                <Button
-                    variant="link"
-                    size="sm"
-                    className=" text-xs font-semibold text-primary"
-                >
-                    See all{" "}
-                    <Icon icon="mdi:arrow-right" className="w-4 h-4 ml-1" />
-                </Button>
             </div>
             <Carousel
                 opts={{

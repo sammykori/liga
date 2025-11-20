@@ -133,7 +133,7 @@ export default function MenuOverlay({
             ],
         },
         {
-            title: "Logout",
+            title: "",
             items: [
                 {
                     icon: "mdi:logout",
@@ -161,7 +161,7 @@ export default function MenuOverlay({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
                     transition={{ duration: 0.3 }}
-                    className="w-full max-w-sm mx-auto shadow-2xl relative h-full overflow-y-auto pb-20"
+                    className="w-full md:max-w-sm mx-auto shadow-2xl relative h-full overflow-y-auto pb-20"
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* Header */}

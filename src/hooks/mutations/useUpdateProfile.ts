@@ -27,7 +27,7 @@ export function useUpdateProfile() {
                 updatedProfile
             );
             // Optionally invalidate related queries
-            queryClient.invalidateQueries({ queryKey: ["profiles"] });
+            queryClient.invalidateQueries({ queryKey: ["profile", updatedProfile.id] });
         },
     });
 }
