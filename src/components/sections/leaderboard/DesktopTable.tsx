@@ -84,7 +84,6 @@ function DesktopTable({ data }: { data: GroupMembershipWithStats[] }) {
                                     </Avatar>
                                     <div className="w-full flex flex-col ">
                                         <p className="font-bold truncate text-xs">
-                                            {player.profiles?.username}{" "}
                                             {player.profiles?.full_name}
                                         </p>
                                         <p className="text-xs text-gray-400">

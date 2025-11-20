@@ -4,18 +4,13 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuGroup,
-    DropdownMenuItem,
     DropdownMenuLabel,
-    DropdownMenuPortal,
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
+    DropdownMenuCheckboxItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icon } from "@iconify/react";
-import { Separator } from "@radix-ui/react-select";
+import { useState } from "react";
 
 function LeaderboardFilter({
     data,
@@ -24,14 +19,59 @@ function LeaderboardFilter({
     data: GroupMembershipWithStats[];
     setData: (a?: GroupMembershipWithStats[] | undefined) => void;
 }) {
-    const sortAZ = () => {
-        const newData = data.sort();
+    const [active, setActive] = useState<"mp" | "mw" | "rate" | "pnts">();
+    // const sortAZ = () => {
+    //     const newData = [...data].sort((a, b) => {
+    //         const nameA = a.profiles?.username || "";
+    //         const nameB = b.profiles?.username || "";
+    //         return nameA.localeCompare(nameB);
+    //     });
+    //     console.log(newData);
+    //     setData(newData);
+    // };
+    // const sortZA = () => {
+    //     const newData = [...data]
+    //         .sort((a, b) => {
+    //             const nameA = a.profiles?.username || "";
+    //             const nameB = b.profiles?.username || "";
+    //             return nameA.localeCompare(nameB);
+    //         })
+    //         .reverse();
+    //     console.log(newData);
+    //     setData(newData);
+    // };
+    const sortByRating = () => {
+        const newData = [...data].sort((a, b) => {
+            const ratingA = a.player_group_stats?.rating || 0;
+            const ratingB = b.player_group_stats?.rating || 0;
+            return ratingB - ratingA;
+        });
         setData(newData);
     };
-    const sortZA = () => {
-        const newData = data.sort().reverse();
-        console.log(newData);
+    const sortByPoints = () => {
+        const newData = [...data].sort((a, b) => {
+            const ratingA = a.player_group_stats?.points || 0;
+            const ratingB = b.player_group_stats?.points || 0;
+            return ratingB - ratingA;
+        });
         setData(newData);
+    };
+    const sortByMp = () => {
+        const newData = [...data].sort((a, b) => {
+            const ratingA = a.player_group_stats?.matches_played || 0;
+            const ratingB = b.player_group_stats?.matches_played || 0;
+            return ratingB - ratingA;
+        });
+        setData(newData);
+    };
+    const sortByMw = () => {
+        const newData = [...data].sort((a, b) => {
+            const ratingA = a.player_group_stats?.matches_won || 0;
+            const ratingB = b.player_group_stats?.matches_won || 0;
+            return ratingB - ratingA;
+        });
+        setData(newData);
+        setActive("mw");
     };
     return (
         <DropdownMenu>
@@ -41,33 +81,36 @@ function LeaderboardFilter({
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="start">
-                <DropdownMenuLabel>Filter</DropdownMenuLabel>
-                <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                        Ratings
-                        <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        Points
-                        <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        Matches Played
-                        <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        Matches Won
-                        <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
+                <DropdownMenuLabel className="font-bold">
+                    Filter
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+
                 <DropdownMenuGroup>
-                    <DropdownMenuItem onClick={() => sortAZ()}>
-                        A -Z
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => sortZA()}>
-                        Z - A
-                    </DropdownMenuItem>
+                    <DropdownMenuCheckboxItem
+                        checked={active === "rate" ? true : false}
+                        onClick={() => sortByRating()}
+                    >
+                        Ratings
+                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem
+                        checked={active === "pnts" ? true : false}
+                        onClick={() => sortByPoints()}
+                    >
+                        Points
+                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem
+                        checked={active === "mp" ? true : false}
+                        onClick={() => sortByMp()}
+                    >
+                        Matches Played
+                    </DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem
+                        checked={active === "mw" ? true : false}
+                        onClick={() => sortByMw()}
+                    >
+                        Matches Won
+                    </DropdownMenuCheckboxItem>
                 </DropdownMenuGroup>
             </DropdownMenuContent>
         </DropdownMenu>

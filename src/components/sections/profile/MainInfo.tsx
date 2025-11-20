@@ -21,7 +21,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
-function MainInfo({ stats, userId }: { stats: Profile; userId: string }) {
+function MainInfo({ stats, userId }: { stats: Profile; userId?: string }) {
     const [open, setOpen] = useState(false);
     const icon = getCountryIcon(stats.country ? stats.country : "");
     const { data: accStats, isPending } = usePlayerAccStats(userId);

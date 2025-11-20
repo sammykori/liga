@@ -31,11 +31,7 @@ interface ParticipantCardProps {
     matchStatus: MatchStatus;
 }
 
-export function VoteCard({
-    role,
-    votedPlayer,
-    matchStatus,
-}: ParticipantCardProps) {
+export function VoteCard({ votedPlayer, matchStatus }: ParticipantCardProps) {
     const [open, setOpen] = React.useState(false);
     console.log(matchStatus);
 

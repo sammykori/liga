@@ -19,5 +19,8 @@
     ],
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
-    "display": "standalone"
+    "display": "standalone",
+    "web_push": {
+        "id": "web.com.example.myapp"
+    }
 }
