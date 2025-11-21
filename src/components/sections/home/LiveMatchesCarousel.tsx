@@ -7,16 +7,35 @@ import {
     CarouselContent,
     CarouselItem,
 } from "@/components/ui/carousel";
+import { useEffect, useState } from "react";
+import { Database } from "@/types/database";
+import { getMatchStatus } from "@/lib/helpers";
+
+type Match = Database["public"]["Tables"]["matches"]["Row"];
 
 function LiveMatchesCarousel({ groupId }: { groupId: string | undefined }) {
     const { data: matches } = useGroupMatches(groupId);
+    const [liveMatches, setLiveMatches] = useState<Match[]>();
     const router = useRouter();
+
+    useEffect(() => {
+        if (matches) {
+            const live = matches.filter(
+                (match) => getMatchStatus(match) === "live"
+            );
+            setLiveMatches(live);
+        }
+    }, [matches]);
+
+    if (!matches) {
+        return null;
+    }
 
     const handleMatchClick = (matchId: string) => {
         router.push(`/match/${matchId}`);
     };
 
-    if (!matches || matches.length < 1) {
+    if (!liveMatches || liveMatches.length < 1) {
         return (
             <motion.section
                 initial={{ opacity: 0, y: 20 }}
@@ -35,6 +54,7 @@ function LiveMatchesCarousel({ groupId }: { groupId: string | undefined }) {
             </motion.section>
         );
     }
+
     return (
         <motion.section
             initial={{ opacity: 0, y: 20 }}

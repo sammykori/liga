@@ -10,7 +10,7 @@ export function useMatchRealtime() {
             .channel("match-updates")
             .on(
                 "postgres_changes",
-                { event: "*", schema: "public", table: "notifications" },
+                { event: "INSERT", schema: "public", table: "notifications" },
                 async (payload) => {
                     console.log("XXXXXXMatch updated:", payload);
                     console.log(

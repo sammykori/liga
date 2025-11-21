@@ -4,9 +4,12 @@ import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useNotifications } from "@/hooks/useNotifications";
+import { Badge } from "./ui/badge";
 
 export function BottomNavigation() {
     const pathname = usePathname();
+    const { data: notifications, isLoading } = useNotifications();
 
     const navItems = [
         { path: "/", icon: "ri:football-fill", label: "Home" },
@@ -37,13 +40,13 @@ export function BottomNavigation() {
                             <Link
                                 key={item.path}
                                 href={item.path}
-                                className="flex flex-col items-center py-2"
+                                className="flex flex-col items-center "
                             >
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     className={`rounded-full transition-all duration-300 
-                                       `}
+                                       relative py-1`}
                                 >
                                     <Icon
                                         icon={item.icon}
@@ -53,6 +56,27 @@ export function BottomNavigation() {
                                                 : "text-muted-foreground"
                                         }`}
                                     />
+                                    {item.path === "/notifications" &&
+                                        !isLoading &&
+                                        notifications &&
+                                        notifications.length > 0 && (
+                                            <Badge
+                                                variant="destructive"
+                                                className="absolute -top-1 -right-1 size-5 p-0 rounded-full flex items-center justify-center text-xs"
+                                            >
+                                                {
+                                                    notifications.filter(
+                                                        (n) => !n.read
+                                                    ).length
+                                                }
+                                            </Badge>
+                                        )}
+                                    {/* {item.path === "/" && (
+                                        <Badge
+                                            variant="destructive"
+                                            className="absolute -top-1 -right-1 size-3 p-0 rounded-full flex items-center justify-center text-xs animate-pulse"
+                                        ></Badge>
+                                    )} */}
                                 </motion.div>
                                 {/* <span
                                     className={`text-xs mt-1 transition-colors ${

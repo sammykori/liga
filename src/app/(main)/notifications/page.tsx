@@ -12,20 +12,31 @@ import EmptyScreen from "@/components/EmptyScreen";
 import { useRouter } from "next/navigation";
 import { usePushNotifications } from "@/lib/PushNotificationProvider";
 import { Button } from "@/components/ui/button";
+import { useUpdateNotification } from "@/hooks/mutations/useUpdateNotification";
 dayjs.extend(relativeTime);
 
 export default function Notifications() {
     const { isSupported, subscription, subscribeToPush } =
         usePushNotifications();
-    console.log(subscription);
+    // console.log(subscription);
     const { data: user, isLoading: isUserLoading } = useAuthUser();
     const router = useRouter();
     const { data: notifications, isLoading: isNotificationsLoading } =
         useNotifications(user?.id);
+    const notificationMutation = useUpdateNotification();
 
-    function handleClick(link: string | null) {
-        if (!link) return;
+    async function handleClick(link: string | null, notificationId: string) {
+        if (!link || !notificationId) return;
+        console.log(link, notificationId);
         router.push(link);
+        try {
+            await notificationMutation.mutateAsync({
+                id: notificationId,
+                read: true,
+            });
+        } catch (error) {
+            console.error("Update failed:", error);
+        }
     }
     if (isUserLoading || isNotificationsLoading) {
         return <LoadingScreen />;
@@ -40,6 +51,7 @@ export default function Notifications() {
             />
         );
     }
+    const unreadCount = notifications.filter((n) => !n.read).length;
     return (
         <div className="container mx-auto px-4 pt-4 pb-8 overflow-hidden">
             {!isSupported && (
@@ -76,10 +88,13 @@ export default function Notifications() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                <div className="mb-6">
-                    <h2 className="text-sm font-medium text-muted-foreground mb-4">
-                        Latest
+                <div className="mb-6 flex gap-2 items-center">
+                    <h2 className="text-sm font-medium text-muted-foreground">
+                        Notifications
                     </h2>
+                    <span className="flex items-center justify-center rounded-full size-6 bg-gray-100 text-center">
+                        {unreadCount}
+                    </span>
                 </div>
 
                 <div className="space-y-3">
@@ -93,9 +108,18 @@ export default function Notifications() {
                                     duration: 0.3,
                                     delay: index * 0.1,
                                 }}
-                                onClick={() => handleClick(notification.link)}
+                                onClick={() =>
+                                    handleClick(
+                                        notification.link,
+                                        notification.id
+                                    )
+                                }
                             >
-                                <Card className="p-4 hover:shadow-medium transition-all">
+                                <Card
+                                    className={`p-4 hover:shadow-medium transition-all ${
+                                        notification.read ? "" : "bg-gray-100"
+                                    } cursor-pointer`}
+                                >
                                     <div className="flex items-center gap-4">
                                         <Icon
                                             icon="noto:goal-net"
@@ -117,58 +141,13 @@ export default function Notifications() {
                                                 ).fromNow()}
                                             </p>
                                         </div>
+                                        {notification.read ? null : (
+                                            <div className="size-3 bg-black rounded-full"></div>
+                                        )}
                                     </div>
                                 </Card>
                             </motion.div>
                         ))}
-                </div>
-
-                <div className="mt-8">
-                    <h2 className="text-sm font-medium text-muted-foreground mb-4">
-                        Older
-                    </h2>
-                    <div className="space-y-3">
-                        {notifications &&
-                            notifications.map((notification, index) => (
-                                <motion.div
-                                    key={`older-${notification.id}`}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{
-                                        duration: 0.3,
-                                        delay: (index + 4) * 0.1,
-                                    }}
-                                >
-                                    <Card className="p-4 hover:shadow-medium transition-all">
-                                        <div className="flex items-center gap-4">
-                                            <Icon
-                                                icon="noto:goal-net"
-                                                className={`w-5 h-5`}
-                                            />
-                                            <div className="flex-1">
-                                                <p className="text-sm text-foreground">
-                                                    {notification.title} in{" "}
-                                                    <span className="font-bold">
-                                                        {
-                                                            notification.groups
-                                                                ?.name
-                                                        }
-                                                    </span>
-                                                </p>
-                                                <p className="text-xs text-muted-foreground">
-                                                    {notification.message}
-                                                </p>
-                                                <p className="text-xs text-muted-foreground">
-                                                    {dayjs(
-                                                        notification.created_at
-                                                    ).fromNow()}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </Card>
-                                </motion.div>
-                            ))}
-                    </div>
                 </div>
             </motion.section>
         </div>

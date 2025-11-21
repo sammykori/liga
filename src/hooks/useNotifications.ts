@@ -8,7 +8,8 @@ async function fetchNotifications(userId?: string) {
     const { data, error } = await supabase
         .from("notifications")
         .select(`*, groups(name)`)
-        .eq("user_id", userId);
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
 
     if (error) {
         console.log(error);
@@ -19,7 +20,7 @@ async function fetchNotifications(userId?: string) {
 
 export function useNotifications(userId?: string) {
     return useQuery({
-        queryKey: ["notification", userId],
+        queryKey: ["notifications"],
         queryFn: () => fetchNotifications(userId),
         enabled: !!userId, // only run if we have a user
     });
