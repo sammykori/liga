@@ -107,6 +107,8 @@ export type Database = {
           group_id: string
           id: string
           joined_at: string
+          removed: boolean
+          removed_at: string | null
           role: Database["public"]["Enums"]["user_role"]
           user_id: string
         }
@@ -114,6 +116,8 @@ export type Database = {
           group_id: string
           id?: string
           joined_at?: string
+          removed?: boolean
+          removed_at?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           user_id: string
         }
@@ -121,6 +125,8 @@ export type Database = {
           group_id?: string
           id?: string
           joined_at?: string
+          removed?: boolean
+          removed_at?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           user_id?: string
         }

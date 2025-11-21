@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Icon } from "@iconify/react";
 import { Database } from "@/types/database";
+import Image from "next/image";
 
 type GroupMembershipRow =
     Database["public"]["Tables"]["group_memberships"]["Row"];
@@ -12,7 +13,7 @@ type PlayerStatsRow = Database["public"]["Tables"]["player_group_stats"]["Row"];
 export type GroupMembershipWithStats = GroupMembershipRow & {
     profiles: Pick<
         ProfileRow,
-        "username" | "full_name" | "position" | "profile_url"
+        "username" | "full_name" | "position" | "profile_url" | "country"
     > | null;
     player_group_stats: Pick<
         PlayerStatsRow,
@@ -45,9 +46,9 @@ export function PlayerCard({ player, variant = "simple" }: PlayerCardProps) {
     };
 
     const getRatingColor = (rating?: number | null) => {
-        if (!rating) return "";
-        if (rating >= 8) return "bg-success text-success-foreground";
-        if (rating >= 6) return "bg-warning text-warning-foreground";
+        if (!rating) return "text-red-500";
+        if (rating >= 8) return "text-green-500";
+        if (rating >= 6) return "text-red-500";
     };
 
     if (variant === "compact") {
@@ -59,10 +60,19 @@ export function PlayerCard({ player, variant = "simple" }: PlayerCardProps) {
                 <Card className="p-4 shadow-soft hover:shadow-medium transition-all duration-300 bg-gradient-card">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-muted rounded-md flex items-center justify-center">
-                                <Icon
-                                    icon="mdi:account"
-                                    className="w-6 h-6 text-muted-foreground"
+                            <div className="size-12 relative">
+                                <Image
+                                    src={
+                                        player?.profiles?.profile_url ||
+                                        "/images/default-pp.jpeg"
+                                    }
+                                    alt="Player Profile"
+                                    fill
+                                    style={{
+                                        objectFit: "cover",
+                                        objectPosition: "center",
+                                    }}
+                                    className="rounded-full"
                                 />
                             </div>
                             <div>
@@ -98,10 +108,19 @@ export function PlayerCard({ player, variant = "simple" }: PlayerCardProps) {
             <Card className="p-4 shadow-soft hover:shadow-medium transition-all duration-300 bg-gradient-card">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-muted rounded-md flex items-center justify-center">
-                            <Icon
-                                icon="mdi:account"
-                                className="w-6 h-6 text-muted-foreground"
+                        <div className="size-12 relative">
+                            <Image
+                                src={
+                                    player?.profiles?.profile_url ||
+                                    "/images/default-pp.jpeg"
+                                }
+                                alt="Player Profile"
+                                fill
+                                style={{
+                                    objectFit: "cover",
+                                    objectPosition: "center",
+                                }}
+                                className="rounded-full"
                             />
                         </div>
                         <div>
@@ -117,14 +136,18 @@ export function PlayerCard({ player, variant = "simple" }: PlayerCardProps) {
                             </p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center">
                         <div
-                            className={`rounded-full flex items-center justify-center text-sm ${getRatingColor(
-                                player.player_group_stats?.rating || 0
-                            )}`}
+                            className={`rounded-full flex items-center justify-center text-lg text-gray-500`}
                         >
                             {player.player_group_stats?.rating || 0}
                         </div>
+                        <Icon
+                            icon="cuida:sort-descending-duotone"
+                            className={`${getRatingColor(
+                                player.player_group_stats?.rating || 0
+                            )}`}
+                        />
                     </div>
                 </div>
             </Card>

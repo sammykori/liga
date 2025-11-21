@@ -5,6 +5,18 @@ import { Icon } from "@iconify/react";
 import { PlayerCard } from "../../PlayerCard";
 import { useGroupPlayers } from "@/hooks/useGroupPlayers";
 import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import Image from "next/image";
+import {
     Drawer,
     DrawerContent,
     DrawerDescription,
@@ -13,6 +25,11 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from "@/components/ui/drawer";
+import { positionInitials } from "@/lib/helpers";
+import { useUpdateGroupMembership } from "@/hooks/mutations/useUpdateGroupMemebership";
+import { GroupMembershipWithStats } from "../../PlayerCard";
+import { toast } from "sonner";
+import { useState } from "react";
 
 function GroupSquadPage({
     groupId,
@@ -21,6 +38,8 @@ function GroupSquadPage({
     groupId: string;
     role: string | null;
 }) {
+    const [open, setOpen] = useState(false);
+    const membershipMutuation = useUpdateGroupMembership();
     const { data: players } = useGroupPlayers(groupId);
     console.log(role);
     if (!players) {
@@ -29,6 +48,43 @@ function GroupSquadPage({
                 <h1>No players have been added yet.</h1>
             </div>
         );
+    }
+
+    async function handleAdminToggle(player: GroupMembershipWithStats) {
+        try {
+            await membershipMutuation.mutate({
+                id: player.id,
+                role: player.role === "admin" ? "user" : "admin",
+            });
+            toast.success(
+                `${player.profiles?.full_name} is now ${
+                    player.role === "admin" ? "a user" : "an admin"
+                }`
+            );
+            setOpen(false);
+        } catch (error) {
+            console.error("Update failed:", error);
+            toast.error("Failed to update group membership role");
+        }
+    }
+
+    async function handleRemovePlayer(player: GroupMembershipWithStats) {
+        try {
+            await membershipMutuation.mutate({
+                id: player.id,
+                removed: true,
+                removed_at: new Date().toISOString(),
+            });
+            toast.success(
+                `${player.profiles?.full_name} is now ${
+                    player.role === "admin" ? "a user" : "an admin"
+                }`
+            );
+            setOpen(false);
+        } catch (error) {
+            console.error("Update failed:", error);
+            toast.error("Failed to update group membership role");
+        }
     }
 
     return (
@@ -62,14 +118,35 @@ function GroupSquadPage({
                                 <DrawerContent>
                                     <DrawerHeader>
                                         <div className="w-full flex flex-col justify-center items-center gap-2">
-                                            <div className="size-28 bg-blue-200"></div>
-                                            <div>
-                                                <DrawerTitle>
-                                                    {player.profiles?.username}
-                                                </DrawerTitle>
-                                                <DrawerDescription className="text-gray-400 text-xs">
-                                                    {player.profiles.full_name}
+                                            <div className="size-28 rounded-md relative">
+                                                <Image
+                                                    src={
+                                                        player?.profiles
+                                                            ?.profile_url ||
+                                                        "/images/default-pp.jpeg"
+                                                    }
+                                                    alt="Player Profile"
+                                                    fill
+                                                    style={{
+                                                        objectFit: "cover",
+                                                        objectPosition:
+                                                            "center",
+                                                    }}
+                                                    className="rounded-full"
+                                                />
+                                            </div>
+                                            <div className="flex items-center justify-center mb-4 gap-2">
+                                                <DrawerDescription className="px-2 rounded-md bg-amber-500 font-bold">
+                                                    {positionInitials(
+                                                        player?.profiles
+                                                            ?.position
+                                                    )}
                                                 </DrawerDescription>
+                                                <DrawerTitle className="text-xl font-bold text-foreground">
+                                                    {player.profiles
+                                                        ?.full_name ||
+                                                        "Player Name"}
+                                                </DrawerTitle>
                                             </div>
                                         </div>
                                     </DrawerHeader>
@@ -78,6 +155,9 @@ function GroupSquadPage({
                                             <Button
                                                 variant="outline"
                                                 className="rounded-lg border px-4 py-2 items-center flex w-full justify-between"
+                                                onClick={() =>
+                                                    handleAdminToggle(player)
+                                                }
                                             >
                                                 {player.role === "user" ? (
                                                     <h1>Make group admin</h1>
@@ -91,15 +171,10 @@ function GroupSquadPage({
                                                     className="size-6"
                                                 />
                                             </Button>
-                                            <Button className="rounded-lg border px-4 py-2 items-center flex w-full justify-between">
-                                                <h1 className="text-red-500">
-                                                    Remove from group
-                                                </h1>
-                                                <Icon
-                                                    icon="gg:remove"
-                                                    className="size-6 text-red-500"
-                                                />
-                                            </Button>
+                                            <ActionButton
+                                                player={player}
+                                                action={handleRemovePlayer}
+                                            />
                                         </DrawerFooter>
                                     )}
                                 </DrawerContent>
@@ -112,3 +187,38 @@ function GroupSquadPage({
 }
 
 export default GroupSquadPage;
+
+type ActionButtonProps = {
+    player: GroupMembershipWithStats;
+    action: (player: GroupMembershipWithStats) => void;
+};
+
+function ActionButton({ player, action }: ActionButtonProps) {
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button className="rounded-lg border px-4 py-2 items-center flex w-full justify-between">
+                    <h1 className="text-red-500">Remove from group</h1>
+                    <Icon icon="gg:remove" className="size-6 text-red-500" />
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>
+                        Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will trigger
+                        notifications to your match participants.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => action(player)}>
+                        Continue
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    );
+}

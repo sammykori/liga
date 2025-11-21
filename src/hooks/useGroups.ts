@@ -13,6 +13,7 @@ async function fetchProfile(userId?: string) {
     groups (*)
   `
         )
+        .eq("removed", false)
         .eq("user_id", userId);
 
     if (error) {

@@ -8,9 +8,11 @@ async function fetchPlayers(groupId: string) {
     const { data, error } = await supabase
         .from("group_memberships")
         .select(
-            `id, user_id, group_id, role, joined_at, profiles(username, full_name, position, profile_url), player_group_stats( goals, assists, matches_played, matches_won, matches_lost, matches_drawn, points, rating )`
+            `id, user_id, group_id, role, removed, removed_at, joined_at, profiles(username, full_name, position, profile_url, country), player_group_stats( goals, assists, matches_played, matches_won, matches_lost, matches_drawn, points, rating )`
         )
-        .eq("group_id", groupId);
+        .eq("group_id", groupId)
+        .eq("removed", false)
+        .order("role", { ascending: true });
 
     if (error) {
         console.log(error);

@@ -13,7 +13,7 @@ export const getInitials = (name: string) => {
     );
 };
 
-export const positionInitials = (position: string | null) => {
+export const positionInitials = (position?: string | null) => {
     switch (position) {
         case "forware":
             return "FWD";
@@ -96,7 +96,8 @@ export async function getCroppedImg(
     });
 }
 
-export function capitalize(sentence: string) {
+export function capitalize(sentence?: string|null) {
+    if (!sentence) return "";
     const words = sentence.split(" ");
 
     const capitalizedSentence = words
