@@ -59,10 +59,10 @@ function SelectGroup({
             <div className="flex items-center justify-between">
                 <div className="flex gap-2 items-center">
                     <h3 className="text-base font-semibold text-foreground">
-                        Group:
+                        Select group:
                     </h3>
                     <Button
-                        variant="link"
+                        variant="ghost"
                         onClick={() => setIsSelect(!isSelect)}
                         className="font-bold text-lg"
                     >
@@ -118,7 +118,7 @@ function GroupsFilter({
                         onClick={() => onSelectGroup(group)}
                         className={`w-10 aspect-square p-1 rounded-full flex border justify-center items-center relative ${
                             group.group_id === groupId
-                                ? "scale-125 transition border-2 border-green-600 shadow-2xl"
+                                ? "scale-125 transition border-2 border-green-600 bg-green-200 shadow-2xl"
                                 : ""
                         }`}
                     >

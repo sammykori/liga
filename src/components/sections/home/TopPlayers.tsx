@@ -14,6 +14,11 @@ function TopPlayers({ groupId }: { groupId: string | undefined }) {
             </div>
         );
     }
+    const newData = [...players].sort((a, b) => {
+        const ratingA = a.player_group_stats?.rating || 0;
+        const ratingB = b.player_group_stats?.rating || 0;
+        return ratingB - ratingA;
+    });
     return (
         <motion.section
             initial={{ opacity: 0, y: 20 }}
@@ -35,7 +40,7 @@ function TopPlayers({ groupId }: { groupId: string | undefined }) {
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-                {players.slice(0, 6).map((player, index) => (
+                {newData.slice(0, 6).map((player, index) => (
                     <motion.div
                         key={player.id}
                         initial={{ opacity: 0, y: 20 }}

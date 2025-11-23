@@ -11,24 +11,42 @@ export function useUpdateGroupMembership() {
 
     return useMutation({
         mutationFn: async (updates: UpdateGroupMembership) => {
-            if (!updates.id) throw new Error("No membershipId provided");
-            if (updates.group_id || updates.user_id)
-                throw new Error("Mutation not allowed on group_id or user_id");
-            const { data, error } = await supabase
-                .from("group_memberships")
-                .update(updates)
-                .eq("id", updates.id!)
-                .select()
-                .single();
-            if (error) throw error;
-            return data;
+            try {
+                if (updates.group_id || updates.user_id) {
+                    const { data, error } = await supabase
+                        .from("group_memberships")
+                        .update(updates)
+                        .eq("group_id", updates.group_id!)
+                        .eq("user_id", updates.user_id!)
+                        .select()
+                        .single();
+                    if (error) throw error;
+                    return data;
+                }
+                if (updates.id) {
+                    const { data, error } = await supabase
+                        .from("group_memberships")
+                        .update({
+                            removed: updates.removed,
+                            removed_at: updates.removed_at,
+                        })
+                        .eq("id", updates.id!)
+                        .select()
+                        .single();
+                    if (error) throw error;
+                    return data;
+                }
+            } catch (error) {
+                console.error("Mutation error:", error);
+            }
+            return;
         },
         onSuccess: (updatedGroup) => {
             // Update cached profile for this user
             // queryClient.setQueryData(["group", updatedGroup.id], updatedGroup);
             // Optionally invalidate related queries
             queryClient.invalidateQueries({
-                queryKey: ["groupPlayers", updatedGroup.group_id],
+                queryKey: ["groupPlayers", updatedGroup?.group_id],
             });
         },
     });

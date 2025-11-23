@@ -39,7 +39,7 @@ export function PlayerCard({ player, variant = "simple" }: PlayerCardProps) {
             case "owner":
                 return "bg-orange-200 text-success-foreground";
             case "admin":
-                return "bg-yello-200 text-accent-foreground";
+                return "bg-blue-200 text-accent-foreground";
             default:
                 return "bg-muted text-muted-foreground";
         }
@@ -80,22 +80,26 @@ export function PlayerCard({ player, variant = "simple" }: PlayerCardProps) {
                                     {player.profiles?.username}
                                 </h3>
                                 <p
-                                    className={`text-sm ${getStatusColor(
+                                    className={`w-fit text-sm ${getStatusColor(
                                         player.role
                                     )} px-2`}
                                 >
-                                    {player.role}
+                                    {player.role !== "user" ? player.role : ""}
                                 </p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center">
                             <div
-                                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${getRatingColor(
-                                    player.player_group_stats?.rating
-                                )}`}
+                                className={`rounded-full flex items-center justify-center text-lg text-gray-500`}
                             >
-                                {player.player_group_stats?.rating}
+                                {player.player_group_stats?.rating || 0}
                             </div>
+                            <Icon
+                                icon="cuida:sort-descending-duotone"
+                                className={`${getRatingColor(
+                                    player.player_group_stats?.rating || 0
+                                )}`}
+                            />
                         </div>
                     </div>
                 </Card>
@@ -132,7 +136,7 @@ export function PlayerCard({ player, variant = "simple" }: PlayerCardProps) {
                                     player.role
                                 )} rounded-full`}
                             >
-                                {player.role}
+                                {player.role !== "user" ? player.role : ""}
                             </p>
                         </div>
                     </div>

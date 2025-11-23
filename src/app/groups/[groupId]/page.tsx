@@ -12,6 +12,27 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "@/components/ui/drawer";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { QRCodeSVG } from "qrcode.react";
 import GroupRequestsPage from "@/components/sections/group/GroupRequestsPage";
 import GroupSquadPage from "@/components/sections/group/GroupSquadPage";
@@ -23,11 +44,15 @@ import GroupTeamsPage from "@/components/sections/group/GroupTeamsPage";
 import GroupMatchesPage from "@/components/sections/group/GroupMatchesPage";
 import { useGroupPlayers } from "@/hooks/useGroupPlayers";
 import { useGroupMatchesPlayed } from "@/hooks/useGroupMatchesPlayed";
+import { toast } from "sonner";
+import { useUpdateGroupMembership } from "@/hooks/mutations/useUpdateGroupMemebership";
+import { useRouter } from "next/navigation";
 
 function Page() {
     const { groupId } = useParams<{ groupId: string }>();
     const [copied, setCopied] = useState(false);
     const [open, setOpen] = useState(false);
+    const router = useRouter();
 
     const { data: user, isLoading: isUserLoading } = useAuthUser();
     const { data: group, isLoading: isGroupLoading } = useSingleGroup(groupId);
@@ -36,6 +61,7 @@ function Page() {
         useGroupPlayers(groupId);
     const { data: matchesPlayed, isLoading: isMatchesPlayedLoading } =
         useGroupMatchesPlayed();
+    const membershipMutation = useUpdateGroupMembership();
 
     console.log(matchesPlayed);
     const handleCopy = async () => {
@@ -55,6 +81,21 @@ function Page() {
         isMatchesPlayedLoading
     ) {
         return;
+    }
+    async function handleRemovePlayer() {
+        try {
+            await membershipMutation.mutate({
+                group_id: groupId,
+                user_id: user?.id,
+                removed: true,
+                removed_at: new Date().toISOString(),
+            });
+            toast.success(`You have left the group successfully.`);
+            router.push("/");
+        } catch (error) {
+            console.error("Update failed:", error);
+            toast.error("Failed to leave group");
+        }
     }
     return (
         <div className="bg-black w-full h-screen min-h-screen text-white">
@@ -139,6 +180,37 @@ function Page() {
                                 </DialogHeader>
                             </DialogContent>
                         </Dialog>
+                        <Drawer>
+                            <DrawerTrigger asChild>
+                                <div className="bg-gray-400/50 rounded-full size-8 p-2 flex items-center justify-center">
+                                    <Icon
+                                        icon="uil:ellipsis-v"
+                                        className="size-4"
+                                    />
+                                </div>
+                            </DrawerTrigger>
+                            <DrawerContent>
+                                <div className="mx-auto w-full max-w-sm">
+                                    <DrawerHeader>
+                                        <DrawerTitle>Leave group</DrawerTitle>
+                                        <DrawerDescription>
+                                            I want to leave this group
+                                        </DrawerDescription>
+                                    </DrawerHeader>
+
+                                    <DrawerFooter>
+                                        <ActionButton
+                                            action={() => handleRemovePlayer()}
+                                        />
+                                        <DrawerClose asChild>
+                                            <Button variant="outline">
+                                                Cancel
+                                            </Button>
+                                        </DrawerClose>
+                                    </DrawerFooter>
+                                </div>
+                            </DrawerContent>
+                        </Drawer>
                     </div>
                 </div>
 
@@ -198,3 +270,36 @@ function Page() {
 }
 
 export default Page;
+
+type ActionButtonProps = {
+    action: () => void;
+};
+function ActionButton({ action }: ActionButtonProps) {
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button className="rounded-lg border px-4 py-2 items-center flex w-full justify-between">
+                    <h1 className="text-red-500">Leave group</h1>
+                    <Icon icon="gg:remove" className="size-6 text-red-500" />
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>
+                        Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will trigger
+                        notifications to your match participants.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => action()}>
+                        Continue
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    );
+}

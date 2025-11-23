@@ -75,15 +75,11 @@ function GroupSquadPage({
                 removed: true,
                 removed_at: new Date().toISOString(),
             });
-            toast.success(
-                `${player.profiles?.full_name} is now ${
-                    player.role === "admin" ? "a user" : "an admin"
-                }`
-            );
+            toast.success(`${player.profiles?.full_name} has been removed `);
             setOpen(false);
         } catch (error) {
             console.error("Update failed:", error);
-            toast.error("Failed to update group membership role");
+            toast.error("Failed to remove group member");
         }
     }
 

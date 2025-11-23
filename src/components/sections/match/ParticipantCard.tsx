@@ -1,7 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { Icon } from "@iconify/react";
+import { positionInitials } from "@/lib/helpers";
+import Image from "next/image";
 import { Database } from "@/types/database";
 import {
     Drawer,
@@ -21,7 +22,10 @@ type GroupResponsesRow = Database["public"]["Tables"]["match_responses"]["Row"];
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 
 export type GroupMembershipWithStats = GroupResponsesRow & {
-    profiles: Pick<ProfileRow, "username" | "full_name" | "position"> | null;
+    profiles: Pick<
+        ProfileRow,
+        "username" | "full_name" | "position" | "profile_url"
+    > | null;
 };
 type Teams = Database["public"]["Tables"]["group_teams"]["Row"];
 type TeamData = Pick<Teams, "id" | "name" | "color"> | null;
@@ -84,29 +88,46 @@ export function ParticipantCard({
                     <Card className="p-2 shadow-soft hover:shadow-medium transition-all duration-300 bg-gradient-card">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-muted rounded-md flex items-center justify-center">
-                                    <Icon
-                                        icon="mdi:account"
-                                        className="w-6 h-6 text-muted-foreground"
+                                <div className="size-12 relative">
+                                    <Image
+                                        src={
+                                            playerResponse?.profiles
+                                                ?.profile_url ||
+                                            "/images/default-pp.jpeg"
+                                        }
+                                        alt="Player Profile"
+                                        fill
+                                        style={{
+                                            objectFit: "cover",
+                                            objectPosition: "center",
+                                        }}
+                                        className="rounded-full"
                                     />
                                 </div>
                                 <div className="flex flex-col gap-2">
-                                    <h3 className="font-semibold text-xs text-card-foreground">
-                                        {playerResponse.profiles?.username}{" "}
-                                        {playerResponse.profiles?.full_name} -{" "}
-                                        {playerResponse.profiles?.position}
-                                    </h3>
+                                    <div className="flex items-center gap-2">
+                                        <div className="px-1 rounded-sm bg-amber-500 text-xs font-bold">
+                                            {positionInitials(
+                                                playerResponse?.profiles
+                                                    ?.position
+                                            )}
+                                        </div>
+                                        <h2 className="text-xs font-bold text-foreground">
+                                            {playerResponse?.profiles
+                                                ?.full_name || "Player Name"}
+                                        </h2>
+                                    </div>
                                     <div className="flex items-center gap-2">
                                         {playerResponse.availability && (
                                             <p
-                                                className={`text-[10px] font-semibold px-2 py-0.5 bg-green-100 border text-green-600 border-green-400 rounded-md`}
+                                                className={`text-[10px] font-semibold px-2 py-0.5 bg-green-100 border text-green-600 border-green-400 rounded-sm`}
                                             >
                                                 available
                                             </p>
                                         )}
                                         {playerResponse.payment_made && (
                                             <p
-                                                className={`text-[10px] font-semibold px-2 py-0.5 text-amber-600 border bg-amber-100 border-amber-400 rounded-md`}
+                                                className={`text-[10px] font-semibold px-2 py-0.5 text-amber-600 border bg-amber-100 border-amber-400 rounded-sm`}
                                             >
                                                 paid
                                             </p>
