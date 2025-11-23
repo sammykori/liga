@@ -30,6 +30,7 @@ import { useUpdateGroupMembership } from "@/hooks/mutations/useUpdateGroupMemebe
 import { GroupMembershipWithStats } from "../../PlayerCard";
 import { toast } from "sonner";
 import { useState } from "react";
+import { useUpdateMembershipRole } from "@/hooks/mutations/useUpdateMembershipRole";
 
 function GroupSquadPage({
     groupId,
@@ -39,6 +40,7 @@ function GroupSquadPage({
     role: string | null;
 }) {
     const [open, setOpen] = useState(false);
+    const roleMutuation = useUpdateMembershipRole();
     const membershipMutuation = useUpdateGroupMembership();
     const { data: players } = useGroupPlayers(groupId);
     console.log(role);
@@ -52,7 +54,7 @@ function GroupSquadPage({
 
     async function handleAdminToggle(player: GroupMembershipWithStats) {
         try {
-            await membershipMutuation.mutate({
+            await roleMutuation.mutate({
                 id: player.id,
                 role: player.role === "admin" ? "user" : "admin",
             });
