@@ -34,6 +34,7 @@ type PushNotificationContextType = {
     subscribeToPush: () => Promise<void>;
     unsubscribeFromPush: () => Promise<void>;
     sendTestNotification: (message: string) => Promise<void>;
+    enableNotifications: () => Promise<void>;
 };
 
 const PushNotificationContext =
@@ -64,6 +65,18 @@ export function PushNotificationProvider({
         });
         const sub = await registration.pushManager.getSubscription();
         setSubscription(sub);
+    }
+    async function enableNotifications() {
+        if (!user) return;
+
+        const permission = await Notification.requestPermission();
+
+        if (permission !== "granted") {
+            console.log("Notification permission denied.");
+            return;
+        }
+
+        await subscribeToPush();
     }
 
     async function subscribeToPush() {
@@ -100,6 +113,7 @@ export function PushNotificationProvider({
                 subscribeToPush,
                 unsubscribeFromPush,
                 sendTestNotification,
+                enableNotifications,
             }}
         >
             {children}

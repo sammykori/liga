@@ -16,7 +16,7 @@ import { useUpdateNotification } from "@/hooks/mutations/useUpdateNotification";
 dayjs.extend(relativeTime);
 
 export default function Notifications() {
-    const { isSupported, subscription, subscribeToPush } =
+    const { isSupported, subscription, subscribeToPush, enableNotifications } =
         usePushNotifications();
     // console.log(subscription);
     const { data: user, isLoading: isUserLoading } = useAuthUser();
@@ -38,17 +38,7 @@ export default function Notifications() {
             console.error("Update failed:", error);
         }
     }
-    async function handleSubscibeNotifications() {
-        if (!("Notification" in window)) return;
 
-        const permission = await Notification.requestPermission();
-
-        if (permission !== "granted") {
-            console.log("User denied permission");
-            return;
-        }
-        await subscribeToPush();
-    }
     if (isUserLoading || isNotificationsLoading) {
         return <LoadingScreen />;
     }
@@ -91,9 +81,7 @@ export default function Notifications() {
                         className="size-10"
                     />
                     <p>You are not subscribed to push notifications.</p>
-                    <Button onClick={handleSubscibeNotifications}>
-                        Subscribe
-                    </Button>
+                    <Button onClick={enableNotifications}>Subscribe</Button>
                 </motion.section>
             )}
             <motion.section
