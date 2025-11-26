@@ -38,6 +38,17 @@ export default function Notifications() {
             console.error("Update failed:", error);
         }
     }
+    async function handleSubscibeNotifications() {
+        if (!("Notification" in window)) return;
+
+        const permission = await Notification.requestPermission();
+
+        if (permission !== "granted") {
+            console.log("User denied permission");
+            return;
+        }
+        await subscribeToPush();
+    }
     if (isUserLoading || isNotificationsLoading) {
         return <LoadingScreen />;
     }
@@ -80,7 +91,9 @@ export default function Notifications() {
                         className="size-10"
                     />
                     <p>You are not subscribed to push notifications.</p>
-                    <Button onClick={() => subscribeToPush()}>Subscribe</Button>
+                    <Button onClick={handleSubscibeNotifications}>
+                        Subscribe
+                    </Button>
                 </motion.section>
             )}
             <motion.section

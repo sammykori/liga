@@ -26,9 +26,7 @@ self.addEventListener("notificationclick", function (event) {
 
     if (urlToOpen) {
         // Open the window and focus on it
-        event.waitUntil(
-            clients.openWindow(`https://localhost:3000${urlToOpen}`)
-        );
+        event.waitUntil(clients.openWindow(urlToOpen));
     }
     // event.waitUntil(clients.openWindow(process.env.APP_URL));
 });
