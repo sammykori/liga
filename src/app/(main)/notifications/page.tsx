@@ -69,7 +69,7 @@ export default function Notifications() {
                     <p>Push notifications are not supported in this browser.</p>
                 </motion.section>
             )}
-            {!subscription && (
+            {!isSupported && !subscription && (
                 <motion.section
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
