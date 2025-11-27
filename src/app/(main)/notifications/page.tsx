@@ -18,7 +18,7 @@ dayjs.extend(relativeTime);
 export default function Notifications() {
     const { isSupported, subscription, subscribeToPush, enableNotifications } =
         usePushNotifications();
-    // console.log(subscription);
+    console.log(subscription);
     const { data: user, isLoading: isUserLoading } = useAuthUser();
     const router = useRouter();
     const { data: notifications, isLoading: isNotificationsLoading } =
@@ -69,7 +69,7 @@ export default function Notifications() {
                     <p>Push notifications are not supported in this browser.</p>
                 </motion.section>
             )}
-            {!isSupported && !subscription && (
+            {isSupported && !subscription && (
                 <motion.section
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
