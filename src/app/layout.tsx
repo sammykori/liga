@@ -29,6 +29,7 @@ const lexend = Lexend({
 export const metadata: Metadata = {
     title: "Liga",
     description: "A Player Rating App",
+    manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -38,6 +39,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
+            <head>
+                <link rel="manifest" href="/manifest.json" />
+            </head>
             <body
                 className={`${geistSans.variable} ${geistMono.variable} ${lobster.variable} ${lexend.className} antialiased`}
             >
