@@ -68,15 +68,18 @@ export function PushNotificationProvider({
     }
     async function enableNotifications() {
         if (!user) return;
+        try {
+            const permission = await Notification.requestPermission();
 
-        const permission = await Notification.requestPermission();
+            if (permission !== "granted") {
+                console.log("Notification permission denied.");
+                return;
+            }
 
-        if (permission !== "granted") {
-            console.log("Notification permission denied.");
-            return;
+            await subscribeToPush();
+        } catch (error) {
+            console.log("Subcription Error", error);
         }
-
-        await subscribeToPush();
     }
 
     async function subscribeToPush() {
