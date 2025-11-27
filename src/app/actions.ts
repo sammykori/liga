@@ -18,23 +18,27 @@ export async function subscribeUser(
     const supabase = createClient();
     subscription = sub;
     const PushSubscription = sub as unknown as webpush.PushSubscription;
+    try {
+        
+        const { error } = await supabase.from("push_subscriptions").upsert(
+            {
+                user_id: userId,
+                endpoint: PushSubscription.endpoint,
+                p256dh: PushSubscription.keys.p256dh,
+                auth: PushSubscription.keys.auth,
+            },
+            { onConflict: "endpoint" }
+        );
 
-    const { error } = await supabase.from("push_subscriptions").upsert(
-        {
-            user_id: userId,
-            endpoint: PushSubscription.endpoint,
-            p256dh: PushSubscription.keys.p256dh,
-            auth: PushSubscription.keys.auth,
-        },
-        { onConflict: "endpoint" }
-    );
-
-    if (error) {
-        console.error("Error saving subscription:", error);
-        return { success: false, error };
+        if (error) {
+            console.error("Error saving subscription:", error);
+            return { success: false, error };
+        }
+        return { success: true };
+    } catch (error) {
+        console.error("Subscription Upload Error:", error);
     }
 
-    return { success: true };
 }
 
 export async function unsubscribeUser() {

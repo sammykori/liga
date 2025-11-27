@@ -7,7 +7,7 @@ import { useMatchRealtime } from "@/hooks/useMatchRealTime";
 export function AuthWatcher() {
     const supabase = createClient();
     const queryClient = useQueryClient();
-    useMatchRealtime();
+    // useMatchRealtime();
 
     useEffect(() => {
         const { data: subscription } = supabase.auth.onAuthStateChange(() => {
