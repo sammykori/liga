@@ -4,6 +4,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupInput,
+} from "@/components/ui/input-group";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
 import {
@@ -29,10 +34,10 @@ const authSchema = z.object({
         .string()
         .min(6, { message: "Password must be at least 6 characters" })
         .max(128, { message: "Password must be less than 128 characters" }),
-    name: z
+    userName: z
         .string()
         .trim()
-        .min(2, { message: "Name must be at least 2 characters" })
+        .min(3, { message: "Name must be at least 2 characters" })
         .max(100, { message: "Name must be less than 100 characters" })
         .optional(),
 });
@@ -51,6 +56,9 @@ export default function Auth() {
         userName: "",
         dob: "",
     });
+    const [isUsernameAvailable, setIsUsernameAvailable] = useState<
+        boolean | null
+    >(null);
 
     useEffect(() => {
         const authMode = searchParams.get("mode") as AuthMode;
@@ -89,6 +97,7 @@ export default function Auth() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
+        setIsUsernameAvailable(null);
 
         try {
             if (mode === "forgot-password") {
@@ -125,6 +134,7 @@ export default function Auth() {
                 });
 
                 if (!validation.success) {
+                    console.log(formData);
                     toast.error("Validation error", {
                         description: validation.error.message,
                     });
@@ -223,9 +233,11 @@ export default function Auth() {
 
     const handleCheckUsername = async (username: string) => {
         console.log(username);
-        handleInputChange("username", username);
-        if (username.length < 2) return;
-
+        handleInputChange("userName", username);
+        if (username.length < 2) {
+            setIsUsernameAvailable(null);
+            return;
+        }
         const { data, error } = await supabase
             .from("profiles")
             .select("id")
@@ -237,15 +249,22 @@ export default function Auth() {
                 description: error.message,
             });
             console.error("Error", error.message, error.details, error);
+            setIsUsernameAvailable(false);
+
             return;
         }
         if (error) {
             console.error("Error", error.message, error.details, error);
         }
+        if (!data) {
+            console.log(data);
+            setIsUsernameAvailable(true);
+        }
 
         if (data) {
             toast.error("Username already taken");
             console.log(data);
+            setIsUsernameAvailable(false);
         }
     };
     const debouncedCheck = lodash.debounce(handleCheckUsername, 500);
@@ -297,18 +316,44 @@ export default function Auth() {
                                             >
                                                 Username
                                             </Label>
-                                            <Input
+
+                                            <InputGroup
                                                 id="userName"
-                                                type="text"
-                                                placeholder="Enter your username"
-                                                onChange={(e) =>
-                                                    debouncedCheck(
-                                                        e.target.value
-                                                    )
-                                                }
-                                                required={mode === "signup"}
                                                 className="mt-1"
-                                            />
+                                            >
+                                                <InputGroupInput
+                                                    placeholder="Enter your username"
+                                                    type="text"
+                                                    required={mode === "signup"}
+                                                    onChange={(e) =>
+                                                        debouncedCheck(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                                <InputGroupAddon>
+                                                    <p>@</p>
+                                                </InputGroupAddon>
+                                                <InputGroupAddon align="inline-end">
+                                                    {isUsernameAvailable !==
+                                                        null && (
+                                                        <div className="flex size-4 items-center justify-center rounded-full">
+                                                            <Icon
+                                                                icon={`${
+                                                                    isUsernameAvailable
+                                                                        ? "uis:check-circle"
+                                                                        : "akar-icons:circle-x-fill"
+                                                                }`}
+                                                                className={`size-4 ${
+                                                                    isUsernameAvailable
+                                                                        ? "text-green-500"
+                                                                        : "text-red-500"
+                                                                }`}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </InputGroupAddon>
+                                            </InputGroup>
                                         </div>
                                         <div>
                                             <Label
