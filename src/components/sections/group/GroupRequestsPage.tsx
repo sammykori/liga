@@ -8,7 +8,7 @@ import relativeTime from "../../../../node_modules/dayjs/plugin/relativeTime";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useUpdateGroupJoinRequest } from "@/hooks/mutations/useUpdateGroupJoinRequest";
 
 dayjs.extend(relativeTime);
 
@@ -16,35 +16,8 @@ function GroupRequestsPage() {
     const supabase = createClient();
     const { groupId } = useParams<{ groupId: string }>();
     const { data: groupRequests } = useGroupRequests(groupId);
-    const queryClient = useQueryClient();
 
-    const mutation = useMutation({
-        mutationFn: async (reqId: string) => {
-            const { data, error } = await supabase
-                .from("group_join_requests")
-                .update({ status: "approved" })
-                .eq("id", reqId);
-            if (error) throw error;
-            return data;
-        },
-        onSuccess: (updatedGroupRequest) => {
-            // Update cached profile for this user
-            queryClient.setQueryData(
-                ["groupsRequests", groupId],
-                updatedGroupRequest
-            );
-            // Optionally invalidate related queries
-            queryClient.invalidateQueries({ queryKey: ["groupsRequests"] });
-        },
-    });
-
-    if (groupRequests && groupRequests?.length < 1) {
-        return (
-            <div className="p-4">
-                <h1>No Pending Requests.</h1>
-            </div>
-        );
-    }
+    const mutation = useUpdateGroupJoinRequest();
 
     async function approve(
         reqId: string,
@@ -53,7 +26,10 @@ function GroupRequestsPage() {
     ) {
         if (!groupRequests) return;
         try {
-            mutation.mutate(reqId);
+            mutation.mutate({
+                id: reqId,
+                status: "approved",
+            });
 
             const { data, error } = await supabase
                 .from("group_memberships")
@@ -73,16 +49,36 @@ function GroupRequestsPage() {
         }
     }
 
-    async function reject(reqId: string) {
+    async function reject(reqId: string, userName: string | null) {
         if (!groupRequests) return;
 
-        await supabase
-            .from("group_join_requests")
-            .update({ status: "rejected" })
-            .eq("id", reqId);
-        groupRequests.filter((req) => req.id !== reqId);
+        try {
+            mutation.mutate({
+                id: reqId,
+                status: "rejected",
+            });
+            toast.success(`${userName || "User"} request has been rejected!`);
+        } catch (error) {
+            console.error("Error approving User request: ", error);
+            toast.error(`Failed to reject ${userName || "User"} request!`);
+        }
     }
 
+    if (!groupRequests) {
+        return (
+            <div className="p-4">
+                <h1>No Pending Requests.</h1>
+            </div>
+        );
+    }
+    if (groupRequests?.length < 1) {
+        return (
+            <div className="p-4">
+                <h1>No Pending Requests.</h1>
+            </div>
+        );
+    }
+    console.log(groupRequests);
     return (
         <div className="container mx-auto px-4 pt-4 pb-8 overflow-hidden">
             <motion.section
@@ -95,7 +91,6 @@ function GroupRequestsPage() {
                         Latest
                     </h2>
                 </div>
-
                 <div className="w-full space-y-3">
                     {groupRequests &&
                         groupRequests.map((request, index) => (
@@ -149,7 +144,12 @@ function GroupRequestsPage() {
                                             Approve
                                         </Button>
                                         <Button
-                                            onClick={() => reject(request.id)}
+                                            onClick={() =>
+                                                reject(
+                                                    request.id,
+                                                    request.profiles?.username
+                                                )
+                                            }
                                             className="w-full text-xs"
                                         >
                                             Reject

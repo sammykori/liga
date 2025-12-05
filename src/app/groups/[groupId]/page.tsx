@@ -84,7 +84,7 @@ function Page() {
     }
     async function handleRemovePlayer() {
         try {
-            await membershipMutation.mutate({
+            membershipMutation.mutate({
                 group_id: groupId,
                 user_id: user?.id,
                 removed: true,
