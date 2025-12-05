@@ -159,11 +159,13 @@ function Page() {
                                 color={match?.teamA?.color || "black"}
                             />
                         </div>
-                        <h1 className="text-xs">{match?.teamA?.name}</h1>
+                        <h1 className="text-xs text-center">
+                            {match?.teamA?.name}
+                        </h1>
                     </div>
                     <div className="flex flex-col justify-center items-center gap-2">
-                        <h1 className="text-xs">{match?.venue}</h1>
-                        <h1 className="text-xs">
+                        <h1 className="text-xs text-center">{match?.venue}</h1>
+                        <h1 className="text-xs text-center">
                             {dayjs(match?.match_date).format("dddd, D MMM")} -
                             {dayjs(match?.match_date).format("hh:mm A")}
                         </h1>
@@ -188,7 +190,9 @@ function Page() {
                                 color={match?.teamB?.color || "black"}
                             />
                         </div>
-                        <h1 className="text-xs">{match?.teamB?.name}</h1>
+                        <h1 className="text-xs text-center">
+                            {match?.teamB?.name}
+                        </h1>
                     </div>
                 </div>
                 {role !== "user" &&
@@ -222,6 +226,7 @@ function Page() {
                                 <Actions
                                     matchId={matchId}
                                     matchStatus={match.status}
+                                    groupId={match.group_id}
                                 />
                             )}
                         </div>

@@ -26,7 +26,7 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer";
 import { positionInitials } from "@/lib/helpers";
-import { useUpdateGroupMembership } from "@/hooks/mutations/useUpdateGroupMemebership";
+import { useLeaveGroupMembership } from "@/hooks/mutations/useLeaveGroupMemebership";
 import { GroupMembershipWithStats } from "../../PlayerCard";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -41,7 +41,7 @@ function GroupSquadPage({
 }) {
     const [open, setOpen] = useState(false);
     const roleMutuation = useUpdateMembershipRole();
-    const membershipMutuation = useUpdateGroupMembership();
+    const membershipMutuation = useLeaveGroupMembership();
     const { data: players } = useGroupPlayers(groupId);
     console.log(role);
     if (!players) {
@@ -72,12 +72,12 @@ function GroupSquadPage({
 
     async function handleRemovePlayer(player: GroupMembershipWithStats) {
         try {
-            await membershipMutuation.mutate({
+            membershipMutuation.mutate({
                 id: player.id,
                 removed: true,
                 removed_at: new Date().toISOString(),
             });
-            toast.success(`${player.profiles?.full_name} has been removed `);
+            toast.success(`${player.profiles?.username} has been removed `);
             setOpen(false);
         } catch (error) {
             console.error("Update failed:", error);

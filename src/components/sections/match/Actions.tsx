@@ -24,16 +24,21 @@ import { Icon } from "@iconify/react";
 import { useUpdateMatch } from "@/hooks/mutations/useUpdateMatch";
 import { toast } from "sonner";
 import { Database } from "@/types/database";
+import { useRouter } from "next/navigation";
+
 type MatchStatus = Database["public"]["Enums"]["match_status"];
 
 function Actions({
     matchId,
     matchStatus,
+    groupId,
 }: {
     matchId: string;
     matchStatus: MatchStatus;
+    groupId: string;
 }) {
     const updateMatchMutation = useUpdateMatch();
+    const router = useRouter();
     async function updateMatch(status: MatchStatus) {
         if (!matchId) return;
         try {
@@ -46,6 +51,9 @@ function Actions({
         } catch (error) {
             console.error("Update failed:", error);
             toast.error("Failed to update match");
+        }
+        if (status === "cancelled") {
+            return router.push(`/groups/${groupId}`);
         }
     }
 
@@ -89,7 +97,6 @@ function Actions({
                                 <ActionButton
                                     name="Cancel Match"
                                     action={() => updateMatch("cancelled")}
-                                    disabled
                                 />
                             </div>
                         )}

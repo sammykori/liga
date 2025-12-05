@@ -6,6 +6,8 @@ import { Icon } from "@iconify/react";
 import { Database } from "@/types/database";
 import dayjs from "dayjs";
 import relativeTime from "../../node_modules/dayjs/plugin/relativeTime";
+import { getMatchStatus } from "@/lib/helpers";
+
 dayjs.extend(relativeTime);
 
 type Match = Database["public"]["Tables"]["matches"]["Row"];
@@ -25,13 +27,36 @@ export function MatchCard({
     variant = "compact",
     onClick,
 }: MatchCardProps) {
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case "cancelled":
+                return "text-orange-500";
+            case "confirmed":
+                return "text-green-500";
+            case "live":
+                return "text-red-500";
+            case "pending":
+                return "text-yellow-500";
+            case "completed":
+                return "text-brown-500";
+            default:
+                return "text-muted-foreground";
+        }
+    };
+
+    const handleOnclick = () => {
+        if (match.status === "cancelled") return;
+        if (onClick) {
+            onClick();
+        }
+    };
     if (variant === "hero") {
         return (
             <motion.div
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
                 className="cursor-pointer"
-                onClick={onClick}
+                onClick={handleOnclick}
             >
                 <Card className="relative overflow-hidden bg-gray-800 text-primary-foreground shadow-strong">
                     <div className="absolute top-4 right-4">
@@ -113,10 +138,20 @@ export function MatchCard({
         <motion.div
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
-            className="cursor-pointer"
-            onClick={onClick}
+            className={`${
+                match.status === "cancelled"
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer"
+            }`}
+            onClick={handleOnclick}
         >
-            <Card className="p-4 shadow-soft hover:shadow-medium transition-all duration-300 bg-gradient-card">
+            <Card
+                className={`p-4 shadow-soft hover:shadow-medium transition-all duration-300  ${
+                    match.status === "cancelled"
+                        ? "bg-gray-200 opacity-40"
+                        : "bg-gradient-card"
+                }`}
+            >
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <div className="text-center">
@@ -162,6 +197,13 @@ export function MatchCard({
                         <p className="text-xs text-muted-foreground">
                             {dayjs(match.match_date).fromNow()}
                         </p>
+                        <div
+                            className={`text-xs w-fit px-2 ${getStatusColor(
+                                match.status
+                            )}`}
+                        >
+                            {getMatchStatus(match)}
+                        </div>
                         {match.status === "confirmed" && (
                             <Button className="mt-1">
                                 <Icon

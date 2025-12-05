@@ -41,11 +41,22 @@ function Lineup({
             </div>
             <Tabs defaultValue="pool" className="w-full h-full">
                 <TabsList className="w-full">
-                    <TabsTrigger value="pool">Player Pool</TabsTrigger>
-                    <TabsTrigger value="teamA">
+                    <TabsTrigger
+                        value="pool"
+                        className="truncate text-left items-start justify-start"
+                    >
+                        Player Pool
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="teamA"
+                        className="truncate text-left items-start justify-start"
+                    >
                         {matchData.teamA?.name}
                     </TabsTrigger>
-                    <TabsTrigger value="teamB">
+                    <TabsTrigger
+                        value="teamB"
+                        className="truncate text-left items-start justify-start"
+                    >
                         {matchData.teamB?.name}
                     </TabsTrigger>
                 </TabsList>
