@@ -84,6 +84,7 @@ function Lineup({
                                     teamB={matchData.teamB}
                                     status={matchData.status}
                                     list="All"
+                                    matchId={matchId}
                                 />
                             ));
                         })()}
@@ -114,6 +115,7 @@ function Lineup({
                                     teamB={matchData.teamB}
                                     status={matchData.status}
                                     list="A"
+                                    matchId={matchId}
                                 />
                             ));
                         })()}
@@ -144,6 +146,7 @@ function Lineup({
                                     teamB={matchData.teamB}
                                     status={matchData.status}
                                     list="B"
+                                    matchId={matchId}
                                 />
                             ));
                         })()}

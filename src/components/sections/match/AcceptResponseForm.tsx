@@ -57,7 +57,10 @@ function AcceptResponseForm({ data, closeModal }: MainInfoFormProps) {
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {},
+        defaultValues: {
+            payment_made: data.payment_made ? "Yes" : "No",
+            availability: data.availability ? "Yes" : "No",
+        },
     });
 
     return (
