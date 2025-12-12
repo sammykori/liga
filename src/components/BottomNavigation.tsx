@@ -6,10 +6,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useNotifications } from "@/hooks/useNotifications";
 import { Badge } from "./ui/badge";
+import { useAuthUser } from "@/hooks/useAuthUser";
 
 export function BottomNavigation() {
     const pathname = usePathname();
-    const { data: notifications, isLoading } = useNotifications();
+    const { data: user, isLoading: isUserLoading } = useAuthUser();
+
+    const { data: notifications, isLoading } = useNotifications(user?.id);
 
     const navItems = [
         { path: "/", icon: "ri:football-fill", label: "Home" },
@@ -25,6 +28,7 @@ export function BottomNavigation() {
         },
         { path: "/profile", icon: "iconamoon:profile-bold", label: "Profile" },
     ];
+    if (isLoading && !notifications) return;
 
     return (
         <div className="w-full max-w-sm mx-auto fixed bottom-0 left-0 right-0 z-50 p-4">

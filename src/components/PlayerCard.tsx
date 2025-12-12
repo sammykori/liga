@@ -80,7 +80,7 @@ export function PlayerCard({ player, variant = "simple" }: PlayerCardProps) {
                                     {player.profiles?.username}
                                 </h3>
                                 <p
-                                    className={`w-fit text-sm ${getStatusColor(
+                                    className={`w-fit text-xs rounded-sm ${getStatusColor(
                                         player.role
                                     )} px-2`}
                                 >
@@ -90,7 +90,7 @@ export function PlayerCard({ player, variant = "simple" }: PlayerCardProps) {
                         </div>
                         <div className="flex items-center">
                             <div
-                                className={`rounded-full flex items-center justify-center text-lg text-gray-500`}
+                                className={`rounded-full flex items-center justify-center text-sm text-gray-500`}
                             >
                                 {player.player_group_stats?.rating || 0}
                             </div>
@@ -132,9 +132,9 @@ export function PlayerCard({ player, variant = "simple" }: PlayerCardProps) {
                                 {player.profiles?.username}
                             </h3>
                             <p
-                                className={`w-fit text-xs text-center px-2 ${getStatusColor(
+                                className={`w-fit text-xs text-center rounded-sm px-2 ${getStatusColor(
                                     player.role
-                                )} rounded-full`}
+                                )}`}
                             >
                                 {player.role !== "user" ? player.role : ""}
                             </p>
@@ -142,7 +142,7 @@ export function PlayerCard({ player, variant = "simple" }: PlayerCardProps) {
                     </div>
                     <div className="flex items-center">
                         <div
-                            className={`rounded-full flex items-center justify-center text-lg text-gray-500`}
+                            className={`rounded-full flex items-center justify-center text-sm text-gray-500`}
                         >
                             {player.player_group_stats?.rating || 0}
                         </div>
