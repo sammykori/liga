@@ -52,6 +52,32 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(url);
     }
 
+    // 2. Check for the Pending Join Cookie
+  const pendingCode = request.cookies.get('pendingJoinCode')?.value
+
+  if (pendingCode && user) {
+    // 3. Perform the Server-Side Join
+    const { data: group } = await supabase
+      .from('groups')
+      .select('id')
+      .eq('join_code', pendingCode)
+      .maybeSingle()
+
+    if (group) {
+      await supabase
+        .from('group_join_requests')
+        .insert({ group_id: group.id, user_id: user.id })
+      
+      // Remove the cookie so we don't repeat this
+      supabaseResponse.cookies.delete('pendingJoinCode')
+      
+      // Optionally redirect to a 'success' query param to trigger the modal on the client
+      const url = request.nextUrl.clone()
+      url.searchParams.set('joined', 'true')
+      return NextResponse.redirect(url)
+    }
+  }
+
     // IMPORTANT: You *must* return the supabaseResponse object as it is.
     // If you're creating a new response object with NextResponse.next() make sure to:
     // 1. Pass the request in it, like so:

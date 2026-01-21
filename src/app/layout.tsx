@@ -1,41 +1,41 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Lobster, Lexend } from "next/font/google";
-import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
-import { ReactQueryProvider } from "@/lib/ReactQueryProvider";
-import { AuthWatcher } from "@/lib/AuthWatcher";
-import { PushNotificationProvider } from "@/lib/PushNotificationProvider";
+import type { Metadata } from 'next'
+import { Geist, Geist_Mono, Lobster, Lexend } from 'next/font/google'
+import './globals.css'
+import { Toaster } from '@/components/ui/sonner'
+import { ReactQueryProvider } from '@/lib/ReactQueryProvider'
+import { AuthWatcher } from '@/lib/AuthWatcher'
+import { PushNotificationProvider } from '@/lib/PushNotificationProvider'
 
 const geistSans = Geist({
-    variable: "--font-geist-sans",
-    subsets: ["latin"],
-});
+    variable: '--font-geist-sans',
+    subsets: ['latin'],
+})
 
 const geistMono = Geist_Mono({
-    variable: "--font-geist-mono",
-    subsets: ["latin"],
-});
+    variable: '--font-geist-mono',
+    subsets: ['latin'],
+})
 const lobster = Lobster({
-    variable: "--font-lobster",
-    subsets: ["latin"],
-    weight: ["400"],
-});
+    variable: '--font-lobster',
+    subsets: ['latin'],
+    weight: ['400'],
+})
 
 const lexend = Lexend({
-    variable: "--font-lexend",
-    subsets: ["latin"],
-});
+    variable: '--font-lexend',
+    subsets: ['latin'],
+})
 
 export const metadata: Metadata = {
-    title: "Liga",
-    description: "A Player Rating App",
-    manifest: "/manifest.json",
-};
+    title: 'Liga',
+    description: 'A Player Rating App',
+    manifest: '/manifest.json',
+}
 
 export default function RootLayout({
     children,
 }: Readonly<{
-    children: React.ReactNode;
+    children: React.ReactNode
 }>) {
     return (
         <html lang="en">
@@ -55,5 +55,5 @@ export default function RootLayout({
                 </ReactQueryProvider>
             </body>
         </html>
-    );
+    )
 }
