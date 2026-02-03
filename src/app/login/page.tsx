@@ -4,25 +4,21 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-    InputGroup,
-    InputGroupAddon,
-    InputGroupInput,
-} from '@/components/ui/input-group'
+
 import { createClient } from '@/utils/supabase/client'
 import { toast } from 'sonner'
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-} from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Icon } from '@iconify/react'
 import { z } from 'zod'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { PostgrestError } from '@supabase/supabase-js'
-import lodash from 'lodash'
+import Password from '@/components/sections/auth/Password'
+import FormFooter from '@/components/sections/auth/FormFooter'
+import FormHeader from '@/components/sections/auth/FormHeader'
+import DoB from '@/components/sections/auth/DoB'
+
+import UserName from '@/components/sections/auth/UserName'
+import SubmitButton from '@/components/sections/auth/SubmitButton'
 
 const authSchema = z.object({
     email: z
@@ -43,6 +39,12 @@ const authSchema = z.object({
 })
 
 type AuthMode = 'login' | 'signup' | 'forgot-password'
+export type LoginFormData = {
+    email: string
+    password: string
+    userName: string
+    dob: string
+}
 
 export default function Auth() {
     const supabase = createClient()
@@ -50,7 +52,7 @@ export default function Auth() {
     const searchParams = useSearchParams()
     const [mode, setMode] = useState<AuthMode>('login')
     const [isLoading, setIsLoading] = useState(false)
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<LoginFormData>({
         email: '',
         password: '',
         userName: '',
@@ -205,69 +207,9 @@ export default function Auth() {
         }
     }
 
-    const handleInputChange = (field: string, value: string) => {
+    const handleInputChange = useCallback((field: string, value: string) => {
         setFormData((prev) => ({ ...prev, [field]: value }))
-    }
-
-    const getTitle = () => {
-        switch (mode) {
-            case 'signup':
-                return 'Create Account'
-            case 'forgot-password':
-                return 'Reset Password'
-            default:
-                return 'Welcome Back'
-        }
-    }
-
-    const getDescription = () => {
-        switch (mode) {
-            case 'signup':
-                return 'Create your account to start rating players'
-            case 'forgot-password':
-                return 'Enter your email to receive a password reset link'
-            default:
-                return 'Sign in to your account to continue'
-        }
-    }
-
-    const handleCheckUsername = async (username: string) => {
-        console.log(username)
-        handleInputChange('userName', username)
-        if (username.length < 2) {
-            setIsUsernameAvailable(null)
-            return
-        }
-        const { data, error } = await supabase
-            .from('profiles')
-            .select('id')
-            .eq('username', username)
-            .maybeSingle()
-
-        if (error && error.code !== 'PGRST116') {
-            toast.error('Error checking username:', {
-                description: error.message,
-            })
-            console.error('Error', error.message, error.details, error)
-            setIsUsernameAvailable(false)
-
-            return
-        }
-        if (error) {
-            console.error('Error', error.message, error.details, error)
-        }
-        if (!data) {
-            console.log(data)
-            setIsUsernameAvailable(true)
-        }
-
-        if (data) {
-            toast.error('Username already taken')
-            console.log(data)
-            setIsUsernameAvailable(false)
-        }
-    }
-    const debouncedCheck = lodash.debounce(handleCheckUsername, 500)
+    }, [])
 
     return (
         <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -278,25 +220,7 @@ export default function Auth() {
                 className="w-full max-w-md"
             >
                 <Card className="border-border shadow-soft">
-                    <CardHeader className="text-center space-y-4">
-                        <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            className="w-16 h-16 bg-gradient-primary rounded-xl flex items-center justify-center mx-auto"
-                        >
-                            <Icon
-                                icon="noto-v1:soccer-ball"
-                                className="size-10 text-primary-foreground"
-                            />
-                        </motion.div>
-                        <div>
-                            <CardTitle className="text-2xl font-bold text-card-foreground">
-                                {getTitle()}
-                            </CardTitle>
-                            <CardDescription className="text-muted-foreground mt-2">
-                                {getDescription()}
-                            </CardDescription>
-                        </div>
-                    </CardHeader>
+                    <FormHeader mode={mode} />
 
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
@@ -309,73 +233,19 @@ export default function Auth() {
                                         transition={{ duration: 0.3 }}
                                         className="space-y-4"
                                     >
-                                        <div>
-                                            <Label
-                                                htmlFor="userName"
-                                                className="text-card-foreground"
-                                            >
-                                                Username
-                                            </Label>
-
-                                            <InputGroup
-                                                id="userName"
-                                                className="mt-1"
-                                            >
-                                                <InputGroupInput
-                                                    placeholder="Enter your username"
-                                                    type="text"
-                                                    required={mode === 'signup'}
-                                                    onChange={(e) =>
-                                                        debouncedCheck(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                />
-                                                <InputGroupAddon>
-                                                    <p>@</p>
-                                                </InputGroupAddon>
-                                                <InputGroupAddon align="inline-end">
-                                                    {isUsernameAvailable !==
-                                                        null && (
-                                                        <div className="flex size-4 items-center justify-center rounded-full">
-                                                            <Icon
-                                                                icon={`${
-                                                                    isUsernameAvailable
-                                                                        ? 'uis:check-circle'
-                                                                        : 'akar-icons:circle-x-fill'
-                                                                }`}
-                                                                className={`size-4 ${
-                                                                    isUsernameAvailable
-                                                                        ? 'text-green-500'
-                                                                        : 'text-red-500'
-                                                                }`}
-                                                            />
-                                                        </div>
-                                                    )}
-                                                </InputGroupAddon>
-                                            </InputGroup>
-                                        </div>
-                                        <div>
-                                            <Label
-                                                htmlFor="dob"
-                                                className="text-card-foreground"
-                                            >
-                                                Date of Birth
-                                            </Label>
-                                            <Input
-                                                id="dob"
-                                                type="date"
-                                                value={formData.dob}
-                                                onChange={(e) =>
-                                                    handleInputChange(
-                                                        'dob',
-                                                        e.target.value
-                                                    )
-                                                }
-                                                required={mode === 'signup'}
-                                                className="mt-1"
-                                            />
-                                        </div>
+                                        <UserName
+                                            handleInputChange={
+                                                handleInputChange
+                                            }
+                                            mode={mode}
+                                        />
+                                        <DoB
+                                            formData={formData}
+                                            handleInputChange={
+                                                handleInputChange
+                                            }
+                                            mode={mode}
+                                        />
                                     </motion.div>
                                 )}
                             </AnimatePresence>
@@ -409,101 +279,15 @@ export default function Auth() {
                             </div>
 
                             {mode !== 'forgot-password' && (
-                                <div>
-                                    <Label
-                                        htmlFor="password"
-                                        className="text-card-foreground"
-                                    >
-                                        Password
-                                    </Label>
-                                    <Input
-                                        id="password"
-                                        type="password"
-                                        placeholder="Enter your password"
-                                        value={formData.password}
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                'password',
-                                                e.target.value
-                                            )
-                                        }
-                                        required
-                                        className="mt-1"
-                                    />
-                                </div>
+                                <Password
+                                    formData={formData}
+                                    handleInputChange={handleInputChange}
+                                />
                             )}
-
-                            <Button
-                                type="submit"
-                                className="w-full hover:opacity-90 transition-opacity"
-                                disabled={isLoading}
-                            >
-                                {isLoading ? (
-                                    <Icon
-                                        icon="mdi:loading"
-                                        className="w-4 h-4 animate-spin"
-                                    />
-                                ) : mode === 'forgot-password' ? (
-                                    'Send Reset Link'
-                                ) : mode === 'signup' ? (
-                                    'Create Account'
-                                ) : (
-                                    'Sign In'
-                                )}
-                            </Button>
+                            <SubmitButton mode={mode} isLoading={isLoading} />
                         </form>
 
-                        <div className="mt-6 space-y-3 text-center">
-                            {mode === 'login' && (
-                                <>
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setMode('forgot-password')
-                                        }
-                                        className="text-sm text-primary hover:underline"
-                                    >
-                                        Forgot your password?
-                                    </button>
-                                    <div className="text-sm text-muted-foreground">
-                                        Don&apos;t have an account?{' '}
-                                        <button
-                                            type="button"
-                                            onClick={() => setMode('signup')}
-                                            className="text-primary hover:underline font-medium"
-                                        >
-                                            Sign up
-                                        </button>
-                                    </div>
-                                </>
-                            )}
-
-                            {mode === 'signup' && (
-                                <div className="text-sm text-muted-foreground">
-                                    Already have an account?{' '}
-                                    <button
-                                        type="button"
-                                        onClick={() => setMode('login')}
-                                        className="text-primary hover:underline font-medium"
-                                    >
-                                        Sign in
-                                    </button>
-                                </div>
-                            )}
-
-                            {mode === 'forgot-password' && (
-                                <div className="text-sm text-muted-foreground">
-                                    Remember your password?{' '}
-                                    <button
-                                        type="button"
-                                        onClick={() => setMode('login')}
-                                        className="text-primary hover:underline font-medium"
-                                    >
-                                        Sign in
-                                    </button>
-                                </div>
-                            )}
-                        </div>
+                        <FormFooter mode={mode} setMode={setMode} />
                     </CardContent>
                 </Card>
             </motion.div>
