@@ -1,115 +1,117 @@
-"use client";
-import { motion, AnimatePresence } from "framer-motion";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-    InputGroup,
-    InputGroupAddon,
-    InputGroupInput,
-} from "@/components/ui/input-group";
-import { createClient } from "@/utils/supabase/client";
-import { toast } from "sonner";
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-} from "@/components/ui/card";
-import { Icon } from "@iconify/react";
-import { z } from "zod";
-import { useState, useEffect } from "react";
-import { PostgrestError } from "@supabase/supabase-js";
-import lodash from "lodash";
+'use client'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+
+import { createClient } from '@/utils/supabase/client'
+import { toast } from 'sonner'
+import { Card, CardContent } from '@/components/ui/card'
+import { Icon } from '@iconify/react'
+import { z } from 'zod'
+import { useState, useEffect, useCallback } from 'react'
+import { PostgrestError } from '@supabase/supabase-js'
+import Password from '@/components/sections/auth/Password'
+import FormFooter from '@/components/sections/auth/FormFooter'
+import FormHeader from '@/components/sections/auth/FormHeader'
+import DoB from '@/components/sections/auth/DoB'
+
+import UserName from '@/components/sections/auth/UserName'
+import SubmitButton from '@/components/sections/auth/SubmitButton'
 
 const authSchema = z.object({
     email: z
         .string()
         .trim()
-        .email({ message: "Invalid email address" })
-        .max(255, { message: "Email must be less than 255 characters" }),
+        .email({ message: 'Invalid email address' })
+        .max(255, { message: 'Email must be less than 255 characters' }),
     password: z
         .string()
-        .min(6, { message: "Password must be at least 6 characters" })
-        .max(128, { message: "Password must be less than 128 characters" }),
+        .min(6, { message: 'Password must be at least 6 characters' })
+        .max(128, { message: 'Password must be less than 128 characters' }),
     userName: z
         .string()
         .trim()
-        .min(3, { message: "Name must be at least 2 characters" })
-        .max(100, { message: "Name must be less than 100 characters" })
+        .min(3, { message: 'Name must be at least 2 characters' })
+        .max(100, { message: 'Name must be less than 100 characters' })
         .optional(),
-});
+})
 
-type AuthMode = "login" | "signup" | "forgot-password";
+type AuthMode = 'login' | 'signup' | 'forgot-password'
+export type LoginFormData = {
+    email: string
+    password: string
+    userName: string
+    dob: string
+}
 
 export default function Auth() {
-    const supabase = createClient();
-    const navigate = useRouter();
-    const searchParams = useSearchParams();
-    const [mode, setMode] = useState<AuthMode>("login");
-    const [isLoading, setIsLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-        userName: "",
-        dob: "",
-    });
+    const supabase = createClient()
+    const navigate = useRouter()
+    const searchParams = useSearchParams()
+    const [mode, setMode] = useState<AuthMode>('login')
+    const [isLoading, setIsLoading] = useState(false)
+    const [formData, setFormData] = useState<LoginFormData>({
+        email: '',
+        password: '',
+        userName: '',
+        dob: '',
+    })
     const [isUsernameAvailable, setIsUsernameAvailable] = useState<
         boolean | null
-    >(null);
+    >(null)
 
     useEffect(() => {
-        const authMode = searchParams.get("mode") as AuthMode;
+        const authMode = searchParams.get('mode') as AuthMode
         if (
             authMode &&
-            ["login", "signup", "forgot-password"].includes(authMode)
+            ['login', 'signup', 'forgot-password'].includes(authMode)
         ) {
-            setMode(authMode);
+            setMode(authMode)
         }
-    }, [searchParams]);
+    }, [searchParams])
 
     useEffect(() => {
         // Check if user is already logged in
         const checkSession = async () => {
             const {
                 data: { session },
-            } = await supabase.auth.getSession();
+            } = await supabase.auth.getSession()
             if (session) {
-                navigate.push("/");
+                navigate.push('/')
             }
-        };
-        checkSession();
+        }
+        checkSession()
 
         // Listen for auth changes
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((event, session) => {
             if (session) {
-                navigate.push("/");
+                navigate.push('/')
             }
-        });
+        })
 
-        return () => subscription.unsubscribe();
-    }, [navigate, supabase]);
+        return () => subscription.unsubscribe()
+    }, [navigate, supabase])
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsLoading(true);
-        setIsUsernameAvailable(null);
+        e.preventDefault()
+        setIsLoading(true)
+        setIsUsernameAvailable(null)
 
         try {
-            if (mode === "forgot-password") {
+            if (mode === 'forgot-password') {
                 const emailValidation = z
                     .string()
                     .email()
-                    .safeParse(formData.email);
+                    .safeParse(formData.email)
                 if (!emailValidation.success) {
-                    toast.error("Invalid email", {
+                    toast.error('Invalid email', {
                         description: emailValidation.error.message,
-                    });
-                    return;
+                    })
+                    return
                 }
 
                 const { error } = await supabase.auth.resetPasswordForEmail(
@@ -117,31 +119,31 @@ export default function Auth() {
                     {
                         redirectTo: `${window.location.origin}`,
                     }
-                );
+                )
 
-                if (error) throw error;
+                if (error) throw error
 
-                toast("Password reset email sent", {
+                toast('Password reset email sent', {
                     description:
-                        "Check your email for the password reset link.",
-                });
-                setMode("login");
+                        'Check your email for the password reset link.',
+                })
+                setMode('login')
             } else {
                 const validation = authSchema.safeParse({
                     ...formData,
-                    userName: mode === "signup" ? formData.userName : undefined,
-                    dob: mode === "signup" ? formData.dob : undefined,
-                });
+                    userName: mode === 'signup' ? formData.userName : undefined,
+                    dob: mode === 'signup' ? formData.dob : undefined,
+                })
 
                 if (!validation.success) {
-                    console.log(formData);
-                    toast.error("Validation error", {
+                    console.log(formData)
+                    toast.error('Validation error', {
                         description: validation.error.message,
-                    });
-                    return;
+                    })
+                    return
                 }
 
-                if (mode === "signup") {
+                if (mode === 'signup') {
                     const { data, error } = await supabase.auth.signUp({
                         email: formData.email,
                         password: formData.password,
@@ -152,42 +154,42 @@ export default function Auth() {
                                 dob: formData.dob,
                             },
                         },
-                    });
+                    })
                     if (!data.user) {
                         console.warn(
-                            "User not created: email may already exist."
-                        );
-                        toast.error("User not created:", {
-                            description: "Email may already exist.",
-                        });
+                            'User not created: email may already exist.'
+                        )
+                        toast.error('User not created:', {
+                            description: 'Email may already exist.',
+                        })
                     }
 
                     if (error) {
-                        console.error(error);
+                        console.error(error)
 
-                        toast.error("Signup error:", {
-                            description: error.name + ": " + error.message,
-                        });
+                        toast.error('Signup error:', {
+                            description: error.name + ': ' + error.message,
+                        })
                     }
 
-                    toast.success("Account created successfully", {
+                    toast.success('Account created successfully', {
                         description:
-                            "Please check your email to verify your account.",
-                    });
-                    setMode("login");
+                            'Please check your email to verify your account.',
+                    })
+                    setMode('login')
                 } else {
                     const { error } = await supabase.auth.signInWithPassword({
                         email: formData.email,
                         password: formData.password,
-                    });
+                    })
 
                     if (error) {
-                        console.error(error);
+                        console.error(error)
 
-                        toast.error("Invalid username or password", {
+                        toast.error('Invalid username or password', {
                             description:
-                                "Please check your email and password are correct.",
-                        });
+                                'Please check your email and password are correct.',
+                        })
                     }
 
                     // Navigation is handled by auth state change
@@ -195,79 +197,19 @@ export default function Auth() {
             }
         } catch (error) {
             if (error instanceof PostgrestError) {
-                toast.error("Authentication error", {
+                toast.error('Authentication error', {
                     description:
-                        error.message || "An unexpected error occurred.",
-                });
+                        error.message || 'An unexpected error occurred.',
+                })
             }
         } finally {
-            setIsLoading(false);
+            setIsLoading(false)
         }
-    };
+    }
 
-    const handleInputChange = (field: string, value: string) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
-    };
-
-    const getTitle = () => {
-        switch (mode) {
-            case "signup":
-                return "Create Account";
-            case "forgot-password":
-                return "Reset Password";
-            default:
-                return "Welcome Back";
-        }
-    };
-
-    const getDescription = () => {
-        switch (mode) {
-            case "signup":
-                return "Create your account to start rating players";
-            case "forgot-password":
-                return "Enter your email to receive a password reset link";
-            default:
-                return "Sign in to your account to continue";
-        }
-    };
-
-    const handleCheckUsername = async (username: string) => {
-        console.log(username);
-        handleInputChange("userName", username);
-        if (username.length < 2) {
-            setIsUsernameAvailable(null);
-            return;
-        }
-        const { data, error } = await supabase
-            .from("profiles")
-            .select("id")
-            .eq("username", username)
-            .maybeSingle();
-
-        if (error && error.code !== "PGRST116") {
-            toast.error("Error checking username:", {
-                description: error.message,
-            });
-            console.error("Error", error.message, error.details, error);
-            setIsUsernameAvailable(false);
-
-            return;
-        }
-        if (error) {
-            console.error("Error", error.message, error.details, error);
-        }
-        if (!data) {
-            console.log(data);
-            setIsUsernameAvailable(true);
-        }
-
-        if (data) {
-            toast.error("Username already taken");
-            console.log(data);
-            setIsUsernameAvailable(false);
-        }
-    };
-    const debouncedCheck = lodash.debounce(handleCheckUsername, 500);
+    const handleInputChange = useCallback((field: string, value: string) => {
+        setFormData((prev) => ({ ...prev, [field]: value }))
+    }, [])
 
     return (
         <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -278,104 +220,32 @@ export default function Auth() {
                 className="w-full max-w-md"
             >
                 <Card className="border-border shadow-soft">
-                    <CardHeader className="text-center space-y-4">
-                        <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            className="w-16 h-16 bg-gradient-primary rounded-xl flex items-center justify-center mx-auto"
-                        >
-                            <Icon
-                                icon="noto-v1:soccer-ball"
-                                className="size-10 text-primary-foreground"
-                            />
-                        </motion.div>
-                        <div>
-                            <CardTitle className="text-2xl font-bold text-card-foreground">
-                                {getTitle()}
-                            </CardTitle>
-                            <CardDescription className="text-muted-foreground mt-2">
-                                {getDescription()}
-                            </CardDescription>
-                        </div>
-                    </CardHeader>
+                    <FormHeader mode={mode} />
 
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <AnimatePresence mode="wait">
-                                {mode === "signup" && (
+                                {mode === 'signup' && (
                                     <motion.div
                                         initial={{ opacity: 0, height: 0 }}
-                                        animate={{ opacity: 1, height: "auto" }}
+                                        animate={{ opacity: 1, height: 'auto' }}
                                         exit={{ opacity: 0, height: 0 }}
                                         transition={{ duration: 0.3 }}
                                         className="space-y-4"
                                     >
-                                        <div>
-                                            <Label
-                                                htmlFor="userName"
-                                                className="text-card-foreground"
-                                            >
-                                                Username
-                                            </Label>
-
-                                            <InputGroup
-                                                id="userName"
-                                                className="mt-1"
-                                            >
-                                                <InputGroupInput
-                                                    placeholder="Enter your username"
-                                                    type="text"
-                                                    required={mode === "signup"}
-                                                    onChange={(e) =>
-                                                        debouncedCheck(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                />
-                                                <InputGroupAddon>
-                                                    <p>@</p>
-                                                </InputGroupAddon>
-                                                <InputGroupAddon align="inline-end">
-                                                    {isUsernameAvailable !==
-                                                        null && (
-                                                        <div className="flex size-4 items-center justify-center rounded-full">
-                                                            <Icon
-                                                                icon={`${
-                                                                    isUsernameAvailable
-                                                                        ? "uis:check-circle"
-                                                                        : "akar-icons:circle-x-fill"
-                                                                }`}
-                                                                className={`size-4 ${
-                                                                    isUsernameAvailable
-                                                                        ? "text-green-500"
-                                                                        : "text-red-500"
-                                                                }`}
-                                                            />
-                                                        </div>
-                                                    )}
-                                                </InputGroupAddon>
-                                            </InputGroup>
-                                        </div>
-                                        <div>
-                                            <Label
-                                                htmlFor="dob"
-                                                className="text-card-foreground"
-                                            >
-                                                Date of Birth
-                                            </Label>
-                                            <Input
-                                                id="dob"
-                                                type="date"
-                                                value={formData.dob}
-                                                onChange={(e) =>
-                                                    handleInputChange(
-                                                        "dob",
-                                                        e.target.value
-                                                    )
-                                                }
-                                                required={mode === "signup"}
-                                                className="mt-1"
-                                            />
-                                        </div>
+                                        <UserName
+                                            handleInputChange={
+                                                handleInputChange
+                                            }
+                                            mode={mode}
+                                        />
+                                        <DoB
+                                            formData={formData}
+                                            handleInputChange={
+                                                handleInputChange
+                                            }
+                                            mode={mode}
+                                        />
                                     </motion.div>
                                 )}
                             </AnimatePresence>
@@ -395,7 +265,7 @@ export default function Auth() {
                                         value={formData.email}
                                         onChange={(e) =>
                                             handleInputChange(
-                                                "email",
+                                                'email',
                                                 e.target.value
                                             )
                                         }
@@ -408,105 +278,19 @@ export default function Auth() {
                                 </div>
                             </div>
 
-                            {mode !== "forgot-password" && (
-                                <div>
-                                    <Label
-                                        htmlFor="password"
-                                        className="text-card-foreground"
-                                    >
-                                        Password
-                                    </Label>
-                                    <Input
-                                        id="password"
-                                        type="password"
-                                        placeholder="Enter your password"
-                                        value={formData.password}
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                "password",
-                                                e.target.value
-                                            )
-                                        }
-                                        required
-                                        className="mt-1"
-                                    />
-                                </div>
+                            {mode !== 'forgot-password' && (
+                                <Password
+                                    formData={formData}
+                                    handleInputChange={handleInputChange}
+                                />
                             )}
-
-                            <Button
-                                type="submit"
-                                className="w-full hover:opacity-90 transition-opacity"
-                                disabled={isLoading}
-                            >
-                                {isLoading ? (
-                                    <Icon
-                                        icon="mdi:loading"
-                                        className="w-4 h-4 animate-spin"
-                                    />
-                                ) : mode === "forgot-password" ? (
-                                    "Send Reset Link"
-                                ) : mode === "signup" ? (
-                                    "Create Account"
-                                ) : (
-                                    "Sign In"
-                                )}
-                            </Button>
+                            <SubmitButton mode={mode} isLoading={isLoading} />
                         </form>
 
-                        <div className="mt-6 space-y-3 text-center">
-                            {mode === "login" && (
-                                <>
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setMode("forgot-password")
-                                        }
-                                        className="text-sm text-primary hover:underline"
-                                    >
-                                        Forgot your password?
-                                    </button>
-                                    <div className="text-sm text-muted-foreground">
-                                        Don&apos;t have an account?{" "}
-                                        <button
-                                            type="button"
-                                            onClick={() => setMode("signup")}
-                                            className="text-primary hover:underline font-medium"
-                                        >
-                                            Sign up
-                                        </button>
-                                    </div>
-                                </>
-                            )}
-
-                            {mode === "signup" && (
-                                <div className="text-sm text-muted-foreground">
-                                    Already have an account?{" "}
-                                    <button
-                                        type="button"
-                                        onClick={() => setMode("login")}
-                                        className="text-primary hover:underline font-medium"
-                                    >
-                                        Sign in
-                                    </button>
-                                </div>
-                            )}
-
-                            {mode === "forgot-password" && (
-                                <div className="text-sm text-muted-foreground">
-                                    Remember your password?{" "}
-                                    <button
-                                        type="button"
-                                        onClick={() => setMode("login")}
-                                        className="text-primary hover:underline font-medium"
-                                    >
-                                        Sign in
-                                    </button>
-                                </div>
-                            )}
-                        </div>
+                        <FormFooter mode={mode} setMode={setMode} />
                     </CardContent>
                 </Card>
             </motion.div>
         </div>
-    );
+    )
 }
