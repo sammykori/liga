@@ -18,7 +18,7 @@ export const Header = () => {
     const [isOpen, setIsOpen] = useState(false)
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border px-4">
+        <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg px-4">
             <div className="container mx-auto">
                 <div className="flex items-center justify-between h-20">
                     {/* Logo */}
@@ -69,7 +69,10 @@ export const Header = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.5, delay: 0.3 }}
                     >
-                        <Button className="rounded-full gap-2">
+                        <Button
+                            size="lg"
+                            className="rounded-full py-6 px-10 gap-2"
+                        >
                             Join Now
                             <ArrowRight className="w-4 h-4" />
                         </Button>
@@ -94,7 +97,7 @@ export const Header = () => {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        className="md:hidden absolute top-20 left-0 right-0 bg-background border-b border-border"
+                        className="md:hidden absolute top-20 left-0 right-0 bg-background"
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}

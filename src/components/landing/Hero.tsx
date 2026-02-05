@@ -12,44 +12,54 @@ const stats = [
 
 export const Hero = () => {
     return (
-        <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
+        <section className="w-full relative min-h-screen flex items-center pt-20 overflow-hidden p-4">
             {/* Background Pattern */}
-            {/* <div className="absolute inset-0 opacity-5">
-                <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-primary blur-3xl" />
-                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-accent blur-3xl" />
-            </div> */}
+            <div className="absolute inset-0 opacity-5">
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-red-500 blur-3xl animate-pulse" />
+                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-green-500 blur-3xl animate-pulse" />
+            </div>
 
-            <div className="container mx-auto relative z-10">
-                <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="w-full container mx-auto relative z-10">
+                <div className="w-full flex flex-col lg:flex-row  gap-12 items-start pt-10">
                     {/* Text Content */}
-                    <div className="space-y-8">
-                        <motion.div
+                    <div className="w-full space-y-8">
+                        {/* <motion.div
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6 }}
                         >
-                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-secondary rounded-full mb-6">
-                                <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-secondary rounded-full ">
+                                <span className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
                                 <span className="text-sm font-medium">
-                                    Season 2024/25 is Live
+                                    Beta Testing
                                 </span>
                             </div>
-                        </motion.div>
+                        </motion.div> */}
 
                         <motion.h1
-                            className="text-display text-5xl md:text-7xl lg:text-8xl leading-none"
+                            className="text-display text-5xl md:text-6xl lg:text-7xl leading-none"
                             initial={{ opacity: 0, y: 40 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.7, delay: 0.1 }}
                         >
-                            <span className="block">19 YEARS</span>
-                            <span className="block text-muted-foreground text-4xl md:text-5xl lg:text-6xl italic font-normal">
-                                of
-                            </span>
-                            <span className="block">EXPERIENCE</span>
-                            <span className="block">PLAYERS/</span>
-                            <span className="block text-muted-foreground">
-                                WORLDWIDE
+                            <div>
+                                <span className="font-bold">CONNECT</span>
+                            </div>
+                            <div>
+                                <span className=" text-muted-foreground text-3xl md:text-5xl lg:text-3xl italic font-normal">
+                                    with
+                                </span>
+
+                                <span className="">FOOTBALL</span>
+                            </div>
+                            <div>
+                                <span className="">PLAYERS</span>
+                                <span className=" text-muted-foreground text-3xl md:text-5xl lg:text-3xl italic font-normal">
+                                    in your
+                                </span>
+                            </div>
+                            <span className="block font-bold text-muted-foreground">
+                                COMMUNITY
                             </span>
                         </motion.h1>
 
@@ -82,43 +92,51 @@ export const Hero = () => {
                                 Watch Trailer
                             </Button>
                         </motion.div>
-
-                        {/* Stats */}
-                        <motion.div
-                            className="flex gap-8 pt-8 border-t border-border"
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: 0.5 }}
-                        >
-                            {stats.map((stat, index) => (
-                                <div
-                                    key={index}
-                                    className="flex items-center gap-3"
-                                >
-                                    <div className="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center">
-                                        <stat.icon className="w-5 h-5" />
-                                    </div>
-                                    <div>
-                                        <div className="text-2xl font-bold font-display">
-                                            {stat.value}
-                                        </div>
-                                        <div className="text-sm text-muted-foreground">
-                                            {stat.label}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </motion.div>
                     </div>
 
                     {/* Hero Image */}
                     <motion.div
-                        className="relative"
+                        className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 relative"
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
-                        <div className="h-40 w-1/2 border-4 border-gray-200 rounded-4xl"></div>
+                        <div className="w-full border-2 border-gray-200 rounded-4xl relative overflow-hidden p-4">
+                            <motion.div
+                                className="relative -right-10 -top-10"
+                                initial={{ opacity: 0 }}
+                                whileInView={{ opacity: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8 }}
+                            >
+                                <div className="flex text-right justify-end tracking-tighter flex-wrap gap-4 text-9xl  lg:text-9xl font-display font-bold text-gray-200 leading-none">
+                                    <span>LIGA</span>
+                                    <span>.APP</span>
+                                </div>
+                            </motion.div>
+                            <motion.div
+                                className="pt-12 flex flex-col gap-2"
+                                initial={{ opacity: 0 }}
+                                whileInView={{ opacity: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8 }}
+                            >
+                                <div>
+                                    <span className="px-4 py-1 bg-accent rounded-full">
+                                        Community
+                                    </span>
+                                </div>
+                                <div className="w-full flex">
+                                    <span className="text-2xl">600+</span>
+                                </div>
+                                <div>
+                                    <span className="text-muted-foreground text-sm ">
+                                        Join our global sport community
+                                    </span>
+                                </div>
+                            </motion.div>
+                        </div>
+                        <div className="w-full border-2 border-gray-200 rounded-4xl"></div>
 
                         {/* Floating Cards */}
                         {/* <motion.div
