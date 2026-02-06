@@ -6,14 +6,6 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { Icon } from '@iconify/react'
 
-const navLinks = [
-    { name: 'Home', href: '#' },
-    { name: 'Matches', href: '#matches' },
-    { name: 'Team', href: '#team' },
-    { name: 'News', href: '#news' },
-    { name: 'About', href: '#about' },
-]
-
 export const Header = () => {
     const [isOpen, setIsOpen] = useState(false)
 
@@ -44,23 +36,7 @@ export const Header = () => {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <nav className="hidden md:flex items-center gap-8">
-                        {navLinks.map((link, index) => (
-                            <motion.a
-                                key={link.name}
-                                href={link.href}
-                                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors link-underline"
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{
-                                    duration: 0.3,
-                                    delay: index * 0.1,
-                                }}
-                            >
-                                {link.name}
-                            </motion.a>
-                        ))}
-                    </nav>
+                    <nav className="hidden md:flex items-center gap-8"></nav>
 
                     {/* CTA Button */}
                     <motion.div
@@ -69,13 +45,15 @@ export const Header = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.5, delay: 0.3 }}
                     >
-                        <Button
-                            size="lg"
-                            className="rounded-full py-6 px-10 gap-2"
-                        >
-                            Join Now
-                            <ArrowRight className="w-4 h-4" />
-                        </Button>
+                        <Link href="/join-group">
+                            <Button
+                                size="lg"
+                                className="rounded-full py-6 px-10 gap-2"
+                            >
+                                Join a group
+                                <ArrowRight className="w-4 h-4" />
+                            </Button>
+                        </Link>
                     </motion.div>
 
                     {/* Mobile Menu Toggle */}
@@ -97,27 +75,22 @@ export const Header = () => {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        className="md:hidden absolute top-20 left-0 right-0 bg-background"
+                        className="md:hidden absolute top-20 left-0 right-0 bg-background p-4"
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3 }}
                     >
                         <nav className="container py-6 flex flex-col gap-4">
-                            {navLinks.map((link) => (
-                                <a
-                                    key={link.name}
-                                    href={link.href}
-                                    className="text-lg font-medium py-2 hover:text-muted-foreground transition-colors"
-                                    onClick={() => setIsOpen(false)}
+                            <Link href="/login">
+                                <Button
+                                    size={'lg'}
+                                    className="rounded-full w-full mt-4"
                                 >
-                                    {link.name}
-                                </a>
-                            ))}
-                            <Button className="rounded-full w-full mt-4">
-                                Join Now
-                                <ArrowRight className="w-4 h-4 ml-2" />
-                            </Button>
+                                    Join a group
+                                    <ArrowRight className="w-4 h-4 ml-2" />
+                                </Button>
+                            </Link>
                         </nav>
                     </motion.div>
                 )}

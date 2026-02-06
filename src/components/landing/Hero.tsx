@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { ArrowRight, Play, Users, Trophy, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const stats = [
     { icon: Users, value: '500+', label: 'Players' },
@@ -12,7 +13,7 @@ const stats = [
 
 export const Hero = () => {
     return (
-        <section className="w-full relative min-h-screen flex items-center pt-20 overflow-hidden p-4">
+        <section className="w-full relative flex items-start pt-20 overflow-hidden p-4">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-5">
                 <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-red-500 blur-3xl animate-pulse" />
@@ -20,7 +21,7 @@ export const Hero = () => {
             </div>
 
             <div className="w-full container mx-auto relative z-10">
-                <div className="w-full flex flex-col lg:flex-row  gap-12 items-start pt-10">
+                <div className="w-full flex flex-col lg:flex-row  gap-12 items-start pt-10 pb-20">
                     {/* Text Content */}
                     <div className="w-full space-y-8">
                         {/* <motion.div
@@ -50,10 +51,10 @@ export const Hero = () => {
                                     with
                                 </span>
 
-                                <span className="">FOOTBALL</span>
+                                <span className="">GRASSROOT</span>
                             </div>
                             <div>
-                                <span className="">PLAYERS</span>
+                                <span className="">FOOTBALL</span>
                                 <span className=" text-muted-foreground text-3xl md:text-5xl lg:text-3xl italic font-normal">
                                     in your
                                 </span>
@@ -69,9 +70,9 @@ export const Hero = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.3 }}
                         >
-                            Join the ultimate football community. Connect with
-                            players, follow matches, and experience the
-                            beautiful game like never before.
+                            Join the ultimate grassrots and amateur football
+                            community. Connect with players, follow matches, and
+                            experience the beautiful game like never before.
                         </motion.p>
 
                         <motion.div
@@ -80,28 +81,23 @@ export const Hero = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.4 }}
                         >
-                            <Button className="rounded-full gap-2">
-                                Get Started
-                                <ArrowRight className="w-4 h-4" />
-                            </Button>
-                            <Button
-                                variant="outline"
-                                className="btn-liga-outline rounded-full"
-                            >
-                                <Play className="w-4 h-4" />
-                                Watch Trailer
-                            </Button>
+                            <Link href="/login">
+                                <Button className="rounded-full gap-2">
+                                    Get Started
+                                    <ArrowRight className="w-4 h-4" />
+                                </Button>
+                            </Link>
                         </motion.div>
                     </div>
 
                     {/* Hero Image */}
                     <motion.div
-                        className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 relative"
+                        className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 relative"
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
-                        <div className="w-full border-2 border-gray-200 rounded-4xl relative overflow-hidden p-4">
+                        <div className="hidden lg:block w-full border-2 border-gray-200 rounded-4xl relative overflow-hidden p-4">
                             <motion.div
                                 className="relative -right-10 -top-10"
                                 initial={{ opacity: 0 }}
@@ -136,7 +132,16 @@ export const Hero = () => {
                                 </div>
                             </motion.div>
                         </div>
-                        <div className="w-full border-2 border-gray-200 rounded-4xl"></div>
+                        <div className="w-full min-h-96 border-2 border-gray-200 rounded-4xl">
+                            <div className="w-full h-full relative">
+                                <Image
+                                    src="/images/hero-huddle.jpg"
+                                    alt="Hero Image"
+                                    fill
+                                    className="w-full h-auto object-cover rounded-4xl grayscale-100 hover:grayscale-0 transition-all duration-500"
+                                />
+                            </div>
+                        </div>
 
                         {/* Floating Cards */}
                         {/* <motion.div

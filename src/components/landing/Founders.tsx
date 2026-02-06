@@ -1,22 +1,27 @@
 'use client'
 import { motion } from 'framer-motion'
-import { ArrowRight, Linkedin, Twitter } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
+import { Icon } from '@iconify/react'
+import { link } from 'fs'
+import Link from 'next/link'
 
 const founders = [
     {
-        name: 'JASON',
-        lastName: 'HARRISON',
+        name: 'DELE',
+        lastName: 'AROGUNDADE',
         role: 'Chief Executive Officer',
         bio: 'Former professional player with 15 years of management experience.',
-        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop',
+        image: '/images/team/dele.jpeg',
+        linkedIn: 'https://www.linkedin.com/in/dele-arogundade/',
     },
     {
-        name: 'ADAM',
-        lastName: 'HOLMES',
-        role: 'Sporting Director',
+        name: 'SAMUEL',
+        lastName: 'KORI',
+        role: 'Chief Technology Officer',
         bio: 'Led scouting operations for top European clubs before joining Liga.',
-        image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=500&fit=crop',
+        image: '/images/team/sam.jpeg',
+        linkedIn: 'https://www.linkedin.com/in/samuelkori/',
     },
 ]
 
@@ -45,10 +50,6 @@ export const Founders = () => {
                             </span>
                         </h2>
                     </div>
-                    <Button className="btn-liga mt-6 md:mt-0">
-                        Full Team
-                        <ArrowRight className="w-4 h-4" />
-                    </Button>
                 </motion.div>
 
                 <div className="grid md:grid-cols-2 gap-8 max-w-4xl">
@@ -62,10 +63,11 @@ export const Founders = () => {
                             transition={{ duration: 0.6, delay: index * 0.15 }}
                         >
                             {/* Image */}
-                            <div className="w-32 h-40 rounded-xl overflow-hidden flex-shrink-0">
-                                <img
+                            <div className="w-32 h-40 rounded-xl overflow-hidden flex-shrink-0 relative">
+                                <Image
                                     src={founder.image}
                                     alt={`${founder.name} ${founder.lastName}`}
+                                    fill
                                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                                 />
                             </div>
@@ -82,18 +84,20 @@ export const Founders = () => {
                                 <p className="text-sm text-muted-foreground mt-2">
                                     {founder.role}
                                 </p>
-                                <p className="text-sm text-muted-foreground mt-4">
-                                    {founder.bio}
-                                </p>
 
                                 {/* Social Links */}
                                 <div className="flex gap-2 mt-4">
-                                    <button className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors">
-                                        <Twitter className="w-4 h-4" />
-                                    </button>
-                                    <button className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors">
-                                        <Linkedin className="w-4 h-4" />
-                                    </button>
+                                    <Link
+                                        href={founder.linkedIn}
+                                        target="_blank"
+                                    >
+                                        <button className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors">
+                                            <Icon
+                                                icon="mdi:linkedin"
+                                                className="w-4 h-4"
+                                            />
+                                        </button>
+                                    </Link>
                                 </div>
                             </div>
                         </motion.div>

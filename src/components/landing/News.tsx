@@ -27,8 +27,9 @@ export const News = () => {
                     transition={{ duration: 0.7 }}
                 >
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-foreground/10 backdrop-blur-sm rounded-full mb-8">
-                        <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                        <span className="text-sm font-medium">Latest News</span>
+                        <span className="text-sm font-medium">
+                            Follow us on socials
+                        </span>
                     </div>
 
                     <h2 className="text-display text-4xl md:text-6xl lg:text-7xl mb-6">
@@ -40,15 +41,9 @@ export const News = () => {
                     </h2>
 
                     <p className="text-lg text-primary-foreground/70 mb-10 max-w-xl mx-auto">
-                        Stay updated with the latest news, transfer rumors,
-                        match reports, and exclusive behind-the-scenes content
-                        from Liga FC.
+                        Stay updated with the latest news, feature updates, and
+                        exclusive behind-the-scenes content from Liga App.
                     </p>
-
-                    <Button className="btn-liga bg-primary-foreground text-primary hover:bg-primary-foreground/90">
-                        Read Latest News
-                        <ArrowRight className="w-4 h-4" />
-                    </Button>
                 </motion.div>
             </div>
 
