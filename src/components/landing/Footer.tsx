@@ -32,7 +32,7 @@ export const Footer = () => {
                 <div className="grid md:grid-cols-4 gap-12 mb-16">
                     {/* Brand */}
                     <div className="md:col-span-1">
-                        <Link href="/">
+                        <Link href="/home">
                             <motion.div
                                 whileHover={{ scale: 1.05 }}
                                 initial={{ opacity: 0, x: -20 }}

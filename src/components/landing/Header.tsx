@@ -45,7 +45,7 @@ export const Header = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.5, delay: 0.3 }}
                     >
-                        <Link href="/join-group">
+                        <Link href="/login">
                             <Button
                                 size="lg"
                                 className="rounded-full py-6 px-10 gap-2"

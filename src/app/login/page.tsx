@@ -79,7 +79,7 @@ export default function Auth() {
                 data: { session },
             } = await supabase.auth.getSession()
             if (session) {
-                navigate.push('/')
+                navigate.push('/home')
             }
         }
         checkSession()
@@ -89,7 +89,7 @@ export default function Auth() {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((event, session) => {
             if (session) {
-                navigate.push('/')
+                navigate.push('/home')
             }
         })
 

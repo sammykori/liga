@@ -1,34 +1,34 @@
-"use client";
-import React from "react";
-import { motion } from "framer-motion";
-import { Icon } from "@iconify/react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useNotifications } from "@/hooks/useNotifications";
-import { Badge } from "./ui/badge";
-import { useAuthUser } from "@/hooks/useAuthUser";
+'use client'
+import React from 'react'
+import { motion } from 'framer-motion'
+import { Icon } from '@iconify/react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useNotifications } from '@/hooks/useNotifications'
+import { Badge } from './ui/badge'
+import { useAuthUser } from '@/hooks/useAuthUser'
 
 export function BottomNavigation() {
-    const pathname = usePathname();
-    const { data: user, isLoading: isUserLoading } = useAuthUser();
+    const pathname = usePathname()
+    const { data: user, isLoading: isUserLoading } = useAuthUser()
 
-    const { data: notifications, isLoading } = useNotifications(user?.id);
+    const { data: notifications, isLoading } = useNotifications(user?.id)
 
     const navItems = [
-        { path: "/", icon: "ri:football-fill", label: "Home" },
+        { path: '/home', icon: 'ri:football-fill', label: 'Home' },
         {
-            path: "/leaderboard",
-            icon: "material-symbols:leaderboard-rounded",
-            label: "Leaderboard",
+            path: '/leaderboard',
+            icon: 'material-symbols:leaderboard-rounded',
+            label: 'Leaderboard',
         },
         {
-            path: "/notifications",
-            icon: "famicons:notifications",
-            label: "Notification",
+            path: '/notifications',
+            icon: 'famicons:notifications',
+            label: 'Notification',
         },
-        { path: "/profile", icon: "iconamoon:profile-bold", label: "Profile" },
-    ];
-    if (isLoading && !notifications) return;
+        { path: '/profile', icon: 'iconamoon:profile-bold', label: 'Profile' },
+    ]
+    if (isLoading && !notifications) return
 
     return (
         <div className="w-full max-w-sm mx-auto fixed bottom-0 left-0 right-0 z-50 p-4">
@@ -39,7 +39,7 @@ export function BottomNavigation() {
             >
                 <div className="w-full flex items-center justify-around">
                     {navItems.map((item) => {
-                        const isActive = pathname === item.path;
+                        const isActive = pathname === item.path
                         return (
                             <Link
                                 key={item.path}
@@ -56,11 +56,11 @@ export function BottomNavigation() {
                                         icon={item.icon}
                                         className={`size-6 ${
                                             isActive
-                                                ? "text-primary"
-                                                : "text-muted-foreground"
+                                                ? 'text-primary'
+                                                : 'text-muted-foreground'
                                         }`}
                                     />
-                                    {item.path === "/notifications" &&
+                                    {item.path === '/notifications' &&
                                         !isLoading &&
                                         notifications &&
                                         notifications.length > 0 && (
@@ -92,10 +92,10 @@ export function BottomNavigation() {
                                     {item.label}
                                 </span> */}
                             </Link>
-                        );
+                        )
                     })}
                 </div>
             </motion.nav>
         </div>
-    );
+    )
 }
