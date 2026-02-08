@@ -22,5 +22,5 @@ export async function GET(request: NextRequest) {
     }
 
     // Default: other verification (signup, etc.)
-    redirect("/");
+    redirect("/home");
 }

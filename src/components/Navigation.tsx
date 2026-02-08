@@ -1,17 +1,17 @@
-"use client";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Icon } from "@iconify/react";
-import { useState } from "react";
-import MenuOverlay from "./MenuOverlay";
-import { useAuthUser } from "@/hooks/useAuthUser";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+'use client'
+import { motion } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { Icon } from '@iconify/react'
+import MenuOverlay from './MenuOverlay'
+import { useAuthUser } from '@/hooks/useAuthUser'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import useMenuStore from '@/stores/menuStore'
 
 export function Navigation({ variant }: { variant?: string }) {
-    const { data: user } = useAuthUser();
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const router = useRouter();
+    const { data: user } = useAuthUser()
+    const router = useRouter()
+    const openMenu = useMenuStore((state) => state.openMenu)
 
     return (
         <>
@@ -19,7 +19,7 @@ export function Navigation({ variant }: { variant?: string }) {
                 initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 className={`sticky top-0 z-50 ${
-                    variant === "active" ? "bg-card/80" : ""
+                    variant === 'active' ? 'bg-card/80' : ''
                 } backdrop-blur-lg shadow-md`}
             >
                 <div className="container mx-auto px-4 py-4">
@@ -36,15 +36,15 @@ export function Navigation({ variant }: { variant?: string }) {
                                     <Icon
                                         icon="famicons:arrow-back"
                                         className={`w-6 h-6 ${
-                                            variant === "action"
-                                                ? "text-gray-400"
-                                                : "text-black"
+                                            variant === 'action'
+                                                ? 'text-gray-400'
+                                                : 'text-black'
                                         }`}
                                     />
                                 </div>
                             </motion.div>
                         ) : (
-                            <Link href="/">
+                            <Link href="/home">
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
                                     className="flex items-center"
@@ -65,25 +65,21 @@ export function Navigation({ variant }: { variant?: string }) {
                         <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => setIsMenuOpen(true)}
+                            onClick={() => openMenu()}
                         >
                             <Icon
                                 icon="charm:menu-meatball"
                                 className={`size-8 ${
-                                    variant === "action"
-                                        ? "text-white"
-                                        : "text-muted-foreground"
+                                    variant === 'action'
+                                        ? 'text-white'
+                                        : 'text-muted-foreground'
                                 }`}
                             />
                         </Button>
                     </div>
                 </div>
             </motion.header>
-            <MenuOverlay
-                isOpen={isMenuOpen}
-                onClose={() => setIsMenuOpen(false)}
-                user={user}
-            />
+            <MenuOverlay user={user} />
         </>
-    );
+    )
 }

@@ -1,6 +1,6 @@
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import Link from 'next/link'
+import Image from 'next/image'
+import { Button } from '@/components/ui/button'
 
 export default function NotFound() {
     return (
@@ -15,9 +15,9 @@ export default function NotFound() {
                 className="w-40 h-auto"
             />
             <p>Could not find requested resource</p>
-            <Link href="/">
+            <Link href="/home">
                 <Button>Return Home</Button>
             </Link>
         </div>
-    );
+    )
 }

@@ -1,100 +1,100 @@
-"use client";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+'use client'
+import { motion } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
     Card,
     CardContent,
     CardHeader,
     CardTitle,
     CardDescription,
-} from "@/components/ui/card";
-import { Icon } from "@iconify/react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { z } from "zod";
-import { useEffect, useState } from "react";
-import { createClient } from "@/utils/supabase/client";
-import { PostgrestError } from "@supabase/supabase-js";
+} from '@/components/ui/card'
+import { Icon } from '@iconify/react'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import { z } from 'zod'
+import { useEffect, useState } from 'react'
+import { createClient } from '@/utils/supabase/client'
+import { PostgrestError } from '@supabase/supabase-js'
 
 const passwordSchema = z
     .object({
         password: z
             .string()
-            .min(6, { message: "Password must be at least 6 characters" })
-            .max(128, { message: "Password must be less than 128 characters" }),
+            .min(6, { message: 'Password must be at least 6 characters' })
+            .max(128, { message: 'Password must be less than 128 characters' }),
         confirmPassword: z
             .string()
-            .min(6, { message: "Password must be at least 6 characters" })
-            .max(128, { message: "Password must be less than 128 characters" }),
+            .min(6, { message: 'Password must be at least 6 characters' })
+            .max(128, { message: 'Password must be less than 128 characters' }),
     })
     .refine((data) => data.password === data.confirmPassword, {
         message: "Passwords don't match",
-        path: ["confirmPassword"],
-    });
+        path: ['confirmPassword'],
+    })
 
 export default function Page() {
-    const supabase = createClient();
-    const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
+    const supabase = createClient()
+    const router = useRouter()
+    const [isLoading, setIsLoading] = useState(false)
     const [formData, setFormData] = useState({
-        password: "",
-        confirmPassword: "",
-    });
+        password: '',
+        confirmPassword: '',
+    })
 
     useEffect(() => {
         // Check if there's a session (user came from reset link)
         const checkSession = async () => {
             const {
                 data: { session },
-            } = await supabase.auth.getSession();
+            } = await supabase.auth.getSession()
             if (!session) {
-                router.push("/auth");
+                router.push('/auth')
             }
-        };
-        checkSession();
-    }, [router, supabase]);
+        }
+        checkSession()
+    }, [router, supabase])
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsLoading(true);
+        e.preventDefault()
+        setIsLoading(true)
 
         try {
-            const validation = passwordSchema.safeParse(formData);
+            const validation = passwordSchema.safeParse(formData)
             if (!validation.success) {
-                toast("Validation error", {
+                toast('Validation error', {
                     description: validation.error?.message,
-                });
-                return;
+                })
+                return
             }
 
             const { error } = await supabase.auth.updateUser({
                 password: formData.password,
-            });
+            })
 
-            if (error) throw error;
+            if (error) throw error
 
-            toast("Password updated successfully", {
-                description: "Your password has been changed.",
-            });
+            toast('Password updated successfully', {
+                description: 'Your password has been changed.',
+            })
 
-            router.push("/");
+            router.push('/home')
         } catch (error) {
             if (error instanceof PostgrestError) {
-                toast("Error updating password", {
+                toast('Error updating password', {
                     description:
-                        error.message || "An unexpected error occurred.",
-                });
+                        error.message || 'An unexpected error occurred.',
+                })
             }
         } finally {
-            setIsLoading(false);
+            setIsLoading(false)
         }
-    };
+    }
 
     const handleInputChange = (field: string, value: string) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
-    };
+        setFormData((prev) => ({ ...prev, [field]: value }))
+    }
 
     return (
         <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -141,7 +141,7 @@ export default function Page() {
                                     value={formData.password}
                                     onChange={(e) =>
                                         handleInputChange(
-                                            "password",
+                                            'password',
                                             e.target.value
                                         )
                                     }
@@ -164,7 +164,7 @@ export default function Page() {
                                     value={formData.confirmPassword}
                                     onChange={(e) =>
                                         handleInputChange(
-                                            "confirmPassword",
+                                            'confirmPassword',
                                             e.target.value
                                         )
                                     }
@@ -184,7 +184,7 @@ export default function Page() {
                                         className="w-4 h-4 animate-spin"
                                     />
                                 ) : (
-                                    "Update Password"
+                                    'Update Password'
                                 )}
                             </Button>
                         </form>
@@ -192,7 +192,7 @@ export default function Page() {
                         <div className="mt-6 text-center">
                             <button
                                 type="button"
-                                onClick={() => router.push("/")}
+                                onClick={() => router.push('/')}
                                 className="text-sm text-muted-foreground hover:text-primary"
                             >
                                 ← Back to home
@@ -202,5 +202,5 @@ export default function Page() {
                 </Card>
             </motion.div>
         </div>
-    );
+    )
 }

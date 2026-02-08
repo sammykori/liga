@@ -1,17 +1,17 @@
-"use client";
-import { Navigation } from "@/components/Navigation";
-import { Icon } from "@iconify/react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
-import { useParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
+'use client'
+import { Navigation } from '@/components/Navigation'
+import { Icon } from '@iconify/react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useState } from 'react'
+import { useParams } from 'next/navigation'
+import { Button } from '@/components/ui/button'
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog'
 import {
     Drawer,
     DrawerClose,
@@ -21,7 +21,7 @@ import {
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
-} from "@/components/ui/drawer";
+} from '@/components/ui/drawer'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -32,46 +32,46 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { QRCodeSVG } from "qrcode.react";
-import GroupRequestsPage from "@/components/sections/group/GroupRequestsPage";
-import GroupSquadPage from "@/components/sections/group/GroupSquadPage";
-import GroupEditForm from "@/components/sections/group/GroupEditForm";
-import { useGroupRole } from "@/hooks/useGroupRole";
-import { useAuthUser } from "@/hooks/useAuthUser";
-import { useSingleGroup } from "@/hooks/useSingleGroup";
-import GroupTeamsPage from "@/components/sections/group/GroupTeamsPage";
-import GroupMatchesPage from "@/components/sections/group/GroupMatchesPage";
-import { useGroupPlayers } from "@/hooks/useGroupPlayers";
-import { useGroupMatchesPlayed } from "@/hooks/useGroupMatchesPlayed";
-import { toast } from "sonner";
-import { useUpdateGroupMembership } from "@/hooks/mutations/useUpdateGroupMemebership";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/alert-dialog'
+import { QRCodeSVG } from 'qrcode.react'
+import GroupRequestsPage from '@/components/sections/group/GroupRequestsPage'
+import GroupSquadPage from '@/components/sections/group/GroupSquadPage'
+import GroupEditForm from '@/components/sections/group/GroupEditForm'
+import { useGroupRole } from '@/hooks/useGroupRole'
+import { useAuthUser } from '@/hooks/useAuthUser'
+import { useSingleGroup } from '@/hooks/useSingleGroup'
+import GroupTeamsPage from '@/components/sections/group/GroupTeamsPage'
+import GroupMatchesPage from '@/components/sections/group/GroupMatchesPage'
+import { useGroupPlayers } from '@/hooks/useGroupPlayers'
+import { useGroupMatchesPlayed } from '@/hooks/useGroupMatchesPlayed'
+import { toast } from 'sonner'
+import { useUpdateGroupMembership } from '@/hooks/mutations/useUpdateGroupMemebership'
+import { useRouter } from 'next/navigation'
 
 function Page() {
-    const { groupId } = useParams<{ groupId: string }>();
-    const [copied, setCopied] = useState(false);
-    const [open, setOpen] = useState(false);
-    const router = useRouter();
+    const { groupId } = useParams<{ groupId: string }>()
+    const [copied, setCopied] = useState(false)
+    const [open, setOpen] = useState(false)
+    const router = useRouter()
 
-    const { data: user, isLoading: isUserLoading } = useAuthUser();
-    const { data: group, isLoading: isGroupLoading } = useSingleGroup(groupId);
-    const { role, loading } = useGroupRole(groupId, user?.id);
+    const { data: user, isLoading: isUserLoading } = useAuthUser()
+    const { data: group, isLoading: isGroupLoading } = useSingleGroup(groupId)
+    const { role, loading } = useGroupRole(groupId, user?.id)
     const { data: players, isLoading: isPlayersLoading } =
-        useGroupPlayers(groupId);
+        useGroupPlayers(groupId)
     const { data: matchesPlayed, isLoading: isMatchesPlayedLoading } =
-        useGroupMatchesPlayed();
-    const membershipMutation = useUpdateGroupMembership();
+        useGroupMatchesPlayed()
+    const membershipMutation = useUpdateGroupMembership()
 
-    console.log(matchesPlayed);
+    console.log(matchesPlayed)
     const handleCopy = async () => {
-        if (!group) return;
+        if (!group) return
         await navigator.clipboard.writeText(
             `${window.location.origin}/join/${group.join_code}`
-        );
-        setCopied(true);
-        setTimeout(() => setCopied(false), 1500);
-    };
+        )
+        setCopied(true)
+        setTimeout(() => setCopied(false), 1500)
+    }
 
     if (
         isGroupLoading ||
@@ -80,7 +80,7 @@ function Page() {
         isPlayersLoading ||
         isMatchesPlayedLoading
     ) {
-        return;
+        return
     }
     async function handleRemovePlayer() {
         try {
@@ -89,12 +89,12 @@ function Page() {
                 user_id: user?.id,
                 removed: true,
                 removed_at: new Date().toISOString(),
-            });
-            toast.success(`You have left the group successfully.`);
-            router.push("/");
+            })
+            toast.success(`You have left the group successfully.`)
+            router.push('/home')
         } catch (error) {
-            console.error("Update failed:", error);
-            toast.error("Failed to leave group");
+            console.error('Update failed:', error)
+            toast.error('Failed to leave group')
         }
     }
     return (
@@ -110,7 +110,7 @@ function Page() {
                         </p>
                     </div>
                     <div className="flex gap-3">
-                        {role !== "user" && (
+                        {role !== 'user' && (
                             <Dialog open={open} onOpenChange={setOpen}>
                                 <DialogTrigger>
                                     <div className="bg-gray-400/50 rounded-full size-8 p-2 flex items-center justify-center">
@@ -173,7 +173,7 @@ function Page() {
                                                         className="h-4 w-4"
                                                     />
                                                 )}
-                                                {copied ? "Copied!" : "Copy"}
+                                                {copied ? 'Copied!' : 'Copy'}
                                             </Button>
                                         </div>
                                     </div>
@@ -266,14 +266,14 @@ function Page() {
                 </div>
             </div>
         </div>
-    );
+    )
 }
 
-export default Page;
+export default Page
 
 type ActionButtonProps = {
-    action: () => void;
-};
+    action: () => void
+}
 function ActionButton({ action }: ActionButtonProps) {
     return (
         <AlertDialog>
@@ -301,5 +301,5 @@ function ActionButton({ action }: ActionButtonProps) {
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-    );
+    )
 }
