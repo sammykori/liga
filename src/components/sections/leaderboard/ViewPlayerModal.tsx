@@ -1,30 +1,30 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Icon } from "@iconify/react";
-import Image from "next/image";
-import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
-import { GroupMembershipWithStats } from "@/components/PlayerCard";
+import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Icon } from '@iconify/react'
+import Image from 'next/image'
+import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog'
+import { GroupMembershipWithStats } from '@/components/PlayerCard'
 import {
     capitalize,
     positionInitials,
     getCountryIcon,
     getCountryCode,
-} from "@/lib/helpers";
+} from '@/lib/helpers'
 
 type JoinGroupModalProps = {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    player: GroupMembershipWithStats | undefined;
-};
+    open: boolean
+    onOpenChange: (open: boolean) => void
+    player: GroupMembershipWithStats | undefined
+}
 
 export function ViewPlayerModal({
     open,
     onOpenChange,
     player,
 }: JoinGroupModalProps) {
-    if (!player) return null;
+    if (!player) return null
     const icon = getCountryIcon(
-        player?.profiles?.country ? player.profiles?.country : ""
-    );
+        player?.profiles?.country ? player.profiles?.country : ''
+    )
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -34,13 +34,13 @@ export function ViewPlayerModal({
                         <Image
                             src={
                                 player?.profiles?.profile_url ||
-                                "/images/default-pp.jpeg"
+                                '/images/default-pp.jpeg'
                             }
                             alt="Player Profile"
                             fill
                             style={{
-                                objectFit: "cover",
-                                objectPosition: "center",
+                                objectFit: 'cover',
+                                objectPosition: 'center',
                             }}
                             className="rounded-full"
                         />
@@ -51,21 +51,21 @@ export function ViewPlayerModal({
                                 {positionInitials(player?.profiles?.position)}
                             </DialogDescription>
                             <DialogTitle className="text-xl font-bold text-foreground">
-                                {player.profiles?.full_name || "Player Name"}
+                                {player.profiles?.full_name || 'Player Name'}
                             </DialogTitle>
                         </div>
 
-                        <DialogDescription className="text-center">
+                        <DialogDescription className="text-center text-black">
                             {capitalize(player?.profiles?.position) ||
-                                "Position"}
+                                'Position'}
                         </DialogDescription>
                         <div className="flex justify-center">
                             <div className=" rounded-lg px-4 py-1 flex items-center gap-2">
                                 {icon && <Icon icon={icon} />}
                                 <span className="text-sm font-medium">
                                     {getCountryCode(
-                                        player.profiles?.country || ""
-                                    ) || "Country"}
+                                        player.profiles?.country || ''
+                                    ) || 'Country'}
                                 </span>
                             </div>
                         </div>
@@ -115,5 +115,5 @@ export function ViewPlayerModal({
                 </div>
             </DialogContent>
         </Dialog>
-    );
+    )
 }

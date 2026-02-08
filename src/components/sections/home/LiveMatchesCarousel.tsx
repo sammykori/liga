@@ -1,39 +1,37 @@
-import { motion } from "framer-motion";
-import { MatchCard } from "../../MatchCard";
-import { useRouter } from "next/navigation";
-import { useGroupMatches } from "@/hooks/useGroupMatches";
+import { motion } from 'framer-motion'
+import { MatchCard } from '../../MatchCard'
+import { useRouter } from 'next/navigation'
+import { useGroupMatches } from '@/hooks/useGroupMatches'
 import {
     Carousel,
     CarouselContent,
     CarouselItem,
-} from "@/components/ui/carousel";
-import { useEffect, useState } from "react";
-import { Database } from "@/types/database";
-import { getMatchStatus } from "@/lib/helpers";
-
-type Match = Database["public"]["Tables"]["matches"]["Row"];
+} from '@/components/ui/carousel'
+import { useEffect, useState } from 'react'
+import { getMatchStatus } from '@/lib/helpers'
+import { type MatchTeams } from '../../MatchCard'
 
 function LiveMatchesCarousel({ groupId }: { groupId: string | undefined }) {
-    const { data: matches } = useGroupMatches(groupId);
-    const [liveMatches, setLiveMatches] = useState<Match[]>();
-    const router = useRouter();
+    const { data: matches } = useGroupMatches(groupId)
+    const [liveMatches, setLiveMatches] = useState<MatchTeams[]>()
+    const router = useRouter()
 
     useEffect(() => {
         if (matches) {
             const live = matches.filter(
-                (match) => getMatchStatus(match) === "live"
-            );
-            setLiveMatches(live);
+                (match) => getMatchStatus(match) === 'live'
+            )
+            setLiveMatches(live)
         }
-    }, [matches]);
+    }, [matches])
 
     if (!matches) {
-        return null;
+        return null
     }
 
     const handleMatchClick = (matchId: string) => {
-        router.push(`/match/${matchId}`);
-    };
+        router.push(`/match/${matchId}`)
+    }
 
     if (!liveMatches || liveMatches.length < 1) {
         return (
@@ -52,7 +50,7 @@ function LiveMatchesCarousel({ groupId }: { groupId: string | undefined }) {
                     </div>
                 </div>
             </motion.section>
-        );
+        )
     }
 
     return (
@@ -70,11 +68,11 @@ function LiveMatchesCarousel({ groupId }: { groupId: string | undefined }) {
                 opts={{
                     loop: true,
                     inViewThreshold: 0.5,
-                    align: "start",
+                    align: 'start',
                 }}
             >
                 <CarouselContent>
-                    {matches.map((match, index) => (
+                    {liveMatches.map((match, index) => (
                         <CarouselItem key={index}>
                             <MatchCard
                                 match={match}
@@ -86,7 +84,7 @@ function LiveMatchesCarousel({ groupId }: { groupId: string | undefined }) {
                 </CarouselContent>
             </Carousel>
         </motion.section>
-    );
+    )
 }
 
-export default LiveMatchesCarousel;
+export default LiveMatchesCarousel

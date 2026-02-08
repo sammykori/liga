@@ -2,16 +2,16 @@
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@iconify/react'
-import { useState } from 'react'
 import MenuOverlay from './MenuOverlay'
 import { useAuthUser } from '@/hooks/useAuthUser'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import useMenuStore from '@/stores/menuStore'
 
 export function Navigation({ variant }: { variant?: string }) {
     const { data: user } = useAuthUser()
-    const [isMenuOpen, setIsMenuOpen] = useState(false)
     const router = useRouter()
+    const openMenu = useMenuStore((state) => state.openMenu)
 
     return (
         <>
@@ -65,7 +65,7 @@ export function Navigation({ variant }: { variant?: string }) {
                         <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => setIsMenuOpen(true)}
+                            onClick={() => openMenu()}
                         >
                             <Icon
                                 icon="charm:menu-meatball"
@@ -79,11 +79,7 @@ export function Navigation({ variant }: { variant?: string }) {
                     </div>
                 </div>
             </motion.header>
-            <MenuOverlay
-                isOpen={isMenuOpen}
-                onClose={() => setIsMenuOpen(false)}
-                user={user}
-            />
+            <MenuOverlay user={user} />
         </>
     )
 }

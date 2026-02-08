@@ -7,10 +7,12 @@ import { usePathname } from 'next/navigation'
 import { useNotifications } from '@/hooks/useNotifications'
 import { Badge } from './ui/badge'
 import { useAuthUser } from '@/hooks/useAuthUser'
+import useMenuStore from '@/stores/menuStore'
 
 export function BottomNavigation() {
     const pathname = usePathname()
     const { data: user, isLoading: isUserLoading } = useAuthUser()
+    const closeMenu = useMenuStore((state) => state.closeMenu)
 
     const { data: notifications, isLoading } = useNotifications(user?.id)
 
@@ -45,6 +47,7 @@ export function BottomNavigation() {
                                 key={item.path}
                                 href={item.path}
                                 className="flex flex-col items-center "
+                                onClick={() => closeMenu()}
                             >
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}

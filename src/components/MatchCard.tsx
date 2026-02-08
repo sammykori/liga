@@ -1,56 +1,56 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Icon } from "@iconify/react";
-import { Database } from "@/types/database";
-import dayjs from "dayjs";
-import relativeTime from "../../node_modules/dayjs/plugin/relativeTime";
-import { getMatchStatus } from "@/lib/helpers";
+import React from 'react'
+import { motion } from 'framer-motion'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Icon } from '@iconify/react'
+import { Database } from '@/types/database'
+import dayjs from 'dayjs'
+import relativeTime from '../../node_modules/dayjs/plugin/relativeTime'
+import { getMatchStatus } from '@/lib/helpers'
 
-dayjs.extend(relativeTime);
+dayjs.extend(relativeTime)
 
-type Match = Database["public"]["Tables"]["matches"]["Row"];
-type Teams = Database["public"]["Tables"]["group_teams"]["Row"];
+type Match = Database['public']['Tables']['matches']['Row']
+type Teams = Database['public']['Tables']['group_teams']['Row']
 export type MatchTeams = Match & {
-    teamA: Pick<Teams, "id" | "name" | "color"> | null;
-    teamB: Pick<Teams, "id" | "name" | "color"> | null;
-};
+    teamA: Pick<Teams, 'id' | 'name' | 'color'> | null
+    teamB: Pick<Teams, 'id' | 'name' | 'color'> | null
+}
 interface MatchCardProps {
-    match: MatchTeams;
-    variant?: "compact" | "hero";
-    onClick?: () => void;
+    match: MatchTeams
+    variant?: 'compact' | 'hero'
+    onClick?: () => void
 }
 
 export function MatchCard({
     match,
-    variant = "compact",
+    variant = 'compact',
     onClick,
 }: MatchCardProps) {
     const getStatusColor = (status: string) => {
         switch (status) {
-            case "cancelled":
-                return "text-orange-500";
-            case "confirmed":
-                return "text-green-500";
-            case "live":
-                return "text-red-500";
-            case "pending":
-                return "text-yellow-500";
-            case "completed":
-                return "text-brown-500";
+            case 'cancelled':
+                return 'text-orange-500'
+            case 'confirmed':
+                return 'text-green-500'
+            case 'live':
+                return 'text-red-500'
+            case 'pending':
+                return 'text-yellow-500'
+            case 'completed':
+                return 'text-brown-500'
             default:
-                return "text-muted-foreground";
+                return 'text-muted-foreground'
         }
-    };
+    }
 
     const handleOnclick = () => {
-        if (match.status === "cancelled") return;
+        if (match.status === 'cancelled') return
         if (onClick) {
-            onClick();
+            onClick()
         }
-    };
-    if (variant === "hero") {
+    }
+    if (variant === 'hero') {
         return (
             <motion.div
                 whileHover={{ scale: 1.02 }}
@@ -58,7 +58,7 @@ export function MatchCard({
                 className="cursor-pointer"
                 onClick={handleOnclick}
             >
-                <Card className="relative overflow-hidden bg-gray-800 text-primary-foreground shadow-strong">
+                <Card className="relative overflow-hidden bg-black text-primary-foreground shadow-strong">
                     <div className="absolute top-4 right-4">
                         {match.status && (
                             <Button
@@ -99,10 +99,10 @@ export function MatchCard({
                             </div>
 
                             <div className="text-center">
-                                {match.status === "completed" ? (
+                                {match.status === 'completed' ? (
                                     <div className="bg-white/20 rounded-lg px-6 py-3">
                                         <span className="text-3xl font-bold">
-                                            {match.teamA_score} :{" "}
+                                            {match.teamA_score} :{' '}
                                             {match.teamB_score}
                                         </span>
                                     </div>
@@ -131,7 +131,7 @@ export function MatchCard({
                     </div>
                 </Card>
             </motion.div>
-        );
+        )
     }
 
     return (
@@ -139,17 +139,17 @@ export function MatchCard({
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
             className={`${
-                match.status === "cancelled"
-                    ? "cursor-not-allowed"
-                    : "cursor-pointer"
+                match.status === 'cancelled'
+                    ? 'cursor-not-allowed'
+                    : 'cursor-pointer'
             }`}
             onClick={handleOnclick}
         >
             <Card
                 className={`p-4 shadow-soft hover:shadow-medium transition-all duration-300  ${
-                    match.status === "cancelled"
-                        ? "bg-gray-200 opacity-40"
-                        : "bg-gradient-card"
+                    match.status === 'cancelled'
+                        ? 'bg-gray-200 opacity-40'
+                        : 'bg-gradient-card'
                 }`}
             >
                 <div className="flex items-center justify-between">
@@ -168,7 +168,7 @@ export function MatchCard({
                         </div>
 
                         <div className="text-center">
-                            {match.status === "confirmed" ? (
+                            {match.status === 'confirmed' ? (
                                 <span className="text-xl font-bold text-card-foreground">
                                     {match.teamA_score} : {match.teamB_score}
                                 </span>
@@ -197,14 +197,14 @@ export function MatchCard({
                         <p className="text-xs text-muted-foreground">
                             {dayjs(match.match_date).fromNow()}
                         </p>
-                        <div
+                        {/* <div
                             className={`text-xs w-fit px-2 ${getStatusColor(
                                 match.status
                             )}`}
                         >
                             {getMatchStatus(match)}
-                        </div>
-                        {match.status === "confirmed" && (
+                        </div> */}
+                        {match.status === 'confirmed' && (
                             <Button className="mt-1">
                                 <Icon
                                     icon="mdi:circle"
@@ -217,5 +217,5 @@ export function MatchCard({
                 </div>
             </Card>
         </motion.div>
-    );
+    )
 }
