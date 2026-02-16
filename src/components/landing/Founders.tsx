@@ -7,18 +7,18 @@ import { link } from 'fs'
 import Link from 'next/link'
 
 const founders = [
-    {
-        name: 'DELE',
-        lastName: 'AROGUNDADE',
-        role: 'Chief Executive Officer',
-        bio: 'Former professional player with 15 years of management experience.',
-        image: '/images/team/dele.jpeg',
-        linkedIn: 'https://www.linkedin.com/in/dele-arogundade/',
-    },
+    // {
+    //     name: 'DELE',
+    //     lastName: 'AROGUNDADE',
+    //     role: 'Chief Executive Officer',
+    //     bio: 'Former professional player with 15 years of management experience.',
+    //     image: '/images/team/dele.jpeg',
+    //     linkedIn: 'https://www.linkedin.com/in/dele-arogundade/',
+    // },
     {
         name: 'SAMUEL',
         lastName: 'KORI',
-        role: 'Chief Technology Officer',
+        role: 'Founding Engineer',
         bio: 'Led scouting operations for top European clubs before joining Liga.',
         image: '/images/team/sam.jpeg',
         linkedIn: 'https://www.linkedin.com/in/samuelkori/',
