@@ -1,10 +1,14 @@
 import { defineConfig } from 'vitest/config'
+import { loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import {playwright} from '@vitest/browser-playwright'
 
 const sharedPlugins = [react(), tsconfigPaths()]
- 
+
+const env = loadEnv('', process.cwd(), '')
+Object.assign(process.env, env)
+
 export default defineConfig({
   plugins: sharedPlugins,
   test: {

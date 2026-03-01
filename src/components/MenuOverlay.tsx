@@ -222,11 +222,12 @@ export default function MenuOverlay({ user }: MenuOverlayProps) {
                                             whileTap={{
                                                 scale: 0.98,
                                             }}
-                                            onClick={() =>
+                                            onClick={() => {
                                                 router.push(
                                                     `/groups/${item.groups.id}`
                                                 )
-                                            }
+                                                onClose()
+                                            }}
                                             className={`w-full flex items-center gap-4 rounded-lg transition-colors ${'hover:bg-accent text-foreground'}`}
                                         >
                                             <div className="w-8 aspect-square border p-1  rounded-full flex justify-center items-center relative">

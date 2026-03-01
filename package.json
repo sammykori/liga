@@ -15,7 +15,7 @@
         "test:browser": "vitest --project browser",
         "coverage": "vitest run --coverage",
         "lint": "eslint",
-        "gen:types": "npx --yes supabase gen types typescript --project-id jkpwiprizwwfzqaavnbh > src/types/database.ts "
+        "gen:types": "npx --yes supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > src/types/database.ts "
     },
     "dependencies": {
         "@hookform/resolvers": "^5.2.2",

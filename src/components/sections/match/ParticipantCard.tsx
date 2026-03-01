@@ -1,10 +1,10 @@
-"use client";
-import React from "react";
-import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
-import { positionInitials } from "@/lib/helpers";
-import Image from "next/image";
-import { Database } from "@/types/database";
+'use client'
+import React from 'react'
+import { motion } from 'framer-motion'
+import { Card } from '@/components/ui/card'
+import { positionInitials } from '@/lib/helpers'
+import Image from 'next/image'
+import { Database } from '@/types/database'
 import {
     Drawer,
     DrawerContent,
@@ -14,43 +14,43 @@ import {
     DrawerTitle,
     DrawerTrigger,
     DrawerClose,
-} from "@/components/ui/drawer";
-import AcceptResponseForm from "./AcceptResponseForm";
+} from '@/components/ui/drawer'
+import AcceptResponseForm from './AcceptResponseForm'
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { useUpdateMatchResponse } from "@/hooks/mutations/useUpdateMatchResponse";
-import { toast } from "sonner";
-import { useAuthUser } from "@/hooks/useAuthUser";
-import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { Icon } from "@iconify/react";
-type GroupResponsesRow = Database["public"]["Tables"]["match_responses"]["Row"];
-type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { useUpdateMatchResponse } from '@/hooks/mutations/useUpdateMatchResponse'
+import { toast } from 'sonner'
+import { useAuthUser } from '@/hooks/useAuthUser'
+import { useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { Icon } from '@iconify/react'
+type GroupResponsesRow = Database['public']['Tables']['match_responses']['Row']
+type ProfileRow = Database['public']['Tables']['profiles']['Row']
 
 export type GroupMembershipWithStats = GroupResponsesRow & {
     profiles: Pick<
         ProfileRow,
-        "username" | "full_name" | "position" | "profile_url"
-    > | null;
-};
-type Teams = Database["public"]["Tables"]["group_teams"]["Row"];
-type TeamData = Pick<Teams, "id" | "name" | "color"> | null;
-type MatchStatus = Database["public"]["Enums"]["match_status"];
+        'username' | 'full_name' | 'position' | 'profile_url'
+    > | null
+}
+type Teams = Database['public']['Tables']['group_teams']['Row']
+type TeamData = Pick<Teams, 'id' | 'name' | 'color'> | null
+type MatchStatus = Database['public']['Enums']['match_status']
 
 interface ParticipantCardProps {
-    playerResponse: GroupMembershipWithStats;
-    role: string | null;
-    teamA?: TeamData;
-    teamB?: TeamData;
-    status?: MatchStatus;
-    list?: "A" | "B" | "All";
-    matchId: string;
+    playerResponse: GroupMembershipWithStats
+    role: string | null
+    teamA?: TeamData
+    teamB?: TeamData
+    status?: MatchStatus
+    list?: 'A' | 'B' | 'All'
+    matchId: string
 }
 
 export function ParticipantCard({
@@ -62,36 +62,43 @@ export function ParticipantCard({
     list,
     matchId,
 }: ParticipantCardProps) {
-    const updateMatchResponseMutation = useUpdateMatchResponse();
-    const [open, setOpen] = useState(false);
-    const [acceptModalOpen, setAcceptModalOpen] = useState(false);
+    const updateMatchResponseMutation = useUpdateMatchResponse()
+    const [open, setOpen] = useState(false)
+    const [acceptModalOpen, setAcceptModalOpen] = useState(false)
 
-    const { data: user, isLoading: isUserLoading } = useAuthUser();
+    const { data: user, isLoading: isUserLoading } = useAuthUser()
+
+    function openAcceptModal(e: React.MouseEvent) {
+        e.preventDefault()
+        e.stopPropagation()
+        if (status === 'completed') return
+        setAcceptModalOpen(true)
+    }
 
     async function selectTeam(
         team: TeamData | undefined,
-        action: "join" | "remove"
+        action: 'join' | 'remove'
     ) {
-        if (!playerResponse || !team) return;
+        if (!playerResponse || !team) return
         try {
             await updateMatchResponseMutation.mutateAsync({
                 id: playerResponse?.id,
-                team_id: action === "join" ? team.id : null,
-            });
-            toast.success("Player selected Sucessfully");
-            setOpen(false);
+                team_id: action === 'join' ? team.id : null,
+            })
+            toast.success('Player selected Sucessfully')
+            setOpen(false)
         } catch (error) {
-            console.error("Update failed:", error);
-            toast.error("Failed to update match");
+            console.error('Update failed:', error)
+            toast.error('Failed to update match')
         }
     }
 
     if (
         !role ||
-        role === "user" ||
-        status === "ended" ||
-        status === "cancelled" ||
-        status === "completed"
+        role === 'user' ||
+        status === 'ended' ||
+        status === 'cancelled' ||
+        status === 'completed'
     ) {
         return (
             <motion.div
@@ -105,13 +112,13 @@ export function ParticipantCard({
                                 <Image
                                     src={
                                         playerResponse?.profiles?.profile_url ||
-                                        "/images/default-pp.jpeg"
+                                        '/images/default-pp.jpeg'
                                     }
                                     alt="Player Profile"
                                     fill
                                     style={{
-                                        objectFit: "cover",
-                                        objectPosition: "center",
+                                        objectFit: 'cover',
+                                        objectPosition: 'center',
                                     }}
                                     className="rounded-full"
                                 />
@@ -125,7 +132,7 @@ export function ParticipantCard({
                                     </div>
                                     <h2 className="text-xs font-bold text-foreground">
                                         {playerResponse?.profiles?.full_name ||
-                                            "Player Name"}
+                                            'Player Name'}
                                     </h2>
                                 </div>
                                 <div className="flex items-center gap-2">
@@ -161,7 +168,7 @@ export function ParticipantCard({
                                     <Button
                                         variant="secondary"
                                         className=""
-                                        onClick={() => console.log("Trigger")}
+                                        onClick={() => console.log('Trigger')}
                                     >
                                         <Icon icon="nimbus:ellipsis" />
                                     </Button>
@@ -182,7 +189,7 @@ export function ParticipantCard({
                     </div>
                 </Card>
             </motion.div>
-        );
+        )
     }
     return (
         <>
@@ -200,13 +207,13 @@ export function ParticipantCard({
                                             src={
                                                 playerResponse?.profiles
                                                     ?.profile_url ||
-                                                "/images/default-pp.jpeg"
+                                                '/images/default-pp.jpeg'
                                             }
                                             alt="Player Profile"
                                             fill
                                             style={{
-                                                objectFit: "cover",
-                                                objectPosition: "center",
+                                                objectFit: 'cover',
+                                                objectPosition: 'center',
                                             }}
                                             className="rounded-full"
                                         />
@@ -222,7 +229,7 @@ export function ParticipantCard({
                                             <h2 className="text-xs font-bold text-foreground">
                                                 {playerResponse?.profiles
                                                     ?.full_name ||
-                                                    "Player Name"}
+                                                    'Player Name'}
                                             </h2>
                                         </div>
                                         <div className="flex items-center gap-2">
@@ -254,13 +261,11 @@ export function ParticipantCard({
                                         open={acceptModalOpen}
                                         onOpenChange={setAcceptModalOpen}
                                     >
-                                        <DialogTrigger>
+                                        <DialogTrigger asChild>
                                             <Button
                                                 variant="secondary"
                                                 className=""
-                                                onClick={() =>
-                                                    console.log("Trigger")
-                                                }
+                                                onClick={openAcceptModal}
                                             >
                                                 <Icon icon="nimbus:ellipsis" />
                                             </Button>
@@ -290,20 +295,20 @@ export function ParticipantCard({
                         </DrawerDescription>
                     </DrawerHeader>
                     <div className="p-4 pb-0 flex flex-col gap-4 w-full">
-                        {(list === "B" || list === "All") && (
-                            <Button onClick={() => selectTeam(teamA, "join")}>
+                        {(list === 'B' || list === 'All') && (
+                            <Button onClick={() => selectTeam(teamA, 'join')}>
                                 Add to {teamA?.name}
                             </Button>
                         )}
-                        {(list === "A" || list === "All") && (
-                            <Button onClick={() => selectTeam(teamB, "join")}>
+                        {(list === 'A' || list === 'All') && (
+                            <Button onClick={() => selectTeam(teamB, 'join')}>
                                 Add to {teamB?.name}
                             </Button>
                         )}
-                        {(list === "A" || list === "B") && (
+                        {(list === 'A' || list === 'B') && (
                             <Button
-                                onClick={() => selectTeam(teamA, "remove")}
-                                variant={"destructive"}
+                                onClick={() => selectTeam(teamA, 'remove')}
+                                variant={'destructive'}
                             >
                                 Remove Player
                             </Button>
@@ -318,5 +323,5 @@ export function ParticipantCard({
                 </DrawerContent>
             </Drawer>
         </>
-    );
+    )
 }

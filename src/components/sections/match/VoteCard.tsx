@@ -1,7 +1,7 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
-import { Icon } from "@iconify/react";
+import React from 'react'
+import { motion } from 'framer-motion'
+import { Card } from '@/components/ui/card'
+import { Icon } from '@iconify/react'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -12,49 +12,49 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Database } from "@/types/database";
+} from '@/components/ui/alert-dialog'
+import { Database } from '@/types/database'
 
 type VotedPlayer = {
-    voted_player_id: string;
-    full_name: string;
-    player_position: string;
-    profile_url: string;
-    votes: number;
-    rank: number;
-};
-type MatchStatus = Database["public"]["Tables"]["matches"]["Row"]["status"];
+    voted_player_id: string
+    full_name: string
+    player_position: string
+    profile_url: string
+    votes: number
+    rank: number
+}
+type MatchStatus = Database['public']['Tables']['matches']['Row']['status']
 
 interface ParticipantCardProps {
-    votedPlayer: VotedPlayer;
-    role: string | null;
-    matchStatus: MatchStatus;
+    votedPlayer: VotedPlayer
+    role: string | null
+    matchStatus: MatchStatus
 }
 
 export function VoteCard({ votedPlayer, matchStatus }: ParticipantCardProps) {
-    const [open, setOpen] = React.useState(false);
-    console.log(matchStatus);
+    const [open, setOpen] = React.useState(false)
+    console.log(matchStatus)
 
     const positionMedal = (rank: number) => {
         switch (rank) {
             case 1:
-                return "noto:1st-place-medal";
-                break;
+                return 'noto:1st-place-medal'
+                break
             case 2:
-                return "noto:2nd-place-medal";
-                break;
+                return 'noto:2nd-place-medal'
+                break
             case 1:
-                return "noto:3rd-place-medal";
-                break;
+                return 'noto:3rd-place-medal'
+                break
 
             default:
-                return "iconoir:medal";
-                break;
+                return 'iconoir:medal'
+                break
         }
-    };
+    }
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
-            <AlertDialogTrigger>
+            <AlertDialogTrigger disabled={matchStatus == 'completed'}>
                 <motion.div
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.2 }}
@@ -75,7 +75,7 @@ export function VoteCard({ votedPlayer, matchStatus }: ParticipantCardProps) {
                                 </div>
                             </div>
                             <div>
-                                {matchStatus === "completed" ? (
+                                {matchStatus === 'completed' ? (
                                     <div>
                                         <Icon
                                             icon={positionMedal(
@@ -86,10 +86,10 @@ export function VoteCard({ votedPlayer, matchStatus }: ParticipantCardProps) {
                                     </div>
                                 ) : (
                                     <p className="text-lg font-bold text-gray-400">
-                                        {votedPlayer.votes}{" "}
+                                        {votedPlayer.votes}{' '}
                                         <span className="italic text-xs">
                                             vote
-                                            {votedPlayer.votes > 1 ? "s" : ""}
+                                            {votedPlayer.votes > 1 ? 's' : ''}
                                         </span>
                                     </p>
                                 )}
@@ -115,5 +115,5 @@ export function VoteCard({ votedPlayer, matchStatus }: ParticipantCardProps) {
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-    );
+    )
 }
